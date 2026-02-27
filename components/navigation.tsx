@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { useTheme } from "next-themes"
 import { Menu, X, Moon, Sun, Download, LogIn, Globe, ExternalLink } from "lucide-react"
+import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -161,9 +162,11 @@ export function Navigation() {
           </Button>
 
           {/* Login */}
-          <Button size="sm" className="gap-1.5">
-            <LogIn className="h-4 w-4" />
-            Login
+          <Button size="sm" className="gap-1.5" asChild>
+            <Link href="/login">
+              <LogIn className="h-4 w-4" />
+              Login
+            </Link>
           </Button>
         </div>
 
@@ -253,9 +256,11 @@ export function Navigation() {
               </a>
             </Button>
 
-            <Button size="sm" className="gap-1.5">
-              <LogIn className="h-4 w-4" />
-              Login
+            <Button size="sm" className="gap-1.5" asChild>
+              <Link href="/login">
+                <LogIn className="h-4 w-4" />
+                Login
+              </Link>
             </Button>
           </div>
         </div>
