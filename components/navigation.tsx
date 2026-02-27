@@ -243,14 +243,14 @@ export function Navigation() {
             </DropdownMenu>
 
             <Button variant="outline" size="sm" className="gap-1.5" asChild>
-              <a href="/chiranjivi-poudel-cv.pdf" download>
+              <a href="https://drive.google.com/drive/folders/11gfMOdsckoZaRyZvVU75R3ZdVn9-BOWG?usp=sharing" download>
                 <Download className="h-4 w-4" />
-                Download CV
+                Download
               </a>
             </Button>
 
             <Button variant="outline" size="sm" className="gap-1.5" asChild>
-              <a href="https://v0.dev" target="_blank" rel="noopener noreferrer">
+              <a href="https://v0.app/ref/TP1KBM target="_blank" rel="noopener noreferrer">
                 <ExternalLink className="h-3.5 w-3.5" />
                 Join v0.dev
               </a>

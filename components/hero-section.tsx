@@ -52,7 +52,7 @@ export function HeroSection() {
             <Button variant="outline" size="lg" className="gap-2" asChild>
               <a href="https://v0.app/ref/TP1KBM" Join>
                 <Download className="h-4 w-4" />
-                Download CV
+                Join here
               </a>
             </Button>
           </div>
