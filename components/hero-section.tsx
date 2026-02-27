@@ -50,7 +50,7 @@ export function HeroSection() {
               <ArrowDown className="h-4 w-4" />
             </Button>
             <Button variant="outline" size="lg" className="gap-2" asChild>
-              <a href="/chiranjivi-poudel-cv.pdf" download>
+              <a href="https://v0.app/ref/TP1KBM" Join>
                 <Download className="h-4 w-4" />
                 Download CV
               </a>
