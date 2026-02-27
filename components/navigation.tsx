@@ -250,7 +250,7 @@ export function Navigation() {
             </Button>
 
             <Button variant="outline" size="sm" className="gap-1.5" asChild>
-              <a href="https://v0.app/ref/TP1KBM target="_blank" rel="noopener noreferrer">
+              <a href="https://v0.app/ref/TP1KBM" target="_blank" rel="noopener noreferrer">
                 <ExternalLink className="h-3.5 w-3.5" />
                 Join v0.dev
               </a>
