@@ -106,7 +106,10 @@ const jsonLd = {
   email: 'c.poudel1993@gmail.com',
   telephone: '+64220153300',
   url: 'https://www.chiranjivipoudel.com.np',
-  sameAs: ['https://www.linkedin.com/in/cpoudel1993/'],
+  sameAs: [
+    'https://www.linkedin.com/in/cpoudel1993/',
+    'https://www.youtube.com/channel/UC7CJV2aO5MSQIPz8LHnobpg',
+  ],
   alumniOf: {
     '@type': 'EducationalOrganization',
     name: 'Sushma Koirala Memorial Engineering College',

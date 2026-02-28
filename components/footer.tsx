@@ -1,10 +1,15 @@
-import { Linkedin, Mail, Phone, Globe } from "lucide-react"
+import { Linkedin, Mail, Phone, Globe, Youtube } from "lucide-react"
 
 const socialLinks = [
   {
     icon: Linkedin,
     label: "LinkedIn",
     href: "https://www.linkedin.com/in/cpoudel1993/",
+  },
+  {
+    icon: Youtube,
+    label: "YouTube",
+    href: "https://www.youtube.com/channel/UC7CJV2aO5MSQIPz8LHnobpg?sub_confirmation=1",
   },
   {
     icon: Mail,
