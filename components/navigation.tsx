@@ -165,7 +165,7 @@ export function Navigation() {
 
           {/* Download CV */}
           <Button variant="ghost" size="sm" className="gap-1.5" asChild>
-            <a href="/chiranjivi-poudel-cv.pdf" download>
+            <a href="https://docs.google.com/document/d/16ta8kZlhrowuU1ZFbVRhbeUoDAmoveKP7Gg6rXWoh5c/edit?usp=sharing" download>
               <Download className="h-4 w-4" />
               <span className="hidden xl:inline">Download CV</span>
             </a>
@@ -173,9 +173,9 @@ export function Navigation() {
 
           {/* Join v0 */}
           <Button variant="ghost" size="sm" className="gap-1.5" asChild>
-            <a href="https://v0.dev" target="_blank" rel="noopener noreferrer">
+            <a href="https://v0.app/ref/TP1KBM" target="_blank" rel="noopener noreferrer">
               <ExternalLink className="h-3.5 w-3.5" />
-              <span className="hidden xl:inline">Join v0.dev</span>
+              <span className="hidden xl:inline">Join</span>
             </a>
           </Button>
 
