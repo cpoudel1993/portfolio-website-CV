@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import { useTheme } from "next-themes"
 import { Menu, X, Moon, Sun, Download, LogIn, Globe, ExternalLink } from "lucide-react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -11,6 +12,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { supabase } from "@/lib/supabase"
 
 const navLinks = [
   { label: "Home", href: "#home" },
@@ -35,10 +37,26 @@ export function Navigation() {
   const [selectedLang, setSelectedLang] = useState("en")
   const { theme, setTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
+  const [session, setSession] = useState<any>(null)
+  const router = useRouter()
 
   useEffect(() => {
     setMounted(true)
-  }, [])
+
+    // get current session
+    supabase.auth.getSession().then(({ data }) => {
+      setSession(data.session)
+    })
+
+    const { data: listener } = supabase.auth.onAuthStateChange((event, sess) => {
+      setSession(sess)
+      if (event === "SIGNED_OUT") {
+        router.push("/")
+      }
+    })
+
+    return () => listener?.subscription.unsubscribe()
+  }, [router])
 
   useEffect(() => {
     const handleScroll = () => {
@@ -161,13 +179,30 @@ export function Navigation() {
             </a>
           </Button>
 
-          {/* Login */}
-          <Button size="sm" className="gap-1.5" asChild>
-            <Link href="/login">
-              <LogIn className="h-4 w-4" />
-              Login
-            </Link>
-          </Button>
+          {/* Authentication actions */}
+          {session && session.user ? (
+            <>
+              <Button size="sm" className="gap-1.5" asChild>
+                <Link href="/admin">Dashboard</Link>
+              </Button>
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={async () => {
+                  await supabase.auth.signOut()
+                }}
+              >
+                Logout
+              </Button>
+            </>
+          ) : (
+            <Button size="sm" className="gap-1.5" asChild>
+              <Link href="/login">
+                <LogIn className="h-4 w-4" />
+                Login
+              </Link>
+            </Button>
+          )}
         </div>
 
         {/* Mobile Menu Toggle */}
@@ -256,12 +291,29 @@ export function Navigation() {
               </a>
             </Button>
 
-            <Button size="sm" className="gap-1.5" asChild>
-              <Link href="/login">
-                <LogIn className="h-4 w-4" />
-                Login
-              </Link>
-            </Button>
+            {session && session.user ? (
+              <>
+                <Button size="sm" className="gap-1.5" asChild>
+                  <Link href="/admin">Dashboard</Link>
+                </Button>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={async () => {
+                    await supabase.auth.signOut()
+                  }}
+                >
+                  Logout
+                </Button>
+              </>
+            ) : (
+              <Button size="sm" className="gap-1.5" asChild>
+                <Link href="/login">
+                  <LogIn className="h-4 w-4" />
+                  Login
+                </Link>
+              </Button>
+            )}
           </div>
         </div>
       </div>

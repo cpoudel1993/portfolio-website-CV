@@ -6,7 +6,8 @@ import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
 import Link from "next/link"
-import { Mail, Lock, ArrowRight, Eye, EyeOff, AlertCircle } from "lucide-react"
+import { Mail, Lock, ArrowRight, Eye, EyeOff } from "lucide-react"
+import { supabase } from "@/lib/supabase"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import {
@@ -31,7 +32,6 @@ export function LoginForm() {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
-  const [demoMode, setDemoMode] = useState(false)
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -45,35 +45,20 @@ export function LoginForm() {
   async function onSubmit(data: LoginFormValues) {
     setIsLoading(true)
     try {
-      // Call the authentication API
-      const response = await fetch("/api/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: data.email,
-          password: data.password,
-        }),
+      // authenticate directly with Supabase
+      const { data: authData, error } = await supabase.auth.signInWithPassword({
+        email: data.email,
+        password: data.password,
       })
 
-      const result = await response.json()
-
-      if (!response.ok) {
-        toast.error(result.error || "Login failed. Please check your credentials.")
+      if (error) {
+        toast.error(error.message)
         return
       }
 
       toast.success("Login successful! Redirecting...")
-      
-      // Store session info if needed
-      if (result.session) {
-        localStorage.setItem("auth-token", result.session.access_token)
-        localStorage.setItem("user", JSON.stringify(result.user))
-      }
-
       setTimeout(() => {
-        router.push("/")
+        router.push("/admin")
       }, 1000)
     } catch (error) {
       console.error("Login error:", error)
@@ -83,24 +68,8 @@ export function LoginForm() {
     }
   }
 
-  const handleDemoLogin = () => {
-    form.setValue("email", "c.poudel1993@gmail.com")
-    form.setValue("password", "P00n@m2054")
-    setDemoMode(true)
-  }
-
   return (
     <div className="w-full space-y-6">
-      {/* Demo Mode Alert */}
-      {demoMode && (
-        <div className="flex gap-3 rounded-lg border border-amber-200 bg-amber-50 p-3 dark:border-amber-900 dark:bg-amber-950">
-          <AlertCircle className="h-4 w-4 flex-shrink-0 text-amber-600 dark:text-amber-400 mt-0.5" />
-          <div className="text-sm text-amber-800 dark:text-amber-200">
-            Demo credentials loaded. Click "Sign In" to test authentication with Supabase.
-          </div>
-        </div>
-      )}
-
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           {/* Email Field */}
@@ -214,19 +183,7 @@ export function LoginForm() {
         </div>
       </div>
 
-      {/* Demo & Social Buttons */}
-      <div className="grid grid-cols-2 gap-2">
-        <Button 
-          variant="outline" 
-          size="sm"
-          onClick={handleDemoLogin}
-          disabled={isLoading}
-          type="button"
-          className="h-9 text-xs"
-        >
-          Load Demo Credentials
-        </Button>
-      </div>
+
 
       {/* Footer Links */}
       <div className="space-y-2 pt-2">
