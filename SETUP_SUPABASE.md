@@ -48,6 +48,21 @@ Get these values from:
 
 4. Click "Sign In" to authenticate
 
+Optional: if you want to use demo credentials locally, set them in your local `.env.local` (do NOT commit):
+
+```env
+DEMO_USER_EMAIL=c.poudel1993@gmail.com
+DEMO_USER_PASSWORD=YOUR_DEMO_PASSWORD
+```
+
+You can also use the helper script to create a `.env.local` file locally (replace values):
+
+```bash
+./scripts/create-env.sh your-project-url your-anon-key c.poudel1993@gmail.com P00n@m2054
+```
+
+Important: the repository should never contain actual passwords. Keep `.env.local` listed in `.gitignore`.
+
 ## Features
 
 - ✅ Email/Password authentication
