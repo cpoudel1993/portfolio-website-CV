@@ -29,10 +29,11 @@ Get these values from:
 1. Go to your Supabase project dashboard
 2. Navigate to **Authentication** → **Users**
 3. Click **Create new user** or invite user
-4. Use these credentials:
-   - **Email**: `c.poudel1993@gmail.com`
-   - **Password**: `P00n@m2054`
-   - Check **Auto confirm user**
+4. Create a test user for your development work or use the sign-up flow in your app. Do NOT commit real credentials into the repository.
+
+   - To create a user in the dashboard: click **Create new user** and provide an email and password, or invite a user.
+   - Alternatively, run the app locally and use the sign-up page to create an account.
+   - Ensure the account is confirmed (auto-confirm or confirm via email) if you want to sign in immediately.
 
 ## Step 4: Test the Login
 
@@ -43,9 +44,24 @@ Get these values from:
 
 2. Navigate to `http://localhost:3000/login`
 
-3. Click "Load Demo Credentials" button to auto-fill the test credentials
+3. Sign in with the account you created in the Supabase dashboard or via the app's sign-up page.
 
 4. Click "Sign In" to authenticate
+
+Optional: if you want to use demo credentials locally, set them in your local `.env.local` (do NOT commit):
+
+```env
+DEMO_USER_EMAIL=c.poudel1993@gmail.com
+DEMO_USER_PASSWORD=YOUR_DEMO_PASSWORD
+```
+
+You can also use the helper script to create a `.env.local` file locally (replace values):
+
+```bash
+./scripts/create-env.sh your-project-url your-anon-key c.poudel1993@gmail.com P00n@m2054
+```
+
+Important: the repository should never contain actual passwords. Keep `.env.local` listed in `.gitignore`.
 
 ## Features
 
