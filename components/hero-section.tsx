@@ -50,9 +50,13 @@ export function HeroSection() {
               <ArrowDown className="h-4 w-4" />
             </Button>
             <Button variant="outline" size="lg" className="gap-2" asChild>
-              <a href="https://v0.app/ref/TP1KBM" Join>
+              <a
+                href="https://drive.google.com/drive/folders/11gfMOdsckoZaRyZvVU75R3ZdVn9-BOWG?usp=sharing"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <Download className="h-4 w-4" />
-                Join here
+                Download CV
               </a>
             </Button>
           </div>
