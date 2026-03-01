@@ -62,6 +62,9 @@ export default function AdminPage() {
         <div className="p-6 bg-card rounded-lg shadow">
           <h2 className="text-lg font-semibold mb-2">Profile</h2>
           <p>Email: {user?.email}</p>
+          {user?.user_metadata?.username && (
+            <p>Username: {user.user_metadata.username}</p>
+          )}
           <p>User ID: {user?.id}</p>
         </div>
         <div className="p-6 bg-card rounded-lg shadow">
