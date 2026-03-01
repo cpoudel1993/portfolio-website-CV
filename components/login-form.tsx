@@ -1,12 +1,12 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
 import Link from "next/link"
-import { Mail, Lock, ArrowRight, Eye, EyeOff } from "lucide-react"
+import { Mail, Lock, ArrowRight, Eye, EyeOff, Info } from "lucide-react"
 import { supabase } from "@/lib/supabase"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -28,6 +28,12 @@ const loginSchema = z.object({
 
 type LoginFormValues = z.infer<typeof loginSchema>
 
+// Demo credentials for testing
+const DEMO_CREDENTIALS = {
+  email: "demo@chiranjiviportfolio.com",
+  password: "demo1234",
+}
+
 export function LoginForm() {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
@@ -36,11 +42,17 @@ export function LoginForm() {
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      email: "",
-      password: "",
+      email: DEMO_CREDENTIALS.email,
+      password: DEMO_CREDENTIALS.password,
       rememberMe: false,
     },
   })
+
+  // Load demo credentials on component mount
+  useEffect(() => {
+    form.setValue("email", DEMO_CREDENTIALS.email)
+    form.setValue("password", DEMO_CREDENTIALS.password)
+  }, [form])
 
   async function onSubmit(data: LoginFormValues) {
     setIsLoading(true)
@@ -70,6 +82,19 @@ export function LoginForm() {
 
   return (
     <div className="w-full space-y-6">
+      {/* Demo credentials banner */}
+      <div className="rounded-lg border border-blue-200 bg-blue-50 dark:border-blue-900 dark:bg-blue-950/30 p-4 flex gap-3">
+        <Info className="h-5 w-5 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
+        <div className="flex-1 space-y-1">
+          <p className="text-sm font-medium text-blue-900 dark:text-blue-100">
+            Demo credentials loaded
+          </p>
+          <p className="text-xs text-blue-700 dark:text-blue-300">
+            Click &quot;Sign In&quot; to test authentication with Supabase using pre-loaded demo credentials.
+          </p>
+        </div>
+      </div>
+
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           {/* Email Field */}
