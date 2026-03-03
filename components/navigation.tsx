@@ -19,6 +19,7 @@ const navLinks = [
   { label: "Skills", href: "#skills" },
   { label: "Certifications", href: "#certifications" },
   { label: "Contact", href: "#contact" },
+  { label: "Kharcha", href: "https://kharcha.poonamkarki.com.np", external: true },
 ]
 
 const languages = [
@@ -93,20 +94,32 @@ export function Navigation() {
         <ul className="hidden items-center gap-1 lg:flex">
           {navLinks.map((link) => (
             <li key={link.href}>
-              <a
-                href={link.href}
-                onClick={(e) => {
-                  e.preventDefault()
-                  handleNavClick(link.href)
-                }}
-                className={`rounded-md px-3 py-2 text-sm font-medium transition-colors ${
-                  activeSection === link.href.replace("#", "")
-                    ? "text-primary bg-primary/10"
-                    : "text-muted-foreground hover:text-foreground hover:bg-muted"
-                }`}
-              >
-                {link.label}
-              </a>
+              {link.external ? (
+                <a
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1 rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground hover:bg-muted"
+                >
+                  {link.label}
+                  <ExternalLink className="h-3 w-3" />
+                </a>
+              ) : (
+                <a
+                  href={link.href}
+                  onClick={(e) => {
+                    e.preventDefault()
+                    handleNavClick(link.href)
+                  }}
+                  className={`rounded-md px-3 py-2 text-sm font-medium transition-colors ${
+                    activeSection === link.href.replace("#", "")
+                      ? "text-primary bg-primary/10"
+                      : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                  }`}
+                >
+                  {link.label}
+                </a>
+              )}
             </li>
           ))}
         </ul>
@@ -204,23 +217,36 @@ export function Navigation() {
         }`}
       >
         <div className="space-y-1 bg-background/95 backdrop-blur-xl px-4 pb-4">
-          {navLinks.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              onClick={(e) => {
-                e.preventDefault()
-                handleNavClick(link.href)
-              }}
-              className={`block rounded-md px-3 py-2.5 text-sm font-medium transition-colors ${
-                activeSection === link.href.replace("#", "")
-                  ? "text-primary bg-primary/10"
-                  : "text-muted-foreground hover:text-foreground hover:bg-muted"
-              }`}
-            >
-              {link.label}
-            </a>
-          ))}
+          {navLinks.map((link) =>
+            link.external ? (
+              <a
+                key={link.href}
+                href={link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1.5 rounded-md px-3 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground hover:bg-muted"
+              >
+                {link.label}
+                <ExternalLink className="h-3 w-3" />
+              </a>
+            ) : (
+              <a
+                key={link.href}
+                href={link.href}
+                onClick={(e) => {
+                  e.preventDefault()
+                  handleNavClick(link.href)
+                }}
+                className={`block rounded-md px-3 py-2.5 text-sm font-medium transition-colors ${
+                  activeSection === link.href.replace("#", "")
+                    ? "text-primary bg-primary/10"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                }`}
+              >
+                {link.label}
+              </a>
+            )
+          )}
 
           <div className="my-3 border-t border-border" />
 
