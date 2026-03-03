@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from 'next'
 import { Inter, JetBrains_Mono } from 'next/font/google'
-import { Analytics } from '@vercel/analytics/next'
 import { ThemeProvider } from '@/components/theme-provider'
 import './globals.css'
 
@@ -15,37 +14,57 @@ const jetbrainsMono = JetBrains_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'Chiranjivi Poudel | Professional Portfolio | New Zealand',
+  title: {
+    default: 'Chiranjivi Poudel | Professional Portfolio | Nepal to New Zealand',
+    template: '%s | Chiranjivi Poudel',
+  },
   description:
-    'Chiranjivi Poudel - Reliable professional based in Hamilton, New Zealand. Process Worker at Silver Fern Farms with a background in Civil Engineering, Surveying, and Site Supervision. Eligible for full-time work in New Zealand.',
+    'Chiranjivi Poudel - Originally from Nepal, now based in Hamilton, New Zealand. Process Worker at Silver Fern Farms with a strong background in Civil Engineering, Surveying, Site Supervision, and Full-Stack Web Development. Eligible for full-time work in New Zealand.',
   keywords: [
     'Chiranjivi Poudel',
+    'Chiranjivi Poudel Nepal',
     'Chiranjivi Poudel New Zealand',
+    'Nepali professional New Zealand',
     'Process Worker New Zealand',
     'Civil Engineer Nepal',
     'Surveyor Hamilton',
     'Silver Fern Farms',
+    'Full Stack Web Developer',
+    'AutoCAD',
+    'Revit',
+    'SketchUp',
     'chiranjivipoudel.com.np',
+    'cpoudel1993',
+    'Hamilton New Zealand',
+    'Waikato',
   ],
-  authors: [{ name: 'Chiranjivi Poudel' }],
+  authors: [{ name: 'Chiranjivi Poudel', url: 'https://www.chiranjivipoudel.com.np' }],
   creator: 'Chiranjivi Poudel',
+  publisher: 'Chiranjivi Poudel',
   metadataBase: new URL('https://www.chiranjivipoudel.com.np'),
   openGraph: {
     type: 'website',
     locale: 'en_NZ',
     url: 'https://www.chiranjivipoudel.com.np',
     siteName: 'Chiranjivi Poudel Portfolio',
-    title: 'Chiranjivi Poudel | Professional Portfolio | New Zealand',
+    title: 'Chiranjivi Poudel | From Nepal to New Zealand | Professional Portfolio',
     description:
-      'Chiranjivi Poudel - Professional based in Hamilton, New Zealand. Process Worker at Silver Fern Farms with Civil Engineering and Surveying background.',
+      'Chiranjivi Poudel - Originally from Nepal, now a professional based in Hamilton, New Zealand. Civil Engineering background with expertise in Surveying, AutoCAD, Revit, SketchUp, and Web Development.',
     images: [
       {
-        url: '/images/chiranjivi-formal.png',
+        url: '/images/my-profile.jpg',
         width: 800,
-        height: 600,
+        height: 800,
         alt: 'Chiranjivi Poudel - Professional Portrait',
       },
     ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Chiranjivi Poudel | Professional Portfolio',
+    description:
+      'Chiranjivi Poudel - From Nepal to New Zealand. Civil Engineer, Surveyor, and Web Developer based in Hamilton, NZ.',
+    images: ['/images/my-profile.jpg'],
   },
   alternates: {
     canonical: 'https://www.chiranjivipoudel.com.np',
@@ -56,24 +75,14 @@ export const metadata: Metadata = {
     googleBot: {
       index: true,
       follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
     },
   },
   icons: {
-    icon: [
-      {
-        url: '/icon-light-32x32.png',
-        media: '(prefers-color-scheme: light)',
-      },
-      {
-        url: '/icon-dark-32x32.png',
-        media: '(prefers-color-scheme: dark)',
-      },
-      {
-        url: '/icon.svg',
-        type: 'image/svg+xml',
-      },
-    ],
-    apple: '/apple-icon.png',
+    icon: '/favicon.jpg',
+    apple: '/apple-icon.jpg',
   },
 }
 
@@ -91,7 +100,12 @@ const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'Person',
   name: 'Chiranjivi Poudel',
+  givenName: 'Chiranjivi',
+  familyName: 'Poudel',
   jobTitle: 'Process Worker',
+  description:
+    'Chiranjivi Poudel is a Nepali-born professional currently living and working in New Zealand. With a background in Civil Engineering and expertise in Surveying, AutoCAD, Revit, SketchUp, and Web Development.',
+  image: 'https://www.chiranjivipoudel.com.np/images/my-profile.jpg',
   worksFor: {
     '@type': 'Organization',
     name: 'Silver Fern Farms Ltd.',
@@ -102,6 +116,14 @@ const jsonLd = {
     addressLocality: 'Hamilton',
     addressRegion: 'Waikato',
     addressCountry: 'NZ',
+  },
+  nationality: {
+    '@type': 'Country',
+    name: 'Nepal',
+  },
+  birthPlace: {
+    '@type': 'Place',
+    name: 'Nepal',
   },
   email: 'c.poudel1993@gmail.com',
   telephone: '+64220153300',
@@ -122,6 +144,8 @@ const jsonLd = {
     'AutoCAD',
     'SketchUp',
     'Revit',
+    'Full-Stack Web Development',
+    'Digital Marketing',
   ],
 }
 
@@ -142,7 +166,6 @@ export default function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           {children}
         </ThemeProvider>
-        <Analytics />
       </body>
     </html>
   )

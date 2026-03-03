@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { useTheme } from "next-themes"
 import { Menu, X, Moon, Sun, Download, LogIn, Globe, ExternalLink } from "lucide-react"
+import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import {
@@ -19,6 +20,7 @@ const navLinks = [
   { label: "Skills", href: "#skills" },
   { label: "Certifications", href: "#certifications" },
   { label: "Contact", href: "#contact" },
+  { label: "Kharcha", href: "https://kharcha.poonamkarki.com.np/auth/login", external: true },
 ]
 
 const languages = [
@@ -84,29 +86,50 @@ export function Navigation() {
             e.preventDefault()
             handleNavClick("#home")
           }}
-          className="text-lg font-bold tracking-tight text-foreground"
+          className="flex items-center gap-2"
         >
-          CP<span className="text-primary">.</span>
+          <Image
+            src="/images/logo.jpg"
+            alt="Chiranjivi Poudel Logo"
+            width={32}
+            height={32}
+            className="rounded-md"
+          />
+          <span className="text-lg font-bold tracking-tight text-foreground">
+            CP<span className="text-primary">.</span>
+          </span>
         </a>
 
         {/* Desktop Nav Links */}
         <ul className="hidden items-center gap-1 lg:flex">
           {navLinks.map((link) => (
             <li key={link.href}>
-              <a
-                href={link.href}
-                onClick={(e) => {
-                  e.preventDefault()
-                  handleNavClick(link.href)
-                }}
-                className={`rounded-md px-3 py-2 text-sm font-medium transition-colors ${
-                  activeSection === link.href.replace("#", "")
-                    ? "text-primary bg-primary/10"
-                    : "text-muted-foreground hover:text-foreground hover:bg-muted"
-                }`}
-              >
-                {link.label}
-              </a>
+              {link.external ? (
+                <a
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1 rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground hover:bg-muted"
+                >
+                  {link.label}
+                  <ExternalLink className="h-3 w-3" />
+                </a>
+              ) : (
+                <a
+                  href={link.href}
+                  onClick={(e) => {
+                    e.preventDefault()
+                    handleNavClick(link.href)
+                  }}
+                  className={`rounded-md px-3 py-2 text-sm font-medium transition-colors ${
+                    activeSection === link.href.replace("#", "")
+                      ? "text-primary bg-primary/10"
+                      : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                  }`}
+                >
+                  {link.label}
+                </a>
+              )}
             </li>
           ))}
         </ul>
@@ -204,23 +227,36 @@ export function Navigation() {
         }`}
       >
         <div className="space-y-1 bg-background/95 backdrop-blur-xl px-4 pb-4">
-          {navLinks.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              onClick={(e) => {
-                e.preventDefault()
-                handleNavClick(link.href)
-              }}
-              className={`block rounded-md px-3 py-2.5 text-sm font-medium transition-colors ${
-                activeSection === link.href.replace("#", "")
-                  ? "text-primary bg-primary/10"
-                  : "text-muted-foreground hover:text-foreground hover:bg-muted"
-              }`}
-            >
-              {link.label}
-            </a>
-          ))}
+          {navLinks.map((link) =>
+            link.external ? (
+              <a
+                key={link.href}
+                href={link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1.5 rounded-md px-3 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground hover:bg-muted"
+              >
+                {link.label}
+                <ExternalLink className="h-3 w-3" />
+              </a>
+            ) : (
+              <a
+                key={link.href}
+                href={link.href}
+                onClick={(e) => {
+                  e.preventDefault()
+                  handleNavClick(link.href)
+                }}
+                className={`block rounded-md px-3 py-2.5 text-sm font-medium transition-colors ${
+                  activeSection === link.href.replace("#", "")
+                    ? "text-primary bg-primary/10"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                }`}
+              >
+                {link.label}
+              </a>
+            )
+          )}
 
           <div className="my-3 border-t border-border" />
 
