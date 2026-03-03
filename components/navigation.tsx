@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { useTheme } from "next-themes"
 import { Menu, X, Moon, Sun, Download, LogIn, Globe, ExternalLink } from "lucide-react"
+import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import {
@@ -85,9 +86,18 @@ export function Navigation() {
             e.preventDefault()
             handleNavClick("#home")
           }}
-          className="text-lg font-bold tracking-tight text-foreground"
+          className="flex items-center gap-2"
         >
-          CP<span className="text-primary">.</span>
+          <Image
+            src="/images/logo.jpg"
+            alt="Chiranjivi Poudel Logo"
+            width={32}
+            height={32}
+            className="rounded-md"
+          />
+          <span className="text-lg font-bold tracking-tight text-foreground">
+            CP<span className="text-primary">.</span>
+          </span>
         </a>
 
         {/* Desktop Nav Links */}
