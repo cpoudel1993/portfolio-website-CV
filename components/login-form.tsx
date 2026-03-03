@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
 import Link from "next/link"
-import { Mail, Lock, ArrowRight, Eye, EyeOff, AlertCircle } from "lucide-react"
+import { Mail, Lock, ArrowRight, Eye, EyeOff } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import {
@@ -31,7 +31,6 @@ export function LoginForm() {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
-  const [demoMode, setDemoMode] = useState(false)
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -83,24 +82,8 @@ export function LoginForm() {
     }
   }
 
-  const handleDemoLogin = () => {
-    form.setValue("email", "c.poudel1993@gmail.com")
-    form.setValue("password", "P00n@m2054")
-    setDemoMode(true)
-  }
-
   return (
     <div className="w-full space-y-6">
-      {/* Demo Mode Alert */}
-      {demoMode && (
-        <div className="flex gap-3 rounded-lg border border-amber-200 bg-amber-50 p-3 dark:border-amber-900 dark:bg-amber-950">
-          <AlertCircle className="h-4 w-4 flex-shrink-0 text-amber-600 dark:text-amber-400 mt-0.5" />
-          <div className="text-sm text-amber-800 dark:text-amber-200">
-            Demo credentials loaded. Click "Sign In" to test authentication with Supabase.
-          </div>
-        </div>
-      )}
-
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           {/* Email Field */}
@@ -203,30 +186,6 @@ export function LoginForm() {
           </Button>
         </form>
       </Form>
-
-      {/* Divider */}
-      <div className="relative">
-        <div className="absolute inset-0 flex items-center">
-          <div className="w-full border-t border-border" />
-        </div>
-        <div className="relative flex justify-center text-xs uppercase">
-          <span className="bg-background px-2 text-muted-foreground">Or continue with</span>
-        </div>
-      </div>
-
-      {/* Demo & Social Buttons */}
-      <div className="grid grid-cols-2 gap-2">
-        <Button 
-          variant="outline" 
-          size="sm"
-          onClick={handleDemoLogin}
-          disabled={isLoading}
-          type="button"
-          className="h-9 text-xs"
-        >
-          Load Demo Credentials
-        </Button>
-      </div>
 
       {/* Footer Links */}
       <div className="space-y-2 pt-2">
