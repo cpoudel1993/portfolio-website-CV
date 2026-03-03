@@ -19,7 +19,7 @@ const navLinks = [
   { label: "Skills", href: "#skills" },
   { label: "Certifications", href: "#certifications" },
   { label: "Contact", href: "#contact" },
-  { label: "Kharcha", href: "https://kharcha.poonamkarki.com.np", external: true },
+  { label: "Kharcha", href: "https://kharcha.poonamkarki.com.np/auth/login", external: true },
 ]
 
 const languages = [
