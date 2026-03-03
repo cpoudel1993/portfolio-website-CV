@@ -66,9 +66,6 @@ export function Footer() {
           <p className="text-xs text-muted-foreground">
             {`\u00A9 ${currentYear} Chiranjivi Poudel. All rights reserved.`}
           </p>
-          <p className="mt-1 text-xs text-muted-foreground">
-            Built with Next.js &middot; Deployed on Vercel
-          </p>
         </div>
       </div>
     </footer>

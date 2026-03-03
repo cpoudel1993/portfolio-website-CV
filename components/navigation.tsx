@@ -86,18 +86,9 @@ export function Navigation() {
             e.preventDefault()
             handleNavClick("#home")
           }}
-          className="flex items-center gap-2"
+          className="text-lg font-bold tracking-tight text-foreground"
         >
-          <Image
-            src="/images/logo.jpg"
-            alt="Chiranjivi Poudel Logo"
-            width={32}
-            height={32}
-            className="rounded-md"
-          />
-          <span className="text-lg font-bold tracking-tight text-foreground">
-            CP<span className="text-primary">.</span>
-          </span>
+          CP<span className="text-primary">.</span>
         </a>
 
         {/* Desktop Nav Links */}
