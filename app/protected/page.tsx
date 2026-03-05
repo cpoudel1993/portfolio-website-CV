@@ -4,12 +4,18 @@ import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { ArrowLeft, LogOut, Shield } from "lucide-react"
 
+const SUPERADMIN_EMAIL = "c.poudel1993@gmail.com"
+
 export default async function ProtectedPage() {
   const supabase = await createClient()
 
   const { data, error } = await supabase.auth.getUser()
   if (error || !data?.user) {
     redirect("/auth/login")
+  }
+
+  if (data.user.email !== SUPERADMIN_EMAIL) {
+    redirect("/auth/unauthorized")
   }
 
   return (

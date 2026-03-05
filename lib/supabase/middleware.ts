@@ -33,17 +33,24 @@ export async function updateSession(request: NextRequest) {
   // supabase.auth.getUser(). A simple mistake could make it very hard to debug
   // issues with users being randomly logged out.
 
+  const SUPERADMIN_EMAIL = 'c.poudel1993@gmail.com'
+
   const {
     data: { user },
   } = await supabase.auth.getUser()
 
-  if (
-    request.nextUrl.pathname.startsWith('/protected') &&
-    !user
-  ) {
-    const url = request.nextUrl.clone()
-    url.pathname = '/auth/login'
-    return NextResponse.redirect(url)
+  if (request.nextUrl.pathname.startsWith('/protected')) {
+    if (!user) {
+      const url = request.nextUrl.clone()
+      url.pathname = '/auth/login'
+      return NextResponse.redirect(url)
+    }
+
+    if (user.email !== SUPERADMIN_EMAIL) {
+      const url = request.nextUrl.clone()
+      url.pathname = '/auth/unauthorized'
+      return NextResponse.redirect(url)
+    }
   }
 
   return supabaseResponse
