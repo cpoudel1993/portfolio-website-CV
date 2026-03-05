@@ -2,6 +2,7 @@ import { ExternalLink, Clock, Award, FileText } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 const certifications = [
+  // --- MSD / MySkill Certificates ---
   {
     title: "Healthcare Taster Training Courses",
     platform: "MSD / MySkill",
@@ -11,6 +12,29 @@ const certifications = [
     skills: ["Support Worker", "Household Management", "Personal Cares"],
     certId: "",
     pdfUrl: "/certificates/healthcare-taster-training-courses-msd-myskill.pdf",
+    verifyUrl: "https://myskilltraining.co.nz/mod/certificate/view.php?id=20850&action=html",
+  },
+  {
+    title: "Supporting a Person with Personal Cares",
+    platform: "MSD / MySkill",
+    type: "Course",
+    date: "Mar 2, 2026",
+    duration: "1 hour",
+    skills: ["Personal Cares", "Support Worker"],
+    certId: "",
+    pdfUrl: "/certificates/supporting-a-person-with-personal-cares-myskill.pdf",
+    verifyUrl: "https://myskilltraining.co.nz/mod/certificate/view.php?id=20525&action=html",
+  },
+  {
+    title: "Providing Household Management",
+    platform: "MSD / MySkill",
+    type: "Course",
+    date: "Mar 2, 2026",
+    duration: "2 hours",
+    skills: ["Household Management", "Support Worker"],
+    certId: "",
+    pdfUrl: "/certificates/providing-household-management-myskill.pdf",
+    verifyUrl: "https://myskilltraining.co.nz/mod/certificate/view.php?id=19028&action=html",
   },
   {
     title: "Your Role as a Support Worker",
@@ -21,7 +45,54 @@ const certifications = [
     skills: ["Support Worker", "Healthcare"],
     certId: "",
     pdfUrl: "/certificates/your-role-as-a-support-worker-msd-myskill.pdf",
+    verifyUrl: "https://myskilltraining.co.nz/mod/certificate/view.php?id=17964&action=html",
   },
+  // --- International Culinary Studio (ICS) / The Info Chef Certificates ---
+  {
+    title: "Orientation: Online Culinary Learning",
+    platform: "International Culinary Studio",
+    type: "Certificate",
+    date: "Mar 2, 2026",
+    duration: "",
+    skills: ["Culinary Arts", "Hospitality"],
+    certId: "",
+    pdfUrl: "/certificates/orientation-online-culinary-learning-ics.pdf",
+    verifyUrl: "https://theinfochef.com/certificates/bryan-template/?course_id=1278&cert-nonce=4dafc7520d",
+  },
+  {
+    title: "The Confident Barista: Theory",
+    platform: "International Culinary Studio",
+    type: "Certificate",
+    date: "Mar 2, 2026",
+    duration: "",
+    skills: ["Barista", "Coffee", "Hospitality"],
+    certId: "",
+    pdfUrl: "/certificates/the-confident-barista-theory-ics.pdf",
+    verifyUrl: "https://theinfochef.com/certificates/bryan-template/?course_id=2238&cert-nonce=bb4548017a",
+  },
+  {
+    title: "Taster in Hospitality (Dyslexia Support)",
+    platform: "International Culinary Studio",
+    type: "Certificate",
+    date: "Mar 2, 2026",
+    duration: "",
+    skills: ["Hospitality", "Customer Service"],
+    certId: "",
+    pdfUrl: "/certificates/taster-in-hospitality-ics.pdf",
+    verifyUrl: "https://theinfochef.com/certificates/bryan-template/?quiz=2338&cert-nonce=e8807ae7a1",
+  },
+  {
+    title: "The Essentials of Food Safety in Catering",
+    platform: "International Culinary Studio",
+    type: "Certificate",
+    date: "Mar 2, 2026",
+    duration: "",
+    skills: ["Food Safety", "Catering", "Hospitality"],
+    certId: "",
+    pdfUrl: "/certificates/essentials-of-food-safety-in-catering-ics.pdf",
+    verifyUrl: "https://theinfochef.com/certificates/bryan-template/?quiz=1757&cert-nonce=2f1411c602",
+  },
+  // --- LinkedIn Learning Certificates ---
   {
     title: "Become a Full-Stack Web Developer",
     platform: "LinkedIn Learning",
@@ -31,6 +102,7 @@ const certifications = [
     skills: ["Web Development", "Full-Stack Development"],
     certId: "7ada2e72e72ca4f234bd054ff84cfd3f8f063df6a4686bc9cc09214a94d38dea",
     pdfUrl: "",
+    verifyUrl: "",
   },
   {
     title: "Explore a Career in Front-End Web Development",
@@ -41,6 +113,7 @@ const certifications = [
     skills: ["Front-End Development"],
     certId: "5725126b852434f99a81a85b7511f66054f1d455d57869cdf2d66c567eda34b0",
     pdfUrl: "",
+    verifyUrl: "",
   },
   {
     title: "Master Digital Marketing",
@@ -51,6 +124,7 @@ const certifications = [
     skills: ["Digital Marketing", "SEO", "SEO Copywriting"],
     certId: "fc212952956edd287854f7462d75759db6229c02cb3d5fa0bea2a8c65758b4ea",
     pdfUrl: "",
+    verifyUrl: "",
   },
   {
     title: "AutoCAD 2024 Essential Training",
@@ -61,6 +135,7 @@ const certifications = [
     skills: ["AutoCAD"],
     certId: "2302b44eb4397bb2e28238a62bad52dca4004d10296428b51f66bbc3754b7209",
     pdfUrl: "",
+    verifyUrl: "",
   },
   {
     title: "Revit 2022: Essential Training for Architecture",
@@ -71,6 +146,7 @@ const certifications = [
     skills: ["Revit"],
     certId: "d00b199dd9ef4f1f6b12e5fa05d6c94aa22d4651883d074f1107df643067058b",
     pdfUrl: "",
+    verifyUrl: "",
   },
   {
     title: "SketchUp Pro 2024 Essential Training",
@@ -81,6 +157,7 @@ const certifications = [
     skills: ["SketchUp"],
     certId: "a52243711a1d700e8ef66b643ec81b09820cb279b38d6f347691bc2694bb4316",
     pdfUrl: "",
+    verifyUrl: "",
   },
 ]
 
@@ -141,11 +218,11 @@ export function CertificationsSection() {
                 ))}
               </div>
 
-              <div className="mt-auto flex gap-2">
-                {cert.certId && (
+              <div className="mt-auto flex flex-wrap gap-2">
+                {(cert.certId || cert.verifyUrl) && (
                   <Button variant="ghost" size="sm" className="h-auto gap-1.5 px-0 text-xs text-muted-foreground hover:text-primary" asChild>
                     <a
-                      href={`https://www.linkedin.com/learning/certificates/${cert.certId}`}
+                      href={cert.verifyUrl || `https://www.linkedin.com/learning/certificates/${cert.certId}`}
                       target="_blank"
                       rel="noopener noreferrer"
                     >
