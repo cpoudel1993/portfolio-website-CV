@@ -181,7 +181,7 @@ export function Navigation() {
 
           {/* Login */}
           <Button size="sm" className="gap-1.5" asChild>
-            <Link href="/login">
+            <Link href="/auth/login">
               <LogIn className="h-4 w-4" />
               Login
             </Link>
@@ -288,7 +288,7 @@ export function Navigation() {
             </Button>
 
             <Button size="sm" className="gap-1.5" asChild>
-              <Link href="/login">
+              <Link href="/auth/login">
                 <LogIn className="h-4 w-4" />
                 Login
               </Link>

@@ -101,9 +101,9 @@ export function CertificationsSection() {
 
         {/* Certification Cards */}
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {certifications.map((cert) => (
+          {certifications.map((cert, index) => (
             <div
-              key={cert.certId}
+              key={cert.certId || `cert-${index}`}
               className="group flex flex-col rounded-xl border border-border bg-card p-5 transition-all hover:border-primary/30 hover:shadow-md"
             >
               <div className="mb-3 flex items-start justify-between gap-2">
