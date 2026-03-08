@@ -45,14 +45,14 @@ export function AdminNavbar({ user }: AdminNavbarProps) {
     return () => clearInterval(interval)
   }, [])
 
-  const localDateStr = currentDate.toLocaleDateString("en-NZ", {
+  const localDateStr = mounted ? currentDate.toLocaleDateString("en-NZ", {
     weekday: "long",
     year: "numeric",
     month: "long",
     day: "numeric",
-  })
+  }) : ""
 
-  const nepaliDateStr = formatNepaliDateFull(currentDate)
+  const nepaliDateStr = mounted ? formatNepaliDateFull(currentDate) : ""
 
   return (
     <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-border bg-card/80 backdrop-blur-xl px-4 md:px-6 lg:px-8">
@@ -60,17 +60,19 @@ export function AdminNavbar({ user }: AdminNavbarProps) {
       <div className="flex items-center gap-6 pl-12 lg:pl-0">
         <h1 className="text-lg font-semibold text-foreground hidden sm:block">Dashboard</h1>
         
-        <div className="hidden md:flex items-center gap-4 text-xs text-muted-foreground">
-          <div className="flex items-center gap-1.5">
-            <Calendar className="h-3.5 w-3.5" />
-            <span>{localDateStr}</span>
+        {mounted && (
+          <div className="hidden md:flex items-center gap-4 text-xs text-muted-foreground">
+            <div className="flex items-center gap-1.5">
+              <Calendar className="h-3.5 w-3.5" />
+              <span>{localDateStr}</span>
+            </div>
+            <div className="h-4 w-px bg-border" />
+            <div className="flex items-center gap-1.5">
+              <span className="text-primary font-medium">NP:</span>
+              <span>{nepaliDateStr}</span>
+            </div>
           </div>
-          <div className="h-4 w-px bg-border" />
-          <div className="flex items-center gap-1.5">
-            <span className="text-primary font-medium">NP:</span>
-            <span>{nepaliDateStr}</span>
-          </div>
-        </div>
+        )}
       </div>
 
       {/* Right side - Actions */}
