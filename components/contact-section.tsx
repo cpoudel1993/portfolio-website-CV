@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Mail, MapPin, Phone, Linkedin, Youtube, Send } from "lucide-react"
+import { Mail, MapPin, Phone, Linkedin, Youtube, Github, Send } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
@@ -129,6 +129,23 @@ export function ContactSection() {
                     className="text-sm font-medium text-foreground hover:text-primary transition-colors"
                   >
                     Chiranjivi Poudel
+                  </a>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-4">
+                <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                  <Github className="h-4 w-4" />
+                </div>
+                <div>
+                  <p className="text-xs text-muted-foreground">GitHub</p>
+                  <a
+                    href="https://github.com/cpoudel1993"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm font-medium text-foreground hover:text-primary transition-colors"
+                  >
+                    cpoudel1993
                   </a>
                 </div>
               </div>
