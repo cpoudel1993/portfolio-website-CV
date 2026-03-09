@@ -130,6 +130,7 @@ const jsonLd = {
   url: 'https://www.chiranjivipoudel.com.np',
   sameAs: [
     'https://www.linkedin.com/in/cpoudel1993/',
+    'https://github.com/cpoudel1993',
     'https://www.youtube.com/channel/UC7CJV2aO5MSQIPz8LHnobpg',
   ],
   alumniOf: {
