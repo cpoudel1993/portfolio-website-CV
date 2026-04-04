@@ -29,17 +29,14 @@ export async function updateSession(request: NextRequest) {
     },
   )
 
-  // Do not run code between createServerClient and
-  // supabase.auth.getUser(). A simple mistake could make it very hard to debug
-  // issues with users being randomly logged out.
-
-  const SUPERADMIN_EMAIL = 'c.poudel1993@gmail.com'
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-
+  // Only check auth for protected routes to avoid unnecessary API calls
   if (request.nextUrl.pathname.startsWith('/protected')) {
+    const SUPERADMIN_EMAIL = 'c.poudel1993@gmail.com'
+
+    const {
+      data: { user },
+    } = await supabase.auth.getUser()
+
     if (!user) {
       const url = request.nextUrl.clone()
       url.pathname = '/auth/login'
