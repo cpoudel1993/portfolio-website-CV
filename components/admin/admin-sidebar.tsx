@@ -31,6 +31,7 @@ const sidebarLinks = [
     title: "Main",
     links: [
       { label: "Dashboard", href: "/protected", icon: LayoutDashboard },
+      { label: "Live Dashboard", href: "/protected/dashboard", icon: LayoutDashboard },
       { label: "Analytics", href: "/protected/analytics", icon: BarChart3 },
     ],
   },
