@@ -1,7 +1,14 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
+const SUPERADMIN_EMAIL = 'c.poudel1993@gmail.com'
+
 export async function updateSession(request: NextRequest) {
+  // Skip middleware for non-protected routes
+  if (!request.nextUrl.pathname.startsWith('/protected')) {
+    return NextResponse.next()
+  }
+
   let supabaseResponse = NextResponse.next({
     request,
   })
@@ -29,25 +36,20 @@ export async function updateSession(request: NextRequest) {
     },
   )
 
-  // Only check auth for protected routes to avoid unnecessary API calls
-  if (request.nextUrl.pathname.startsWith('/protected')) {
-    const SUPERADMIN_EMAIL = 'c.poudel1993@gmail.com'
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
 
-    const {
-      data: { user },
-    } = await supabase.auth.getUser()
+  if (!user) {
+    const url = request.nextUrl.clone()
+    url.pathname = '/auth/login'
+    return NextResponse.redirect(url)
+  }
 
-    if (!user) {
-      const url = request.nextUrl.clone()
-      url.pathname = '/auth/login'
-      return NextResponse.redirect(url)
-    }
-
-    if (user.email !== SUPERADMIN_EMAIL) {
-      const url = request.nextUrl.clone()
-      url.pathname = '/auth/unauthorized'
-      return NextResponse.redirect(url)
-    }
+  if (user.email !== SUPERADMIN_EMAIL) {
+    const url = request.nextUrl.clone()
+    url.pathname = '/auth/unauthorized'
+    return NextResponse.redirect(url)
   }
 
   return supabaseResponse
