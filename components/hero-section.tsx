@@ -33,12 +33,12 @@ export function HeroSection() {
             Hamilton, Waikato, New Zealand
           </div>
 
-          <h1 className="mb-4 text-4xl font-bold tracking-tight text-foreground text-balance sm:text-5xl lg:text-6xl uppercase shadow-md">
+          <h1 className="mb-4 text-4xl font-bold tracking-tight text-foreground text-balance sm:text-5xl lg:text-6xl uppercase shadow-md" style={{ fontFamily: '"Playfair Display", sans-serif' }}>
             Chiranjivi{" "}
             <span className="text-primary">Poudel</span>
           </h1>
 
-          <p className="mb-3 flex items-center justify-center gap-2 text-lg font-medium text-foreground/80 lg:justify-start">
+          <p className="mb-3 flex items-center justify-center gap-2 text-right text-lg font-medium text-foreground/80 lg:justify-start">
             <Briefcase className="h-4 w-4 text-primary" />
             Process Worker &middot; Civil Engineer &middot; Surveyor
           </p>
