@@ -82,7 +82,7 @@ export function AboutSection() {
               key={item.title}
               className="group rounded-xl border border-border bg-card p-6 transition-all hover:border-primary/30 hover:shadow-md"
             >
-              <div className="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
+              <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
                 <item.icon className="h-5 w-5" />
               </div>
               <h3 className="mb-2 text-sm font-semibold text-foreground">{item.title}</h3>

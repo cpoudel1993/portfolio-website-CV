@@ -10,29 +10,40 @@ export function HeroSection() {
       id="home"
       className="relative flex min-h-screen items-center justify-center overflow-hidden px-4 pt-20"
     >
-      {/* Subtle background pattern */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,var(--color-primary)/0.04,transparent_50%)]" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,var(--color-accent)/0.03,transparent_50%)]" />
+      {/* Anime-style mountain background */}
+      <div className="absolute inset-0">
+        <Image
+          src="/images/anime-mountain-bg-1.jpg"
+          alt="Anime-style mountain landscape"
+          fill
+          className="object-cover object-center"
+          priority
+          quality={90}
+        />
+        {/* Gradient overlay for text readability */}
+        <div className="absolute inset-0 bg-gradient-to-b from-background/70 via-background/50 to-background/90" />
+        <div className="absolute inset-0 bg-gradient-to-r from-background/60 via-transparent to-background/60" />
+      </div>
 
       <div className="relative mx-auto flex max-w-6xl flex-col items-center gap-10 lg:flex-row lg:gap-16">
         {/* Text Content */}
         <div className="flex-1 text-center lg:text-left">
-          <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-border bg-secondary px-4 py-1.5 text-sm text-muted-foreground">
+          <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-border bg-secondary px-4 py-1.5 text-sm text-muted-foreground italic">
             <MapPin className="h-3.5 w-3.5" />
             Hamilton, Waikato, New Zealand
           </div>
 
-          <h1 className="mb-4 text-4xl font-bold tracking-tight text-foreground text-balance sm:text-5xl lg:text-6xl">
+          <h1 className="mb-4 text-4xl font-bold tracking-tight text-foreground text-balance sm:text-5xl lg:text-6xl uppercase shadow-md" style={{ fontFamily: '"Playfair Display", sans-serif' }}>
             Chiranjivi{" "}
             <span className="text-primary">Poudel</span>
           </h1>
 
-          <p className="mb-3 flex items-center justify-center gap-2 text-lg font-medium text-foreground/80 lg:justify-start">
+          <p className="mb-3 flex items-center justify-center gap-2 text-right text-lg font-medium text-foreground/80 lg:justify-start">
             <Briefcase className="h-4 w-4 text-primary" />
             Process Worker &middot; Civil Engineer &middot; Surveyor
           </p>
 
-          <p className="mx-auto mb-8 max-w-xl text-base leading-relaxed text-muted-foreground lg:mx-0">
+          <p className="mx-auto mb-8 max-w-xl text-center text-base leading-relaxed text-muted-foreground lg:mx-0">
             Reliable and hardworking professional with full-time New Zealand employment
             experience. Currently a Process Worker at Silver Fern Farms, Te Aroha, with a
             strong background in civil engineering, surveying, and site supervision.

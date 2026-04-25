@@ -78,7 +78,7 @@ export function Navigation() {
           : "bg-transparent"
       }`}
     >
-      <nav className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 lg:px-8">
+      <nav className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 lg:px-8" style={{ fontFamily: '"IBM Plex Sans", sans-serif', fontWeight: 300 }}>
         {/* Logo */}
         <a
           href="#home"

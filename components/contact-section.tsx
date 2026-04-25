@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import Image from "next/image"
 import { Mail, MapPin, Phone, Linkedin, Youtube, Github, Send } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -31,8 +32,21 @@ export function ContactSection() {
   }
 
   return (
-    <section id="contact" className="px-4 py-20 lg:py-28">
-      <div className="mx-auto max-w-6xl">
+    <section id="contact" className="relative px-4 py-20 lg:py-28 overflow-hidden">
+      {/* Anime-style mountain background */}
+      <div className="absolute inset-0">
+        <Image
+          src="/images/anime-mountain-bg-2.jpg"
+          alt="Anime-style mountain sunset landscape"
+          fill
+          className="object-cover object-center"
+          quality={90}
+        />
+        {/* Gradient overlay for text readability */}
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-background/60" />
+      </div>
+      
+      <div className="relative mx-auto max-w-6xl">
         {/* Section Header */}
         <div className="mb-14 text-center">
           <p className="mb-2 text-sm font-semibold uppercase tracking-widest text-primary">
