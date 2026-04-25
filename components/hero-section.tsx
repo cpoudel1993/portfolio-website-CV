@@ -28,12 +28,12 @@ export function HeroSection() {
       <div className="relative mx-auto flex max-w-6xl flex-col items-center gap-10 lg:flex-row lg:gap-16">
         {/* Text Content */}
         <div className="flex-1 text-center lg:text-left">
-          <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-border bg-secondary px-4 py-1.5 text-sm text-muted-foreground">
+          <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-border bg-secondary px-4 py-1.5 text-sm text-muted-foreground italic">
             <MapPin className="h-3.5 w-3.5" />
             Hamilton, Waikato, New Zealand
           </div>
 
-          <h1 className="mb-4 text-4xl font-bold tracking-tight text-foreground text-balance sm:text-5xl lg:text-6xl">
+          <h1 className="mb-4 text-4xl font-bold tracking-tight text-foreground text-balance sm:text-5xl lg:text-6xl uppercase shadow-md">
             Chiranjivi{" "}
             <span className="text-primary">Poudel</span>
           </h1>
@@ -43,7 +43,7 @@ export function HeroSection() {
             Process Worker &middot; Civil Engineer &middot; Surveyor
           </p>
 
-          <p className="mx-auto mb-8 max-w-xl text-base leading-relaxed text-muted-foreground lg:mx-0">
+          <p className="mx-auto mb-8 max-w-xl text-center text-base leading-relaxed text-muted-foreground lg:mx-0">
             Reliable and hardworking professional with full-time New Zealand employment
             experience. Currently a Process Worker at Silver Fern Farms, Te Aroha, with a
             strong background in civil engineering, surveying, and site supervision.
