@@ -37,14 +37,13 @@ export default function SignUpPage() {
     }
 
     try {
+      // Use NEXT_PUBLIC_SITE_URL for production, fallback to window.location for localhost
+      const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || window.location.origin
       const { error } = await supabase.auth.signUp({
         email,
         password,
         options: {
-          emailRedirectTo:
-            process.env.NEXT_PUBLIC_SITE_URL
-              ? `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`
-              : `${window.location.origin}/auth/callback`,
+          emailRedirectTo: `${siteUrl}/auth/callback`,
         },
       })
       if (error) throw error
