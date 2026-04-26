@@ -73,42 +73,12 @@ export function ContactSection() {
             <div className="space-y-5">
               <div className="flex items-center gap-4">
                 <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                  <Mail className="h-4 w-4" />
-                </div>
-                <div>
-                  <p className="text-xs text-muted-foreground">Email</p>
-                  <a
-                    href="mailto:c.poudel1993@gmail.com"
-                    className="text-sm font-medium text-foreground hover:text-primary transition-colors"
-                  >
-                    c.poudel1993@gmail.com
-                  </a>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-4">
-                <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                  <Phone className="h-4 w-4" />
-                </div>
-                <div>
-                  <p className="text-xs text-muted-foreground">Phone</p>
-                  <a
-                    href="tel:+64220153300"
-                    className="text-sm font-medium text-foreground hover:text-primary transition-colors"
-                  >
-                    +64 22 015 3300
-                  </a>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-4">
-                <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
                   <MapPin className="h-4 w-4" />
                 </div>
                 <div>
                   <p className="text-xs text-muted-foreground">Location</p>
                   <p className="text-sm font-medium text-foreground">
-                    81 Lake Road, Frankton, Hamilton, New Zealand
+                    Hamilton, New Zealand
                   </p>
                 </div>
               </div>
@@ -176,6 +146,24 @@ export function ContactSection() {
           {/* Contact Form */}
           <div className="flex-1">
             <form onSubmit={handleSubmit} className="rounded-xl border border-border bg-card p-6 shadow-sm">
+              {/* Status Messages */}
+              {submitStatus.type === 'success' && (
+                <div className="mb-4 flex items-start gap-3 rounded-lg bg-green-50 p-3 dark:bg-green-950">
+                  <CheckCircle className="h-5 w-5 flex-shrink-0 text-green-600 dark:text-green-400 mt-0.5" />
+                  <div>
+                    <p className="text-sm font-medium text-green-900 dark:text-green-100">{submitStatus.message}</p>
+                  </div>
+                </div>
+              )}
+              {submitStatus.type === 'error' && (
+                <div className="mb-4 flex items-start gap-3 rounded-lg bg-red-50 p-3 dark:bg-red-950">
+                  <AlertCircle className="h-5 w-5 flex-shrink-0 text-red-600 dark:text-red-400 mt-0.5" />
+                  <div>
+                    <p className="text-sm font-medium text-red-900 dark:text-red-100">{submitStatus.message}</p>
+                  </div>
+                </div>
+              )}
+
               <div className="space-y-4">
                 <div>
                   <Label htmlFor="name" className="text-sm text-foreground">
@@ -188,6 +176,7 @@ export function ContactSection() {
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     className="mt-1.5"
+                    disabled={isSubmitting}
                   />
                 </div>
 
@@ -203,6 +192,7 @@ export function ContactSection() {
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     className="mt-1.5"
+                    disabled={isSubmitting}
                   />
                 </div>
 
@@ -217,6 +207,7 @@ export function ContactSection() {
                     value={formData.subject}
                     onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
                     className="mt-1.5"
+                    disabled={isSubmitting}
                   />
                 </div>
 
@@ -232,12 +223,25 @@ export function ContactSection() {
                     value={formData.message}
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                     className="mt-1.5 resize-none"
+                    disabled={isSubmitting}
                   />
                 </div>
 
-                <Button type="submit" className="w-full gap-2" disabled={submitted}>
-                  {submitted ? (
-                    "Message Sent!"
+                <Button 
+                  type="submit" 
+                  className="w-full gap-2" 
+                  disabled={isSubmitting || submitStatus.type === 'success'}
+                >
+                  {isSubmitting ? (
+                    <>
+                      <span className="inline-block animate-spin">⟳</span>
+                      Sending...
+                    </>
+                  ) : submitStatus.type === 'success' ? (
+                    <>
+                      <CheckCircle className="h-4 w-4" />
+                      Message Sent!
+                    </>
                   ) : (
                     <>
                       <Send className="h-4 w-4" />
