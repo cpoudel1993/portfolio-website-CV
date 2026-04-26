@@ -2,45 +2,61 @@
 
 import { createClient } from '@/lib/supabase/server'
 
-export async function submitContact(formData: {
-  name: string
+interface ContactMessageInput {
+  full_name: string
   email: string
   subject: string
   message: string
-}) {
+}
+
+export async function submitContactMessage(data: ContactMessageInput) {
   try {
+    // Validate required fields
+    if (!data.full_name || !data.email || !data.message) {
+      return {
+        success: false,
+        error: 'Please fill in all required fields.',
+      }
+    }
+
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(data.email)) {
+      return {
+        success: false,
+        error: 'Please enter a valid email address.',
+      }
+    }
+
     const supabase = await createClient()
 
-    // Insert message into Supabase
-    const { data, error } = await supabase
-      .from('messages')
-      .insert([
-        {
-          name: formData.name,
-          email: formData.email,
-          subject: formData.subject,
-          message: formData.message,
-          is_read: false,
-          is_archived: false,
-          created_at: new Date().toISOString(),
-        },
-      ])
-      .select()
+    // Insert message into contact_messages table
+    const { error } = await supabase.from('contact_messages').insert({
+      full_name: data.full_name,
+      email: data.email,
+      subject: data.subject || null,
+      message: data.message,
+      status: 'unread',
+    })
 
     if (error) {
-      console.error('Database error:', error)
-      return { success: false, error: 'Failed to save message. Please try again.' }
+      console.error('Supabase insert error:', error)
+      return {
+        success: false,
+        error: 'Failed to send message. Please try again later.',
+      }
     }
 
-    // TODO: Send email using Resend/SMTP when configured
-    // For now, just confirm the message was saved
-    return { 
-      success: true, 
-      message: 'Thank you! Your message has been received. I will get back to you soon.',
-      id: data?.[0]?.id 
+    return {
+      success: true,
+      message: 'Message sent successfully!',
     }
   } catch (error) {
-    console.error('Contact submission error:', error)
-    return { success: false, error: 'An unexpected error occurred. Please try again.' }
+    console.error('Contact form submission error:', error)
+    return {
+      success: false,
+      error: 'An unexpected error occurred. Please try again.',
+    }
   }
 }
+

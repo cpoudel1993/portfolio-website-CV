@@ -1,34 +1,56 @@
-"use client"
+'use client'
 
 import { useState } from "react"
 import Image from "next/image"
-import { Mail, MapPin, Phone, Linkedin, Youtube, Github, Send } from "lucide-react"
+import { MapPin, Linkedin, Youtube, Github, Send, AlertCircle, CheckCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
+import { submitContactMessage } from "@/app/actions/contact"
 
 export function ContactSection() {
   const [formData, setFormData] = useState({
-    name: "",
+    full_name: "",
     email: "",
     subject: "",
     message: "",
   })
-  const [submitted, setSubmitted] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitStatus, setSubmitStatus] = useState<{
+    type: 'success' | 'error' | null
+    message: string
+  }>({ type: null, message: '' })
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // Open mailto link with form data
-    const mailtoLink = `mailto:c.poudel1993@gmail.com?subject=${encodeURIComponent(
-      formData.subject
-    )}&body=${encodeURIComponent(
-      `From: ${formData.name} (${formData.email})\n\n${formData.message}`
-    )}`
-    window.open(mailtoLink)
-    setSubmitted(true)
-    setTimeout(() => setSubmitted(false), 3000)
-    setFormData({ name: "", email: "", subject: "", message: "" })
+    setIsSubmitting(true)
+    setSubmitStatus({ type: null, message: '' })
+
+    try {
+      const result = await submitContactMessage(formData)
+      
+      if (result.success) {
+        setSubmitStatus({
+          type: 'success',
+          message: 'Message sent successfully!',
+        })
+        setFormData({ full_name: '', email: '', subject: '', message: '' })
+        setTimeout(() => setSubmitStatus({ type: null, message: '' }), 5000)
+      } else {
+        setSubmitStatus({
+          type: 'error',
+          message: result.error || 'Failed to send message. Please try again.',
+        })
+      }
+    } catch (error) {
+      setSubmitStatus({
+        type: 'error',
+        message: 'An unexpected error occurred.',
+      })
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -173,8 +195,8 @@ export function ContactSection() {
                     id="name"
                     placeholder="Your name"
                     required
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    value={formData.full_name}
+                    onChange={(e) => setFormData({ ...formData, full_name: e.target.value })}
                     className="mt-1.5"
                     disabled={isSubmitting}
                   />
@@ -203,7 +225,6 @@ export function ContactSection() {
                   <Input
                     id="subject"
                     placeholder="How can I help?"
-                    required
                     value={formData.subject}
                     onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
                     className="mt-1.5"
