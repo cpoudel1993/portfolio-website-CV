@@ -19,6 +19,7 @@ import {
   X,
   Home,
   ExternalLink,
+  Image as ImageIcon,
 } from "lucide-react"
 import type { User } from "@supabase/supabase-js"
 
@@ -39,6 +40,7 @@ const sidebarLinks = [
     title: "Content",
     links: [
       { label: "Projects", href: "/protected/projects", icon: FolderOpen },
+      { label: "Gallery", href: "/protected/gallery", icon: ImageIcon },
       { label: "Experience", href: "/protected/experience", icon: Briefcase },
       { label: "Certifications", href: "/protected/certifications", icon: Award },
       { label: "Blog Posts", href: "/protected/posts", icon: FileText },

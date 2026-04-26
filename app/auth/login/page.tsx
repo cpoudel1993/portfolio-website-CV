@@ -9,6 +9,14 @@ import { useRouter } from "next/navigation"
 import { useState } from "react"
 import { Mail, Lock, ArrowLeft, ArrowRight, Eye, EyeOff } from "lucide-react"
 
+function getSafeNext(): string {
+  if (typeof window === "undefined") return "/protected"
+  const raw = new URLSearchParams(window.location.search).get("next")
+  if (!raw) return "/protected"
+  // Only allow same-site relative redirects to avoid open-redirect issues
+  return raw.startsWith("/") && !raw.startsWith("//") ? raw : "/protected"
+}
+
 export default function LoginPage() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
@@ -29,7 +37,8 @@ export default function LoginPage() {
         password,
       })
       if (error) throw error
-      router.push("/protected")
+      router.push(getSafeNext())
+      router.refresh()
     } catch (error: unknown) {
       setError(error instanceof Error ? error.message : "An error occurred")
     } finally {

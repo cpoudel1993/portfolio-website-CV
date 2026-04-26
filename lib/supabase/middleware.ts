@@ -43,6 +43,9 @@ export async function updateSession(request: NextRequest) {
   if (!user) {
     const url = request.nextUrl.clone()
     url.pathname = '/auth/login'
+    // Preserve where the user was trying to go so we can return them after login
+    const next = request.nextUrl.pathname + request.nextUrl.search
+    url.searchParams.set('next', next)
     return NextResponse.redirect(url)
   }
 
