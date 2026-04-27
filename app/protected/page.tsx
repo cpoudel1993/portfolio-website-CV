@@ -41,15 +41,15 @@ export default async function DashboardPage() {
       .select('*', { count: 'exact', head: true })
       .eq('status', 'published')
 
-    // Get messages counts
+    // Get messages counts (from contact_messages table)
     const { count: msgCount } = await supabase
-      .from('messages')
+      .from('contact_messages')
       .select('*', { count: 'exact', head: true })
 
     const { count: unreadCount } = await supabase
-      .from('messages')
+      .from('contact_messages')
       .select('*', { count: 'exact', head: true })
-      .eq('is_read', false)
+      .eq('status', 'unread')
 
     // Get projects count
     const { count: projCount } = await supabase

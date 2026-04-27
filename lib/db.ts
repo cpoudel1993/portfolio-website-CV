@@ -75,6 +75,17 @@ export interface Message {
   created_at: string
 }
 
+export interface ContactMessage {
+  id: string
+  full_name: string
+  email: string
+  subject: string | null
+  message: string
+  status: 'unread' | 'read' | 'archived'
+  created_at: string
+  updated_at: string
+}
+
 // Projects
 export async function getProjects() {
   const supabase = createClient()
@@ -270,6 +281,37 @@ export async function updateMessage(id: string, updates: Partial<Message>) {
 export async function deleteMessage(id: string) {
   const supabase = createClient()
   const { error } = await supabase.from('messages').delete().eq('id', id)
+  
+  if (error) throw error
+}
+
+// Contact Messages
+export async function getContactMessages() {
+  const supabase = createClient()
+  const { data, error } = await supabase
+    .from('contact_messages')
+    .select('*')
+    .order('created_at', { ascending: false })
+  
+  if (error) throw error
+  return data as ContactMessage[]
+}
+
+export async function updateContactMessage(id: string, updates: Partial<ContactMessage>) {
+  const supabase = createClient()
+  const { data, error } = await supabase
+    .from('contact_messages')
+    .update(updates)
+    .eq('id', id)
+    .select()
+  
+  if (error) throw error
+  return data[0] as ContactMessage
+}
+
+export async function deleteContactMessage(id: string) {
+  const supabase = createClient()
+  const { error } = await supabase.from('contact_messages').delete().eq('id', id)
   
   if (error) throw error
 }
