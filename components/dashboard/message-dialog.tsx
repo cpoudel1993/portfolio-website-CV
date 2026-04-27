@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { Eye, EyeOff, Copy, Check } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { updateMessage } from '@/lib/db'
+import { updateContactMessage } from '@/lib/db'
 import {
   Dialog,
   DialogContent,
@@ -16,26 +16,27 @@ import {
 interface MessageDialogProps {
   message: {
     id: string
-    name: string
+    full_name: string
     email: string
     subject: string | null
     message: string
-    is_read: boolean
+    status: 'unread' | 'read' | 'archived'
     created_at: string
   }
 }
 
 export function MessageDialog({ message }: MessageDialogProps) {
   const [isOpen, setIsOpen] = useState(false)
-  const [isRead, setIsRead] = useState(message.is_read)
+  const [status, setStatus] = useState(message.status)
   const [isCopied, setIsCopied] = useState(false)
   const [isUpdating, setIsUpdating] = useState(false)
 
   const handleToggleRead = async () => {
     setIsUpdating(true)
     try {
-      await updateMessage(message.id, { is_read: !isRead })
-      setIsRead(!isRead)
+      const newStatus = status === 'read' ? 'unread' : 'read'
+      await updateContactMessage(message.id, { status: newStatus })
+      setStatus(newStatus)
     } catch (error) {
       console.error('Error updating message:', error)
     } finally {
@@ -67,7 +68,7 @@ export function MessageDialog({ message }: MessageDialogProps) {
             <div className="flex-1">
               <DialogTitle>{message.subject || '(No Subject)'}</DialogTitle>
               <DialogDescription className="mt-2">
-                From {message.name} ({message.email})
+                From {message.full_name} ({message.email})
               </DialogDescription>
             </div>
             <Button
@@ -77,7 +78,7 @@ export function MessageDialog({ message }: MessageDialogProps) {
               disabled={isUpdating}
               className="flex-shrink-0"
             >
-              {isRead ? (
+              {status === 'read' ? (
                 <EyeOff className="h-4 w-4" />
               ) : (
                 <Eye className="h-4 w-4" />
@@ -90,7 +91,7 @@ export function MessageDialog({ message }: MessageDialogProps) {
           <div className="flex items-center justify-between rounded-lg bg-muted/50 p-3">
             <div>
               <p className="text-xs text-muted-foreground">From</p>
-              <p className="text-sm font-medium">{message.name}</p>
+              <p className="text-sm font-medium">{message.full_name}</p>
             </div>
             <button
               onClick={copyEmail}
@@ -122,12 +123,12 @@ export function MessageDialog({ message }: MessageDialogProps) {
             <p className="text-xs text-muted-foreground mb-2">Status</p>
             <span
               className={`inline-block rounded-full px-2 py-1 text-xs font-medium ${
-                isRead
+                status === 'read'
                   ? 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300'
                   : 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300'
               }`}
             >
-              {isRead ? 'Read' : 'Unread'}
+              {status === 'read' ? 'Read' : 'Unread'}
             </span>
           </div>
 

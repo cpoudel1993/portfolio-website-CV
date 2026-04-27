@@ -2,7 +2,7 @@
 
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
-import { getMessages, updateMessage, deleteMessage } from '@/lib/db'
+import { getContactMessages, deleteContactMessage } from '@/lib/db'
 import { MessageDialog } from '@/components/dashboard/message-dialog'
 import { Button } from '@/components/ui/button'
 import { Trash2 } from 'lucide-react'
@@ -21,13 +21,13 @@ export default async function MessagesPage() {
   let fetchError = null
 
   try {
-    messages = await getMessages()
+    messages = await getContactMessages()
   } catch (err) {
     console.error('Error fetching messages:', err)
     fetchError = 'Failed to load messages'
   }
 
-  const unreadCount = messages.filter((m) => !m.is_read).length
+  const unreadCount = messages.filter((m) => m.status === 'unread').length
   const totalCount = messages.length
 
   return (
@@ -78,7 +78,7 @@ export default async function MessagesPage() {
               <tbody>
                 {messages.map((message) => (
                   <tr key={message.id} className="border-b border-border hover:bg-muted/30">
-                    <td className="px-6 py-3 font-medium">{message.name}</td>
+                    <td className="px-6 py-3 font-medium">{message.full_name}</td>
                     <td className="px-6 py-3 text-muted-foreground text-xs">{message.email}</td>
                     <td className="px-6 py-3 text-muted-foreground">
                       {message.subject || '(no subject)'}
@@ -93,12 +93,12 @@ export default async function MessagesPage() {
                     <td className="px-6 py-3">
                       <span
                         className={`inline-block rounded-full px-2 py-1 text-xs font-medium ${
-                          message.is_read
+                          message.status === 'read'
                             ? 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300'
                             : 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300'
                         }`}
                       >
-                        {message.is_read ? 'Read' : 'Unread'}
+                        {message.status === 'read' ? 'Read' : 'Unread'}
                       </span>
                     </td>
                     <td className="px-6 py-3 flex gap-2">
@@ -120,7 +120,7 @@ function DeleteMessageButton({ messageId }: { messageId: string }) {
   async function handleDelete() {
     'use server'
     try {
-      await deleteMessage(messageId)
+      await deleteContactMessage(messageId)
     } catch (error) {
       console.error('Error deleting message:', error)
     }
