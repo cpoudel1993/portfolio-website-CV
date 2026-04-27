@@ -14,7 +14,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
-const navLinks = [
+type NavLink = { label: string; href: string; anchor?: string; external?: boolean }
+
+const defaultNavLinks: NavLink[] = [
   { label: "Home", href: "/", anchor: "#home" },
   { label: "About", href: "/about", anchor: "#about" },
   { label: "Experience", href: "/experience", anchor: "#experience" },
@@ -34,9 +36,10 @@ const languages = [
   { code: "jp", label: "Japanese" },
 ]
 
-export function Navigation() {
+export function Navigation({ menuItems }: { menuItems?: NavLink[] } = {}) {
   const pathname = usePathname()
   const isHomePage = pathname === '/'
+  const navLinks: NavLink[] = menuItems && menuItems.length > 0 ? menuItems : defaultNavLinks
   const [isOpen, setIsOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [activeSection, setActiveSection] = useState("home")

@@ -1,5 +1,5 @@
 import { Metadata } from 'next'
-import { Navigation } from '@/components/navigation'
+import { NavigationServer } from '@/components/navigation-server'
 import { Footer } from '@/components/footer'
 import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
@@ -36,7 +36,7 @@ export default async function ProjectsPage() {
 
   return (
     <>
-      <Navigation />
+      <NavigationServer />
       <main className="pt-20">
         <section className="px-4 py-20 lg:py-28">
           <div className="mx-auto max-w-6xl">

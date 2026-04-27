@@ -23,6 +23,7 @@ import {
   Search,
   UserCircle,
   Wrench,
+  ListOrdered,
 } from "lucide-react"
 import type { User } from "@supabase/supabase-js"
 
@@ -53,6 +54,7 @@ const sidebarLinks = [
     links: [
       { label: "Messages", href: "/protected/messages", icon: MessageSquare },
       { label: "Profile", href: "/protected/profile", icon: UserCircle },
+      { label: "Menu", href: "/protected/menu", icon: ListOrdered },
       { label: "SEO Settings", href: "/protected/seo", icon: Search },
       { label: "Settings", href: "/protected/settings", icon: Settings },
     ],

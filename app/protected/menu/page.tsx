@@ -1,14 +1,13 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
-import { getAllBlogPosts } from '@/app/actions/blog-posts'
-import { BlogPostsManager } from '@/components/admin/blog-posts-manager'
-import type { BlogPost } from '@/lib/db'
+import { getMenuItems } from '@/app/actions/menu'
+import { MenuManager } from '@/components/admin/menu-manager'
 
 const SUPERADMIN_EMAIL = 'c.poudel1993@gmail.com'
 
 export const dynamic = 'force-dynamic'
 
-export default async function BlogPostsPage() {
+export default async function MenuPage() {
   const supabase = await createClient()
   const { data, error } = await supabase.auth.getUser()
 
@@ -16,7 +15,7 @@ export default async function BlogPostsPage() {
     redirect('/auth/unauthorized')
   }
 
-  const posts = (await getAllBlogPosts()) as BlogPost[]
+  const items = await getMenuItems()
 
-  return <BlogPostsManager posts={posts} />
+  return <MenuManager items={items} />
 }

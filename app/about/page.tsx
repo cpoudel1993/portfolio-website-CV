@@ -1,5 +1,5 @@
 import { Metadata } from 'next'
-import { Navigation } from '@/components/navigation'
+import { NavigationServer } from '@/components/navigation-server'
 import { AboutSection } from '@/components/about-section'
 import { Footer } from '@/components/footer'
 
@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   return (
     <>
-      <Navigation />
+      <NavigationServer />
       <main className="pt-20">
         <AboutSection />
       </main>
