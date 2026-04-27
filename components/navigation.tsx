@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { usePathname } from "next/navigation"
 import { useTheme } from "next-themes"
 import { Menu, X, Moon, Sun, Download, LogIn, Globe, ExternalLink } from "lucide-react"
 import Image from "next/image"
@@ -14,13 +15,15 @@ import {
 } from "@/components/ui/dropdown-menu"
 
 const navLinks = [
-  { label: "Home", href: "#home" },
-  { label: "About", href: "#about" },
-  { label: "Experience", href: "#experience" },
-  { label: "Skills", href: "#skills" },
-  { label: "Certifications", href: "#certifications" },
-  { label: "Gallery", href: "#gallery" },
-  { label: "Contact", href: "#contact" },
+  { label: "Home", href: "/", anchor: "#home" },
+  { label: "About", href: "/about", anchor: "#about" },
+  { label: "Experience", href: "/experience", anchor: "#experience" },
+  { label: "Skills", href: "/skills", anchor: "#skills" },
+  { label: "Projects", href: "/projects" },
+  { label: "Certifications", href: "/certifications", anchor: "#certifications" },
+  { label: "Gallery", href: "/gallery", anchor: "#gallery" },
+  { label: "Blog", href: "/blog" },
+  { label: "Contact", href: "/contact", anchor: "#contact" },
   { label: "Kharcha", href: "https://kharcha.poonamkarki.com.np/auth/login", external: true },
 ]
 
@@ -32,6 +35,8 @@ const languages = [
 ]
 
 export function Navigation() {
+  const pathname = usePathname()
+  const isHomePage = pathname === '/'
   const [isOpen, setIsOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [activeSection, setActiveSection] = useState("home")
@@ -47,28 +52,38 @@ export function Navigation() {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20)
 
-      const sections = navLinks.map((link) => link.href.replace("#", ""))
-      for (let i = sections.length - 1; i >= 0; i--) {
-        const el = document.getElementById(sections[i])
-        if (el) {
-          const rect = el.getBoundingClientRect()
-          if (rect.top <= 100) {
-            setActiveSection(sections[i])
-            break
+      // Only track anchor sections on homepage
+      if (isHomePage) {
+        const anchors = navLinks.filter((link) => link.anchor).map((link) => link.anchor!.replace("#", ""))
+        for (let i = anchors.length - 1; i >= 0; i--) {
+          const el = document.getElementById(anchors[i])
+          if (el) {
+            const rect = el.getBoundingClientRect()
+            if (rect.top <= 100) {
+              setActiveSection(anchors[i])
+              break
+            }
           }
         }
       }
     }
     window.addEventListener("scroll", handleScroll)
     return () => window.removeEventListener("scroll", handleScroll)
-  }, [])
+  }, [isHomePage])
 
-  const handleNavClick = (href: string) => {
+  const handleAnchorClick = (anchor: string) => {
     setIsOpen(false)
-    const el = document.querySelector(href)
+    const el = document.querySelector(anchor)
     if (el) {
       el.scrollIntoView({ behavior: "smooth" })
     }
+  }
+
+  const getActiveState = (link: typeof navLinks[0]) => {
+    if (isHomePage && link.anchor) {
+      return activeSection === link.anchor.replace("#", "")
+    }
+    return pathname === link.href
   }
 
   return (
@@ -81,16 +96,17 @@ export function Navigation() {
     >
       <nav className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 lg:px-8" style={{ fontFamily: '"IBM Plex Sans", sans-serif', fontWeight: 300 }}>
         {/* Logo */}
-        <a
-          href="#home"
-          onClick={(e) => {
-            e.preventDefault()
-            handleNavClick("#home")
+        <Link
+          href="/"
+          onClick={() => {
+            if (isHomePage) {
+              handleAnchorClick("#home")
+            }
           }}
           className="text-lg font-bold tracking-tight text-foreground"
         >
           CP<span className="text-primary">.</span>
-        </a>
+        </Link>
 
         {/* Desktop Nav Links */}
         <ul className="hidden items-center gap-1 lg:flex">
@@ -106,21 +122,32 @@ export function Navigation() {
                   {link.label}
                   <ExternalLink className="h-3 w-3" />
                 </a>
-              ) : (
+              ) : isHomePage && link.anchor ? (
                 <a
-                  href={link.href}
+                  href={link.anchor}
                   onClick={(e) => {
                     e.preventDefault()
-                    handleNavClick(link.href)
+                    handleAnchorClick(link.anchor!)
                   }}
                   className={`rounded-md px-3 py-2 text-sm font-medium transition-colors ${
-                    activeSection === link.href.replace("#", "")
+                    getActiveState(link)
                       ? "text-primary bg-primary/10"
                       : "text-muted-foreground hover:text-foreground hover:bg-muted"
                   }`}
                 >
                   {link.label}
                 </a>
+              ) : (
+                <Link
+                  href={link.href}
+                  className={`rounded-md px-3 py-2 text-sm font-medium transition-colors ${
+                    getActiveState(link)
+                      ? "text-primary bg-primary/10"
+                      : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                  }`}
+                >
+                  {link.label}
+                </Link>
               )}
             </li>
           ))}
@@ -231,22 +258,35 @@ export function Navigation() {
                 {link.label}
                 <ExternalLink className="h-3 w-3" />
               </a>
-            ) : (
+            ) : isHomePage && link.anchor ? (
               <a
                 key={link.href}
-                href={link.href}
+                href={link.anchor}
                 onClick={(e) => {
                   e.preventDefault()
-                  handleNavClick(link.href)
+                  handleAnchorClick(link.anchor!)
                 }}
                 className={`block rounded-md px-3 py-2.5 text-sm font-medium transition-colors ${
-                  activeSection === link.href.replace("#", "")
+                  getActiveState(link)
                     ? "text-primary bg-primary/10"
                     : "text-muted-foreground hover:text-foreground hover:bg-muted"
                 }`}
               >
                 {link.label}
               </a>
+            ) : (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={() => setIsOpen(false)}
+                className={`block rounded-md px-3 py-2.5 text-sm font-medium transition-colors ${
+                  getActiveState(link)
+                    ? "text-primary bg-primary/10"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                }`}
+              >
+                {link.label}
+              </Link>
             )
           )}
 

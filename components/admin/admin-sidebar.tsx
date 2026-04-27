@@ -20,6 +20,9 @@ import {
   Home,
   ExternalLink,
   Image as ImageIcon,
+  Search,
+  UserCircle,
+  Wrench,
 } from "lucide-react"
 import type { User } from "@supabase/supabase-js"
 
@@ -32,7 +35,6 @@ const sidebarLinks = [
     title: "Main",
     links: [
       { label: "Dashboard", href: "/protected", icon: LayoutDashboard },
-      { label: "Live Dashboard", href: "/protected/dashboard", icon: LayoutDashboard },
       { label: "Analytics", href: "/protected/analytics", icon: BarChart3 },
     ],
   },
@@ -43,14 +45,15 @@ const sidebarLinks = [
       { label: "Gallery", href: "/protected/gallery", icon: ImageIcon },
       { label: "Experience", href: "/protected/experience", icon: Briefcase },
       { label: "Certifications", href: "/protected/certifications", icon: Award },
-      { label: "Blog Posts", href: "/protected/posts", icon: FileText },
+      { label: "Blog Posts", href: "/protected/blog-posts", icon: FileText },
     ],
   },
   {
     title: "Management",
     links: [
       { label: "Messages", href: "/protected/messages", icon: MessageSquare },
-      { label: "Users", href: "/protected/users", icon: Users },
+      { label: "Profile", href: "/protected/profile", icon: UserCircle },
+      { label: "SEO Settings", href: "/protected/seo", icon: Search },
       { label: "Settings", href: "/protected/settings", icon: Settings },
     ],
   },
