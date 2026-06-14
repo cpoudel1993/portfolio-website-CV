@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import { useTheme } from "next-themes"
 import { Menu, X, Moon, Sun, Download, LogIn, Globe, ExternalLink } from "lucide-react"
 import Image from "next/image"
@@ -38,6 +38,7 @@ const languages = [
 
 export function Navigation({ menuItems }: { menuItems?: NavLink[] } = {}) {
   const pathname = usePathname()
+  const router = useRouter()
   const isHomePage = pathname === '/'
   const navLinks: NavLink[] = menuItems && menuItems.length > 0 ? menuItems : defaultNavLinks
   const [isOpen, setIsOpen] = useState(false)
@@ -74,12 +75,18 @@ export function Navigation({ menuItems }: { menuItems?: NavLink[] } = {}) {
     return () => window.removeEventListener("scroll", handleScroll)
   }, [isHomePage])
 
-  const handleAnchorClick = (anchor: string) => {
+  const handleAnchorClick = (link: NavLink) => {
     setIsOpen(false)
-    const el = document.querySelector(anchor)
-    if (el) {
-      el.scrollIntoView({ behavior: "smooth" })
+    if (link.anchor) {
+      const el = document.querySelector(link.anchor)
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth" })
+        return
+      }
     }
+    // Section isn't present on this page (e.g. Experience/Skills are on their own
+    // dedicated pages now) — navigate to the dedicated page instead.
+    router.push(link.href)
   }
 
   const getActiveState = (link: typeof navLinks[0]) => {
@@ -103,7 +110,7 @@ export function Navigation({ menuItems }: { menuItems?: NavLink[] } = {}) {
           href="/"
           onClick={() => {
             if (isHomePage) {
-              handleAnchorClick("#home")
+              handleAnchorClick({ label: "Home", href: "/", anchor: "#home" })
             }
           }}
           className="text-lg font-bold tracking-tight text-foreground"
@@ -130,7 +137,7 @@ export function Navigation({ menuItems }: { menuItems?: NavLink[] } = {}) {
                   href={link.anchor}
                   onClick={(e) => {
                     e.preventDefault()
-                    handleAnchorClick(link.anchor!)
+                    handleAnchorClick(link)
                   }}
                   className={`rounded-md px-3 py-2 text-sm font-medium transition-colors ${
                     getActiveState(link)
@@ -267,7 +274,7 @@ export function Navigation({ menuItems }: { menuItems?: NavLink[] } = {}) {
                 href={link.anchor}
                 onClick={(e) => {
                   e.preventDefault()
-                  handleAnchorClick(link.anchor!)
+                  handleAnchorClick(link)
                 }}
                 className={`block rounded-md px-3 py-2.5 text-sm font-medium transition-colors ${
                   getActiveState(link)
