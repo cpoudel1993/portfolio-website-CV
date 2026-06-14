@@ -1,186 +1,104 @@
-import { ExternalLink, Clock, Award, FileText } from "lucide-react"
-import { Button } from "@/components/ui/button"
+'use client'
 
-const certifications = [
-  // --- MSD / MySkill Certificates ---
-  {
-    title: "Healthcare Taster Training Courses",
-    platform: "MSD / MySkill",
-    type: "Certificate",
-    date: "Mar 2, 2026",
-    duration: "",
-    skills: ["Support Worker", "Household Management", "Personal Cares"],
-    certId: "",
-    pdfUrl: "/certificates/healthcare-taster-training-courses-msd-myskill.pdf",
-    verifyUrl: "https://myskilltraining.co.nz/mod/certificate/view.php?id=20850&action=html",
-  },
-  {
-    title: "Supporting a Person with Personal Cares",
-    platform: "MSD / MySkill",
-    type: "Course",
-    date: "Mar 2, 2026",
-    duration: "1 hour",
-    skills: ["Personal Cares", "Support Worker"],
-    certId: "",
-    pdfUrl: "/certificates/supporting-a-person-with-personal-cares-myskill.pdf",
-    verifyUrl: "https://myskilltraining.co.nz/mod/certificate/view.php?id=20525&action=html",
-  },
-  {
-    title: "Providing Household Management",
-    platform: "MSD / MySkill",
-    type: "Course",
-    date: "Mar 2, 2026",
-    duration: "2 hours",
-    skills: ["Household Management", "Support Worker"],
-    certId: "",
-    pdfUrl: "/certificates/providing-household-management-myskill.pdf",
-    verifyUrl: "https://myskilltraining.co.nz/mod/certificate/view.php?id=19028&action=html",
-  },
-  {
-    title: "Your Role as a Support Worker",
-    platform: "MSD / MySkill",
-    type: "Course",
-    date: "Mar 2, 2026",
-    duration: "",
-    skills: ["Support Worker", "Healthcare"],
-    certId: "",
-    pdfUrl: "/certificates/your-role-as-a-support-worker-msd-myskill.pdf",
-    verifyUrl: "https://myskilltraining.co.nz/mod/certificate/view.php?id=17964&action=html",
-  },
-  // --- International Culinary Studio (ICS) / The Info Chef Certificates ---
-  {
-    title: "Orientation: Online Culinary Learning",
-    platform: "International Culinary Studio",
-    type: "Certificate",
-    date: "Mar 2, 2026",
-    duration: "",
-    skills: ["Culinary Arts", "Hospitality"],
-    certId: "",
-    pdfUrl: "/certificates/orientation-online-culinary-learning-ics.pdf",
-    verifyUrl: "https://theinfochef.com/certificates/bryan-template/?course_id=1278&cert-nonce=4dafc7520d",
-  },
-  {
-    title: "The Confident Barista: Theory",
-    platform: "International Culinary Studio",
-    type: "Certificate",
-    date: "Mar 2, 2026",
-    duration: "",
-    skills: ["Barista", "Coffee", "Hospitality"],
-    certId: "",
-    pdfUrl: "/certificates/the-confident-barista-theory-ics.pdf",
-    verifyUrl: "https://theinfochef.com/certificates/bryan-template/?course_id=2238&cert-nonce=bb4548017a",
-  },
-  {
-    title: "Taster in Hospitality (Dyslexia Support)",
-    platform: "International Culinary Studio",
-    type: "Certificate",
-    date: "Mar 2, 2026",
-    duration: "",
-    skills: ["Hospitality", "Customer Service"],
-    certId: "",
-    pdfUrl: "/certificates/taster-in-hospitality-ics.pdf",
-    verifyUrl: "https://theinfochef.com/certificates/bryan-template/?quiz=2338&cert-nonce=e8807ae7a1",
-  },
-  {
-    title: "The Essentials of Food Safety in Catering",
-    platform: "International Culinary Studio",
-    type: "Certificate",
-    date: "Mar 2, 2026",
-    duration: "",
-    skills: ["Food Safety", "Catering", "Hospitality"],
-    certId: "",
-    pdfUrl: "/certificates/essentials-of-food-safety-in-catering-ics.pdf",
-    verifyUrl: "https://theinfochef.com/certificates/bryan-template/?quiz=1757&cert-nonce=2f1411c602",
-  },
-  // --- LinkedIn Learning Certificates ---
-  {
-    title: "Become a Full-Stack Web Developer",
-    platform: "LinkedIn Learning",
-    type: "Learning Path",
-    date: "Dec 13, 2023",
-    duration: "105 hours 27 minutes",
-    skills: ["Web Development", "Full-Stack Development"],
-    certId: "7ada2e72e72ca4f234bd054ff84cfd3f8f063df6a4686bc9cc09214a94d38dea",
-    pdfUrl: "",
-    verifyUrl: "",
-  },
-  {
-    title: "Explore a Career in Front-End Web Development",
-    platform: "LinkedIn Learning",
-    type: "Learning Path",
-    date: "Dec 31, 2023",
-    duration: "32 hours 11 minutes",
-    skills: ["Front-End Development"],
-    certId: "5725126b852434f99a81a85b7511f66054f1d455d57869cdf2d66c567eda34b0",
-    pdfUrl: "",
-    verifyUrl: "",
-  },
-  {
-    title: "Master Digital Marketing",
-    platform: "LinkedIn Learning",
-    type: "Learning Path",
-    date: "Dec 13, 2023",
-    duration: "9 hours 5 minutes",
-    skills: ["Digital Marketing", "SEO", "SEO Copywriting"],
-    certId: "fc212952956edd287854f7462d75759db6229c02cb3d5fa0bea2a8c65758b4ea",
-    pdfUrl: "",
-    verifyUrl: "",
-  },
-  {
-    title: "AutoCAD 2024 Essential Training",
-    platform: "LinkedIn Learning",
-    type: "Course",
-    date: "Jan 18, 2026",
-    duration: "10 hours 6 minutes",
-    skills: ["AutoCAD"],
-    certId: "2302b44eb4397bb2e28238a62bad52dca4004d10296428b51f66bbc3754b7209",
-    pdfUrl: "",
-    verifyUrl: "",
-  },
-  {
-    title: "Revit 2022: Essential Training for Architecture",
-    platform: "LinkedIn Learning",
-    type: "Course",
-    date: "Jun 15, 2025",
-    duration: "13 hours 51 minutes",
-    skills: ["Revit"],
-    certId: "d00b199dd9ef4f1f6b12e5fa05d6c94aa22d4651883d074f1107df643067058b",
-    pdfUrl: "",
-    verifyUrl: "",
-  },
-  {
-    title: "SketchUp Pro 2024 Essential Training",
-    platform: "LinkedIn Learning",
-    type: "Course",
-    date: "Jun 17, 2025",
-    duration: "3 hours 17 minutes",
-    skills: ["SketchUp"],
-    certId: "a52243711a1d700e8ef66b643ec81b09820cb279b38d6f347691bc2694bb4316",
-    pdfUrl: "",
-    verifyUrl: "",
-  },
-]
+import { ExternalLink, Clock, Award, FileText } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { useState, useEffect } from 'react'
+import { createClient } from '@/lib/supabase/client'
+
+interface Certification {
+  id: string
+  title: string
+  platform: string
+  type: string | null
+  date_earned: string | null
+  duration: string | null
+  skills: string[] | null
+  cert_id: string | null
+  pdf_url: string | null
+  verify_url: string | null
+  status: 'draft' | 'published' | 'archived'
+  created_at: string
+  updated_at: string
+}
 
 export function CertificationsSection() {
+  const [certifications, setCertifications] = useState<Certification[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const supabase = createClient()
+    let mounted = true
+
+    const fetchCertifications = async () => {
+      const { data, error } = await supabase
+        .from('certifications')
+        .select('*')
+        .eq('status', 'published')
+        .order('date_earned', { ascending: false })
+
+      if (!mounted) return
+      if (error) {
+        console.error('[v0] certifications fetch error:', error.message)
+        setLoading(false)
+        return
+      }
+
+      setCertifications(data || [])
+      setLoading(false)
+    }
+
+    fetchCertifications()
+
+    // Real-time subscription for live updates
+    const channel = supabase
+      .channel('certifications_public')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'certifications' },
+        () => {
+          fetchCertifications()
+        }
+      )
+      .subscribe()
+
+    return () => {
+      mounted = false
+      supabase.removeChannel(channel)
+    }
+  }, [])
+
+  if (loading) {
+    return (
+      <section id="certifications" className="bg-secondary/50 px-4 py-20 lg:py-28">
+        <div className="mx-auto max-w-6xl">
+          <div className="mb-14 text-center">
+            <p className="mb-2 text-sm font-semibold uppercase tracking-widest text-primary">Credentials</p>
+            <h2 className="mb-4 text-3xl font-bold tracking-tight text-foreground sm:text-4xl text-balance">Certifications & Training</h2>
+            <div className="mx-auto h-1 w-12 rounded-full bg-primary" />
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="h-48 animate-pulse rounded-xl bg-muted" />
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
   return (
     <section id="certifications" className="bg-secondary/50 px-4 py-20 lg:py-28">
       <div className="mx-auto max-w-6xl">
-        {/* Section Header */}
         <div className="mb-14 text-center">
-          <p className="mb-2 text-sm font-semibold uppercase tracking-widest text-primary">
-            Credentials
-          </p>
-          <h2 className="mb-4 text-3xl font-bold tracking-tight text-foreground sm:text-4xl text-balance">
-            Certifications & Training
-          </h2>
+          <p className="mb-2 text-sm font-semibold uppercase tracking-widest text-primary">Credentials</p>
+          <h2 className="mb-4 text-3xl font-bold tracking-tight text-foreground sm:text-4xl text-balance">Certifications & Training</h2>
           <div className="mx-auto h-1 w-12 rounded-full bg-primary" />
         </div>
 
-        {/* Certification Cards */}
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {certifications.map((cert, index) => (
+          {certifications.map((cert) => (
             <div
-              key={cert.certId || `cert-${index}`}
+              key={cert.id}
               className="group flex flex-col rounded-xl border border-border bg-card p-5 transition-all hover:border-primary/30 hover:shadow-md"
             >
               <div className="mb-3 flex items-start justify-between gap-2">
@@ -188,13 +106,11 @@ export function CertificationsSection() {
                   <Award className="h-4 w-4" />
                 </div>
                 <span className="rounded-full bg-muted px-2.5 py-0.5 text-xs font-medium text-muted-foreground">
-                  {cert.type}
+                  {cert.type || 'Certificate'}
                 </span>
               </div>
 
-              <h3 className="mb-1 text-sm font-semibold text-foreground leading-snug">
-                {cert.title}
-              </h3>
+              <h3 className="mb-1 text-sm font-semibold text-foreground leading-snug">{cert.title}</h3>
               <p className="mb-3 text-xs text-primary">{cert.platform}</p>
 
               <div className="mb-4 flex flex-wrap gap-3 text-xs text-muted-foreground">
@@ -204,40 +120,44 @@ export function CertificationsSection() {
                     {cert.duration}
                   </span>
                 )}
-                <span>{cert.date}</span>
+                {cert.date_earned && <span>{cert.date_earned}</span>}
               </div>
 
-              <div className="mb-4 flex flex-wrap gap-1.5">
-                {cert.skills.map((skill) => (
-                  <span
-                    key={skill}
-                    className="rounded-md border border-primary/20 bg-primary/5 px-2 py-0.5 text-xs text-primary"
-                  >
-                    {skill}
-                  </span>
-                ))}
-              </div>
+              {cert.skills && cert.skills.length > 0 && (
+                <div className="mb-4 flex flex-wrap gap-1.5">
+                  {cert.skills.map((skill) => (
+                    <span
+                      key={skill}
+                      className="rounded-md border border-primary/20 bg-primary/5 px-2 py-0.5 text-xs text-primary"
+                    >
+                      {skill}
+                    </span>
+                  ))}
+                </div>
+              )}
 
               <div className="mt-auto flex flex-wrap gap-2">
-                {(cert.certId || cert.verifyUrl) && (
-                  <Button variant="ghost" size="sm" className="h-auto gap-1.5 px-0 text-xs text-muted-foreground hover:text-primary" asChild>
-                    <a
-                      href={cert.verifyUrl || `https://www.linkedin.com/learning/certificates/${cert.certId}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      Verify Certificate
+                {cert.verify_url && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-auto gap-1.5 px-0 text-xs text-muted-foreground hover:text-primary"
+                    asChild
+                  >
+                    <a href={cert.verify_url} target="_blank" rel="noopener noreferrer">
+                      Verify
                       <ExternalLink className="h-3 w-3" />
                     </a>
                   </Button>
                 )}
-                {cert.pdfUrl && (
-                  <Button variant="ghost" size="sm" className="h-auto gap-1.5 px-0 text-xs text-muted-foreground hover:text-primary" asChild>
-                    <a
-                      href={cert.pdfUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
+                {cert.pdf_url && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-auto gap-1.5 px-0 text-xs text-muted-foreground hover:text-primary"
+                    asChild
+                  >
+                    <a href={cert.pdf_url} target="_blank" rel="noopener noreferrer">
                       View PDF
                       <FileText className="h-3 w-3" />
                     </a>
