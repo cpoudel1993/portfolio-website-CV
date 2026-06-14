@@ -22,7 +22,7 @@ export function HeroSection() {
         />
         {/* Gradient overlay for text readability */}
         <div className="absolute inset-0 bg-gradient-to-b from-background/70 via-background/50 to-background/90" />
-        <div className="absolute inset-0 bg-gradient-to-r from-background/60 via-transparent to-background/60" />
+        <div className="absolute inset-0" style={{ backgroundColor: "rgba(0, 0, 0, 0.05)" }} />
       </div>
 
       <div className="relative mx-auto flex max-w-6xl flex-col items-center gap-10 lg:flex-row lg:gap-16">
@@ -33,9 +33,9 @@ export function HeroSection() {
             Hamilton, Waikato, New Zealand
           </div>
 
-          <h1 className="mb-4 text-4xl font-bold tracking-tight text-foreground text-balance sm:text-5xl lg:text-6xl uppercase shadow-md" style={{ fontFamily: '"Playfair Display", sans-serif' }}>
+          <h1 className="mb-4 text-4xl font-bold tracking-tight text-balance sm:text-5xl lg:text-6xl uppercase shadow-md" style={{ fontFamily: '"Outfit", sans-serif', color: "#000000" }}>
             Chiranjivi{" "}
-            <span className="text-primary">Poudel</span>
+            <span className="text-primary" style={{ color: "#380064" }}>Poudel</span>
           </h1>
 
           <p className="mb-3 flex items-center justify-center gap-2 text-right text-lg font-medium text-foreground/80 lg:justify-start">
