@@ -1,5 +1,6 @@
 import { Metadata } from 'next'
 import { NavigationServer } from '@/components/navigation-server'
+import { PageHero } from '@/components/page-hero'
 import { ContactSection } from '@/components/contact-section'
 import { Footer } from '@/components/footer'
 
@@ -16,7 +17,13 @@ export default function ContactPage() {
   return (
     <>
       <NavigationServer />
-      <main className="pt-20">
+      <main>
+        <PageHero
+          title="Get In Touch"
+          subtitle="Let's Connect"
+          description="Have a question or interested in collaborating? I'd love to hear from you. Reach out and let's start a conversation."
+          imageUrl="/api/placeholder?w=500&h=500"
+        />
         <ContactSection />
       </main>
       <Footer />
