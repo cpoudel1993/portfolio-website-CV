@@ -42,6 +42,7 @@ const sidebarLinks = [
   {
     title: "Content",
     links: [
+      { label: "Homepage", href: "/protected/homepage", icon: Home },
       { label: "Projects", href: "/protected/projects", icon: FolderOpen },
       { label: "Gallery", href: "/protected/gallery", icon: ImageIcon },
       { label: "Experience", href: "/protected/experience", icon: Briefcase },
