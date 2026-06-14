@@ -1,5 +1,6 @@
 import Image from "next/image"
 import { Award, HardHat, Coffee, Factory } from "lucide-react"
+import { DEFAULT_HOMEPAGE_CONTENT, type HomepageContent } from "@/lib/homepage-content"
 
 const highlights = [
   {
@@ -28,7 +29,11 @@ const highlights = [
   },
 ]
 
-export function AboutSection() {
+export function AboutSection({
+  content = DEFAULT_HOMEPAGE_CONTENT,
+}: {
+  content?: HomepageContent
+}) {
   return (
     <section id="about" className="px-4 py-20 lg:py-28">
       <div className="mx-auto max-w-6xl">
@@ -38,7 +43,7 @@ export function AboutSection() {
             About
           </p>
           <h2 className="mb-4 text-3xl font-bold tracking-tight text-foreground sm:text-4xl text-balance">
-            About Chiranjivi Poudel
+            {content.aboutHeading}
           </h2>
           <div className="mx-auto h-1 w-12 rounded-full bg-primary" />
         </div>
@@ -48,8 +53,8 @@ export function AboutSection() {
           <div className="relative flex-shrink-0">
             <div className="relative h-64 w-64 overflow-hidden rounded-2xl border border-border shadow-lg sm:h-72 sm:w-72">
               <Image
-                src="/images/chiranjivi-casual.png"
-                alt="Chiranjivi Poudel - Casual portrait"
+                src={content.aboutImage || "/images/chiranjivi-casual.png"}
+                alt={`${content.heroNameFirst} ${content.heroNameLast} - Casual portrait`}
                 fill
                 className="object-cover object-top"
                 sizes="(max-width: 640px) 256px, 288px"
@@ -60,17 +65,10 @@ export function AboutSection() {
           {/* Text Content */}
           <div className="flex-1">
             <p className="mb-4 text-base leading-relaxed text-muted-foreground">
-              I am a reliable and hardworking professional currently based in Hamilton,
-              Waikato, New Zealand. With full-time employment experience in the New Zealand
-              meat processing industry, I bring a strong understanding of food safety, hygiene,
-              and health and safety standards.
+              {content.aboutParagraph1}
             </p>
             <p className="mb-6 text-base leading-relaxed text-muted-foreground">
-              My background spans civil engineering, topographic and construction surveying,
-              architectural drafting, and site supervision across multiple projects in Nepal.
-              I am committed to long-term, dependable contribution across production,
-              construction, or customer-focused roles. I hold a Diploma in Civil Engineering
-              and am eligible to work full-time in New Zealand.
+              {content.aboutParagraph2}
             </p>
           </div>
         </div>

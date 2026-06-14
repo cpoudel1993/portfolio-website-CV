@@ -107,7 +107,6 @@ export function Navigation({ menuItems }: { menuItems?: NavLink[] } = {}) {
             }
           }}
           className="text-lg font-bold tracking-tight text-foreground"
-          style={{ fontFamily: '"Playfair Display", sans-serif' }}
         >
           CP<span className="text-primary">.</span>
         </Link>

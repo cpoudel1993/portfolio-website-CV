@@ -4,14 +4,19 @@ import { AboutSection } from "@/components/about-section"
 import { GallerySection } from "@/components/gallery-section"
 import { ContactSection } from "@/components/contact-section"
 import { Footer } from "@/components/footer"
+import { getSiteSettingsAsMap } from "@/app/actions/site-settings"
+import { mapSettingsToHomepageContent } from "@/lib/homepage-content"
 
-export default function Home() {
+export default async function Home() {
+  const settings = await getSiteSettingsAsMap()
+  const content = mapSettingsToHomepageContent(settings)
+
   return (
     <>
       <NavigationServer />
       <main>
-        <HeroSection />
-        <AboutSection />
+        <HeroSection content={content} />
+        <AboutSection content={content} />
         <GallerySection />
         <ContactSection />
       </main>
