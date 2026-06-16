@@ -4,7 +4,7 @@ import { useMemo, useRef, useState, useTransition } from "react"
 import { useRouter } from "next/navigation"
 import Image from "next/image"
 import { createClient } from "@/lib/supabase/client"
-import { CheckCircle, AlertCircle, X, Save, Upload, Loader2 } from "lucide-react"
+import { CheckCircle, AlertCircle, X, Save, Upload, Loader2, Plus, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -16,6 +16,17 @@ import {
   mapHomepageContentToSettings,
   type HomepageContent,
 } from "@/lib/homepage-content"
+import {
+  parseHighlights,
+  parseSocialLinks,
+  getHighlightIcon,
+  getSocialIcon,
+  HIGHLIGHT_ICON_NAMES,
+  SOCIAL_ICON_NAMES,
+  SITE_CONTENT_KEYS,
+  type Highlight,
+  type SocialLink,
+} from "@/lib/site-content"
 
 type Status = { type: "success" | "error"; message: string } | null
 
@@ -32,6 +43,12 @@ export function HomepageForm({ initial, userId }: HomepageFormProps) {
   const [content, setContent] = useState<HomepageContent>(() =>
     mapSettingsToHomepageContent(initial),
   )
+  const [highlights, setHighlights] = useState<Highlight[]>(() =>
+    parseHighlights(initial[SITE_CONTENT_KEYS.highlights]),
+  )
+  const [socialLinks, setSocialLinks] = useState<SocialLink[]>(() =>
+    parseSocialLinks(initial[SITE_CONTENT_KEYS.socialLinks]),
+  )
   const [uploadingField, setUploadingField] = useState<keyof HomepageContent | null>(null)
 
   const bgInputRef = useRef<HTMLInputElement>(null)
@@ -45,6 +62,22 @@ export function HomepageForm({ initial, userId }: HomepageFormProps) {
 
   const set = (field: keyof HomepageContent, value: string) =>
     setContent((c) => ({ ...c, [field]: value }))
+
+  // Highlight card helpers
+  const addHighlight = () =>
+    setHighlights((h) => [...h, { icon: "Award", title: "", description: "" }])
+  const updateHighlight = (index: number, field: keyof Highlight, value: string) =>
+    setHighlights((h) => h.map((item, i) => (i === index ? { ...item, [field]: value } : item)))
+  const removeHighlight = (index: number) =>
+    setHighlights((h) => h.filter((_, i) => i !== index))
+
+  // Social link helpers
+  const addSocialLink = () =>
+    setSocialLinks((s) => [...s, { icon: "Globe", label: "", value: "", href: "" }])
+  const updateSocialLink = (index: number, field: keyof SocialLink, value: string) =>
+    setSocialLinks((s) => s.map((item, i) => (i === index ? { ...item, [field]: value } : item)))
+  const removeSocialLink = (index: number) =>
+    setSocialLinks((s) => s.filter((_, i) => i !== index))
 
   async function uploadImage(
     field: keyof HomepageContent,
@@ -94,7 +127,12 @@ export function HomepageForm({ initial, userId }: HomepageFormProps) {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     startTransition(async () => {
-      const result = await upsertSiteSettings(mapHomepageContentToSettings(content))
+      const payload = {
+        ...mapHomepageContentToSettings(content),
+        [SITE_CONTENT_KEYS.highlights]: JSON.stringify(highlights),
+        [SITE_CONTENT_KEYS.socialLinks]: JSON.stringify(socialLinks),
+      }
+      const result = await upsertSiteSettings(payload)
       if (result.success) {
         flash({ type: "success", message: "Homepage updated." })
         router.refresh()
@@ -106,6 +144,8 @@ export function HomepageForm({ initial, userId }: HomepageFormProps) {
 
   const resetDefaults = () => {
     setContent(DEFAULT_HOMEPAGE_CONTENT)
+    setHighlights(parseHighlights(undefined))
+    setSocialLinks(parseSocialLinks(undefined))
     flash({ type: "success", message: "Reset to defaults. Remember to save." })
   }
 
@@ -373,6 +413,178 @@ export function HomepageForm({ initial, userId }: HomepageFormProps) {
             value={content.aboutParagraph2}
             onChange={(e) => set("aboutParagraph2", e.target.value)}
           />
+        </div>
+      </div>
+
+      {/* Highlight cards */}
+      <div className="rounded-lg border border-border bg-card p-6">
+        <div className="mb-4 flex items-center justify-between">
+          <div>
+            <h2 className="text-lg font-semibold">About Highlights</h2>
+            <p className="text-sm text-muted-foreground">
+              The cards shown under the About section (Food Processing, Civil Engineering, etc.).
+            </p>
+          </div>
+          <Button type="button" variant="outline" size="sm" className="gap-2" onClick={addHighlight}>
+            <Plus className="h-4 w-4" />
+            Add card
+          </Button>
+        </div>
+
+        <div className="space-y-4">
+          {highlights.length === 0 && (
+            <p className="rounded-md border border-dashed border-border p-4 text-center text-sm text-muted-foreground">
+              No highlight cards. Click &quot;Add card&quot; to create one.
+            </p>
+          )}
+          {highlights.map((item, index) => {
+            const Icon = getHighlightIcon(item.icon)
+            return (
+              <div key={index} className="rounded-lg border border-border p-4">
+                <div className="mb-3 flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-2">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary/10 text-primary">
+                      <Icon className="h-4 w-4" />
+                    </div>
+                    <span className="text-sm font-medium text-muted-foreground">
+                      Card {index + 1}
+                    </span>
+                  </div>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="text-destructive hover:text-destructive"
+                    onClick={() => removeHighlight(index)}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
+                <div className="grid gap-3 sm:grid-cols-3">
+                  <div>
+                    <Label>Icon</Label>
+                    <select
+                      value={item.icon}
+                      onChange={(e) => updateHighlight(index, "icon", e.target.value)}
+                      className="mt-1.5 flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                    >
+                      {HIGHLIGHT_ICON_NAMES.map((name) => (
+                        <option key={name} value={name}>
+                          {name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="sm:col-span-2">
+                    <Label>Title</Label>
+                    <Input
+                      value={item.title}
+                      onChange={(e) => updateHighlight(index, "title", e.target.value)}
+                      placeholder="e.g. Food Processing"
+                    />
+                  </div>
+                </div>
+                <div className="mt-3">
+                  <Label>Description</Label>
+                  <Textarea
+                    rows={2}
+                    value={item.description}
+                    onChange={(e) => updateHighlight(index, "description", e.target.value)}
+                  />
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      </div>
+
+      {/* Social / contact links */}
+      <div className="rounded-lg border border-border bg-card p-6">
+        <div className="mb-4 flex items-center justify-between">
+          <div>
+            <h2 className="text-lg font-semibold">Social &amp; Contact Links</h2>
+            <p className="text-sm text-muted-foreground">
+              Shown in the footer and the Contact section (Location, LinkedIn, YouTube, GitHub).
+            </p>
+          </div>
+          <Button type="button" variant="outline" size="sm" className="gap-2" onClick={addSocialLink}>
+            <Plus className="h-4 w-4" />
+            Add link
+          </Button>
+        </div>
+
+        <div className="space-y-4">
+          {socialLinks.length === 0 && (
+            <p className="rounded-md border border-dashed border-border p-4 text-center text-sm text-muted-foreground">
+              No links. Click &quot;Add link&quot; to create one.
+            </p>
+          )}
+          {socialLinks.map((item, index) => {
+            const Icon = getSocialIcon(item.icon)
+            return (
+              <div key={index} className="rounded-lg border border-border p-4">
+                <div className="mb-3 flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-2">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary/10 text-primary">
+                      <Icon className="h-4 w-4" />
+                    </div>
+                    <span className="text-sm font-medium text-muted-foreground">
+                      {item.label || `Link ${index + 1}`}
+                    </span>
+                  </div>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="text-destructive hover:text-destructive"
+                    onClick={() => removeSocialLink(index)}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <div>
+                    <Label>Icon / logo</Label>
+                    <select
+                      value={item.icon}
+                      onChange={(e) => updateSocialLink(index, "icon", e.target.value)}
+                      className="mt-1.5 flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                    >
+                      {SOCIAL_ICON_NAMES.map((name) => (
+                        <option key={name} value={name}>
+                          {name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <Label>Label</Label>
+                    <Input
+                      value={item.label}
+                      onChange={(e) => updateSocialLink(index, "label", e.target.value)}
+                      placeholder="e.g. LinkedIn"
+                    />
+                  </div>
+                  <div>
+                    <Label>Display text</Label>
+                    <Input
+                      value={item.value}
+                      onChange={(e) => updateSocialLink(index, "value", e.target.value)}
+                      placeholder="e.g. linkedin.com/in/cpoudel1993"
+                    />
+                  </div>
+                  <div>
+                    <Label>Link URL (optional)</Label>
+                    <Input
+                      value={item.href}
+                      onChange={(e) => updateSocialLink(index, "href", e.target.value)}
+                      placeholder="https://... (leave blank for Location)"
+                    />
+                  </div>
+                </div>
+              </div>
+            )
+          })}
         </div>
       </div>
 

@@ -1,38 +1,17 @@
 import Image from "next/image"
-import { Award, HardHat, Coffee, Factory } from "lucide-react"
 import { DEFAULT_HOMEPAGE_CONTENT, type HomepageContent } from "@/lib/homepage-content"
-
-const highlights = [
-  {
-    icon: Factory,
-    title: "Food Processing",
-    description:
-      "Full-time NZ employment experience handling edible internal products at Silver Fern Farms under strict food safety and hygiene standards.",
-  },
-  {
-    icon: HardHat,
-    title: "Civil Engineering",
-    description:
-      "Diploma in Civil Engineering with hands-on experience in surveying, drafting, quality control, and site supervision on road and bridge projects.",
-  },
-  {
-    icon: Coffee,
-    title: "Barista",
-    description:
-      "Advanced barista certification with expertise in beverage preparation, customer service, cash handling, and coffee shop management.",
-  },
-  {
-    icon: Award,
-    title: "Continuous Learner",
-    description:
-      "Certified in AutoCAD, Revit, SketchUp, Full-Stack Web Development, Front-End Development, and Digital Marketing through LinkedIn Learning.",
-  },
-]
+import {
+  DEFAULT_HIGHLIGHTS,
+  getHighlightIcon,
+  type Highlight,
+} from "@/lib/site-content"
 
 export function AboutSection({
   content = DEFAULT_HOMEPAGE_CONTENT,
+  highlights = DEFAULT_HIGHLIGHTS,
 }: {
   content?: HomepageContent
+  highlights?: Highlight[]
 }) {
   return (
     <section id="about" className="px-4 py-20 lg:py-28">
@@ -75,18 +54,21 @@ export function AboutSection({
 
         {/* Highlight Cards */}
         <div className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {highlights.map((item) => (
-            <div
-              key={item.title}
-              className="group rounded-xl border border-border bg-card p-6 transition-all hover:border-primary/30 hover:shadow-md"
-            >
-              <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
-                <item.icon className="h-5 w-5" />
+          {highlights.map((item, index) => {
+            const Icon = getHighlightIcon(item.icon)
+            return (
+              <div
+                key={`${item.title}-${index}`}
+                className="group rounded-xl border border-border bg-card p-6 transition-all hover:border-primary/30 hover:shadow-md"
+              >
+                <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
+                  <Icon className="h-5 w-5" />
+                </div>
+                <h3 className="mb-2 text-sm font-semibold text-foreground">{item.title}</h3>
+                <p className="text-sm leading-relaxed text-muted-foreground">{item.description}</p>
               </div>
-              <h3 className="mb-2 text-sm font-semibold text-foreground">{item.title}</h3>
-              <p className="text-sm leading-relaxed text-muted-foreground">{item.description}</p>
-            </div>
-          ))}
+            )
+          })}
         </div>
       </div>
     </section>

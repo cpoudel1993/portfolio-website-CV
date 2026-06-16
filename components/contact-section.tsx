@@ -2,14 +2,19 @@
 
 import { useState } from "react"
 import Image from "next/image"
-import { MapPin, Linkedin, Youtube, Github, Send, AlertCircle, CheckCircle } from "lucide-react"
+import { Send, AlertCircle, CheckCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { submitContactMessage } from "@/app/actions/contact"
+import { DEFAULT_SOCIAL_LINKS, getSocialIcon, type SocialLink } from "@/lib/site-content"
 
-export function ContactSection() {
+export function ContactSection({
+  socialLinks = DEFAULT_SOCIAL_LINKS,
+}: {
+  socialLinks?: SocialLink[]
+}) {
   const [formData, setFormData] = useState({
     full_name: "",
     email: "",
@@ -93,68 +98,32 @@ export function ContactSection() {
             </p>
 
             <div className="space-y-5">
-              <div className="flex items-center gap-4">
-                <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                  <MapPin className="h-4 w-4" />
-                </div>
-                <div>
-                  <p className="text-xs text-muted-foreground">Location</p>
-                  <p className="text-sm font-medium text-foreground">
-                    Hamilton, New Zealand
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-4">
-                <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                  <Linkedin className="h-4 w-4" />
-                </div>
-                <div>
-                  <p className="text-xs text-muted-foreground">LinkedIn</p>
-                  <a
-                    href="https://www.linkedin.com/in/cpoudel1993/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-sm font-medium text-foreground hover:text-primary transition-colors"
-                  >
-                    linkedin.com/in/cpoudel1993
-                  </a>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-4">
-                <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                  <Youtube className="h-4 w-4" />
-                </div>
-                <div>
-                  <p className="text-xs text-muted-foreground">YouTube</p>
-                  <a
-                    href="https://www.youtube.com/channel/UC7CJV2aO5MSQIPz8LHnobpg?sub_confirmation=1"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-sm font-medium text-foreground hover:text-primary transition-colors"
-                  >
-                    Chiranjivi Poudel
-                  </a>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-4">
-                <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                  <Github className="h-4 w-4" />
-                </div>
-                <div>
-                  <p className="text-xs text-muted-foreground">GitHub</p>
-                  <a
-                    href="https://github.com/cpoudel1993"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-sm font-medium text-foreground hover:text-primary transition-colors"
-                  >
-                    cpoudel1993
-                  </a>
-                </div>
-              </div>
+              {socialLinks.map((link) => {
+                const Icon = getSocialIcon(link.icon)
+                const isExternal = link.href.startsWith("http")
+                return (
+                  <div key={link.label} className="flex items-center gap-4">
+                    <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                      <Icon className="h-4 w-4" />
+                    </div>
+                    <div>
+                      <p className="text-xs text-muted-foreground">{link.label}</p>
+                      {link.href ? (
+                        <a
+                          href={link.href}
+                          target={isExternal ? "_blank" : undefined}
+                          rel={isExternal ? "noopener noreferrer" : undefined}
+                          className="text-sm font-medium text-foreground hover:text-primary transition-colors"
+                        >
+                          {link.value}
+                        </a>
+                      ) : (
+                        <p className="text-sm font-medium text-foreground">{link.value}</p>
+                      )}
+                    </div>
+                  </div>
+                )
+              })}
             </div>
 
             <div className="mt-8 rounded-xl border border-border bg-card p-4">
