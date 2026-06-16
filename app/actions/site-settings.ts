@@ -80,8 +80,16 @@ export async function upsertSiteSettings(values: Record<string, string>) {
       console.error('upsertSiteSettings error:', error)
       return { success: false, error: error.message }
     }
+    // Revalidate all pages that use site_settings data
     revalidatePath('/protected/settings')
-    revalidatePath('/', 'layout')
+    revalidatePath('/', 'layout') // Homepage + all layouts
+    revalidatePath('/contact', 'layout') // Contact page + layouts
+    revalidatePath('/experience', 'layout') // All other pages
+    revalidatePath('/skills', 'layout')
+    revalidatePath('/projects', 'layout')
+    revalidatePath('/certifications', 'layout')
+    revalidatePath('/blog', 'layout')
+    revalidatePath('/gallery', 'layout')
     return { success: true }
   } catch (e) {
     return { success: false, error: e instanceof Error ? e.message : 'Failed to save settings' }

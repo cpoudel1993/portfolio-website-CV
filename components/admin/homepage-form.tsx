@@ -132,6 +132,7 @@ export function HomepageForm({ initial, userId }: HomepageFormProps) {
         [SITE_CONTENT_KEYS.highlights]: JSON.stringify(highlights),
         [SITE_CONTENT_KEYS.socialLinks]: JSON.stringify(socialLinks),
       }
+      console.log("[v0] Saving homepage settings:", payload)
       const result = await upsertSiteSettings(payload)
       if (result.success) {
         flash({ type: "success", message: "Homepage updated." })
