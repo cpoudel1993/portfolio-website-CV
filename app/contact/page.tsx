@@ -3,6 +3,8 @@ import { NavigationServer } from '@/components/navigation-server'
 import { PageHero } from '@/components/page-hero'
 import { ContactSection } from '@/components/contact-section'
 import { Footer } from '@/components/footer'
+import { getSiteSettingsAsMap } from '@/app/actions/site-settings'
+import { parseSocialLinks } from '@/lib/site-content'
 
 export const metadata: Metadata = {
   title: 'Contact | Chiranjivi Poudel',
@@ -13,7 +15,10 @@ export const metadata: Metadata = {
   },
 }
 
-export default function ContactPage() {
+export default async function ContactPage() {
+  const settings = await getSiteSettingsAsMap()
+  const socialLinks = parseSocialLinks(settings.site_social_links)
+
   return (
     <>
       <NavigationServer />
@@ -24,7 +29,7 @@ export default function ContactPage() {
           description="Have a question or interested in collaborating? I'd love to hear from you. Reach out and let's start a conversation."
           imageUrl="/api/placeholder?w=500&h=500"
         />
-        <ContactSection />
+        <ContactSection socialLinks={socialLinks} />
       </main>
       <Footer />
     </>

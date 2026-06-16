@@ -1,40 +1,13 @@
-import { Linkedin, Mail, Phone, Globe, Youtube, Github } from "lucide-react"
+import { getSiteSettingsAsMap } from "@/app/actions/site-settings"
+import { parseSocialLinks, getSocialIcon } from "@/lib/site-content"
 
-const socialLinks = [
-  {
-    icon: Linkedin,
-    label: "LinkedIn",
-    href: "https://www.linkedin.com/in/cpoudel1993/",
-  },
-  {
-    icon: Github,
-    label: "GitHub",
-    href: "https://github.com/cpoudel1993",
-  },
-  {
-    icon: Youtube,
-    label: "YouTube",
-    href: "https://www.youtube.com/channel/UC7CJV2aO5MSQIPz8LHnobpg?sub_confirmation=1",
-  },
-  {
-    icon: Mail,
-    label: "Email",
-    href: "mailto:c.poudel1993@gmail.com",
-  },
-  {
-    icon: Phone,
-    label: "Phone",
-    href: "tel:+64220153300",
-  },
-  {
-    icon: Globe,
-    label: "Website",
-    href: "https://www.chiranjivipoudel.com.np",
-  },
-]
-
-export function Footer() {
+export async function Footer() {
   const currentYear = new Date().getFullYear()
+  const settings = await getSiteSettingsAsMap()
+  const socialLinks = parseSocialLinks(settings.site_social_links)
+
+  // Only items with a usable link are shown as footer icon buttons.
+  const linkItems = socialLinks.filter((link) => link.href.trim() !== "")
 
   return (
     <footer className="border-t border-border bg-card px-4 py-10">
@@ -52,18 +25,22 @@ export function Footer() {
 
           {/* Social Links */}
           <div className="flex items-center gap-3">
-            {socialLinks.map((link) => (
-              <a
-                key={link.label}
-                href={link.href}
-                target={link.href.startsWith("http") ? "_blank" : undefined}
-                rel={link.href.startsWith("http") ? "noopener noreferrer" : undefined}
-                aria-label={link.label}
-                className="flex h-9 w-9 items-center justify-center rounded-lg border border-border text-muted-foreground transition-all hover:border-primary/30 hover:text-primary hover:bg-primary/5"
-              >
-                <link.icon className="h-4 w-4" />
-              </a>
-            ))}
+            {linkItems.map((link) => {
+              const Icon = getSocialIcon(link.icon)
+              const isExternal = link.href.startsWith("http")
+              return (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  target={isExternal ? "_blank" : undefined}
+                  rel={isExternal ? "noopener noreferrer" : undefined}
+                  aria-label={link.label}
+                  className="flex h-9 w-9 items-center justify-center rounded-lg border border-border text-muted-foreground transition-all hover:border-primary/30 hover:text-primary hover:bg-primary/5"
+                >
+                  <Icon className="h-4 w-4" />
+                </a>
+              )
+            })}
           </div>
         </div>
 
