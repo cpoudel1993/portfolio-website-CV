@@ -147,36 +147,46 @@ function isSocialLink(value: unknown): value is SocialLink {
 }
 
 export function parseHighlights(raw?: string | null): Highlight[] {
+  console.log("[v0] parseHighlights raw input:", raw)
   if (!raw) return DEFAULT_HIGHLIGHTS
   try {
     const parsed = JSON.parse(raw)
     if (Array.isArray(parsed) && parsed.length > 0 && parsed.every(isHighlight)) {
-      return parsed.map((h) => ({
+      const result = parsed.map((h) => ({
         icon: typeof h.icon === "string" ? h.icon : "Award",
         title: h.title,
         description: typeof h.description === "string" ? h.description : "",
       }))
+      console.log("[v0] parseHighlights parsed:", result)
+      return result
     }
+    console.log("[v0] parseHighlights validation failed, using defaults")
     return DEFAULT_HIGHLIGHTS
-  } catch {
+  } catch (e) {
+    console.log("[v0] parseHighlights error:", e)
     return DEFAULT_HIGHLIGHTS
   }
 }
 
 export function parseSocialLinks(raw?: string | null): SocialLink[] {
+  console.log("[v0] parseSocialLinks raw input:", raw)
   if (!raw) return DEFAULT_SOCIAL_LINKS
   try {
     const parsed = JSON.parse(raw)
     if (Array.isArray(parsed) && parsed.length > 0 && parsed.every(isSocialLink)) {
-      return parsed.map((s) => ({
+      const result = parsed.map((s) => ({
         icon: typeof s.icon === "string" ? s.icon : "Globe",
         label: s.label,
         value: typeof s.value === "string" ? s.value : "",
         href: typeof s.href === "string" ? s.href : "",
       }))
+      console.log("[v0] parseSocialLinks parsed:", result)
+      return result
     }
+    console.log("[v0] parseSocialLinks validation failed, using defaults")
     return DEFAULT_SOCIAL_LINKS
-  } catch {
+  } catch (e) {
+    console.log("[v0] parseSocialLinks error:", e)
     return DEFAULT_SOCIAL_LINKS
   }
 }
