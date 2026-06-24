@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next'
 import { Inter, JetBrains_Mono } from 'next/font/google'
 import { ThemeProvider } from '@/components/theme-provider'
+import { getPublicProfile } from '@/app/actions/profile-public'
 import './globals.css'
 
 const inter = Inter({
@@ -13,17 +14,21 @@ const jetbrainsMono = JetBrains_Mono({
   variable: '--font-jetbrains-mono',
 })
 
-export const metadata: Metadata = {
-  title: {
-    default: 'Chiranjivi Poudel | Professional Portfolio | Nepal to New Zealand',
-    template: '%s | Chiranjivi Poudel',
-  },
-  description:
-    'Chiranjivi Poudel - Originally from Nepal, now based in Hamilton, New Zealand. Process Worker at Silver Fern Farms with a strong background in Civil Engineering, Surveying, Site Supervision, and Full-Stack Web Development. Eligible for full-time work in New Zealand.',
-  keywords: [
-    'Chiranjivi Poudel',
-    'Chiranjivi Poudel Nepal',
-    'Chiranjivi Poudel New Zealand',
+export async function generateMetadata(): Promise<Metadata> {
+  const profile = await getPublicProfile()
+  const fullName = profile?.full_name || 'Chiranjivi Poudel'
+  const bio = profile?.bio || 'Originally from Nepal, now based in Hamilton, New Zealand. Process Worker at Silver Fern Farms with a strong background in Civil Engineering, Surveying, Site Supervision, and Full-Stack Web Development. Eligible for full-time work in New Zealand.'
+
+  return {
+    title: {
+      default: `${fullName} | Professional Portfolio | Nepal to New Zealand`,
+      template: `%s | ${fullName}`,
+    },
+    description: `${fullName} - ${bio}`,
+    keywords: [
+    fullName,
+    `${fullName} Nepal`,
+    `${fullName} New Zealand`,
     'Nepali professional New Zealand',
     'Process Worker New Zealand',
     'Civil Engineer Nepal',
@@ -38,52 +43,51 @@ export const metadata: Metadata = {
     'Hamilton New Zealand',
     'Waikato',
   ],
-  authors: [{ name: 'Chiranjivi Poudel', url: 'https://www.chiranjivipoudel.com.np' }],
-  creator: 'Chiranjivi Poudel',
-  publisher: 'Chiranjivi Poudel',
-  metadataBase: new URL('https://www.chiranjivipoudel.com.np'),
-  openGraph: {
-    type: 'website',
-    locale: 'en_NZ',
-    url: 'https://www.chiranjivipoudel.com.np',
-    siteName: 'Chiranjivi Poudel Portfolio',
-    title: 'Chiranjivi Poudel | From Nepal to New Zealand | Professional Portfolio',
-    description:
-      'Chiranjivi Poudel - Originally from Nepal, now a professional based in Hamilton, New Zealand. Civil Engineering background with expertise in Surveying, AutoCAD, Revit, SketchUp, and Web Development.',
+    authors: [{ name: fullName, url: 'https://www.chiranjivipoudel.com.np' }],
+    creator: fullName,
+    publisher: fullName,
+    metadataBase: new URL('https://www.chiranjivipoudel.com.np'),
+    openGraph: {
+      type: 'website',
+      locale: 'en_NZ',
+      url: 'https://www.chiranjivipoudel.com.np',
+      siteName: `${fullName} Portfolio`,
+      title: `${fullName} | From Nepal to New Zealand | Professional Portfolio`,
+      description: `${fullName} - ${bio}`,
     images: [
       {
         url: '/images/my-profile.jpg',
         width: 800,
         height: 800,
-        alt: 'Chiranjivi Poudel - Professional Portrait',
+        alt: `${fullName} - Professional Portrait`,
       },
     ],
   },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'Chiranjivi Poudel | Professional Portfolio',
-    description:
-      'Chiranjivi Poudel - From Nepal to New Zealand. Civil Engineer, Surveyor, and Web Developer based in Hamilton, NZ.',
-    images: ['/images/my-profile.jpg'],
-  },
-  alternates: {
-    canonical: 'https://www.chiranjivipoudel.com.np',
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
+    twitter: {
+      card: 'summary_large_image',
+      title: `${fullName} | Professional Portfolio`,
+      description: `${fullName} - From Nepal to New Zealand. Civil Engineer, Surveyor, and Web Developer based in Hamilton, NZ.`,
+      images: ['/images/my-profile.jpg'],
+    },
+    alternates: {
+      canonical: 'https://www.chiranjivipoudel.com.np',
+    },
+    robots: {
       index: true,
       follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+      },
     },
-  },
-  icons: {
-    icon: '/favicon.jpg',
-    apple: '/apple-icon.jpg',
-  },
+    icons: {
+      icon: '/favicon.jpg',
+      apple: '/apple-icon.jpg',
+    },
+  }
 }
 
 export const viewport: Viewport = {
