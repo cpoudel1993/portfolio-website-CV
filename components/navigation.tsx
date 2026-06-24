@@ -36,7 +36,7 @@ const languages = [
   { code: "jp", label: "Japanese" },
 ]
 
-export function Navigation({ menuItems }: { menuItems?: NavLink[] } = {}) {
+export function Navigation({ menuItems, initials = 'CP' }: { menuItems?: NavLink[]; initials?: string } = {}) {
   const pathname = usePathname()
   const router = useRouter()
   const isHomePage = pathname === '/'
@@ -115,7 +115,9 @@ export function Navigation({ menuItems }: { menuItems?: NavLink[] } = {}) {
           }}
           className="text-lg font-bold tracking-tight text-foreground"
         >
-          CP<span className="text-primary">.</span>
+          {initials.split('')[0]}
+          {initials.split('')[1]}
+          <span className="text-primary">.</span>
         </Link>
 
         {/* Desktop Nav Links */}
