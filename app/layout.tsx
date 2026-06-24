@@ -16,13 +16,14 @@ const jetbrainsMono = JetBrains_Mono({
 
 export async function generateMetadata(): Promise<Metadata> {
   const profile = await getPublicProfile()
+  const displayName = profile?.display_name || 'Chiranjivi Poudel'
   const fullName = profile?.full_name || 'Chiranjivi Poudel'
   const bio = profile?.bio || 'Originally from Nepal, now based in Hamilton, New Zealand. Process Worker at Silver Fern Farms with a strong background in Civil Engineering, Surveying, Site Supervision, and Full-Stack Web Development. Eligible for full-time work in New Zealand.'
 
   return {
     title: {
-      default: `${fullName} | Professional Portfolio | Nepal to New Zealand`,
-      template: `%s | ${fullName}`,
+      default: `${displayName} | Professional Portfolio | Nepal to New Zealand`,
+      template: `%s | ${displayName}`,
     },
     description: `${fullName} - ${bio}`,
     keywords: [

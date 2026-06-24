@@ -1,10 +1,13 @@
 import { getSiteSettingsAsMap } from "@/app/actions/site-settings"
 import { parseSocialLinks, getSocialIcon } from "@/lib/site-content"
+import { getPublicProfile } from "@/app/actions/profile-public"
 
 export async function Footer() {
   const currentYear = new Date().getFullYear()
   const settings = await getSiteSettingsAsMap()
+  const profile = await getPublicProfile()
   const socialLinks = parseSocialLinks(settings.site_social_links)
+  const initials = profile?.initials || 'CP'
 
   // Only items with a usable link are shown as footer icon buttons.
   const linkItems = socialLinks.filter((link) => link.href.trim() !== "")
@@ -16,7 +19,9 @@ export async function Footer() {
           {/* Brand */}
           <div>
             <a href="#home" className="text-lg font-bold text-foreground">
-              CP<span className="text-primary">.</span>
+              {initials.split('')[0]}
+              {initials.split('')[1]}
+              <span className="text-primary">.</span>
             </a>
           </div>
 
