@@ -18,9 +18,6 @@ export async function Footer() {
             <a href="#home" className="text-lg font-bold text-foreground">
               CP<span className="text-primary">.</span>
             </a>
-            <p className="mt-1 text-xs text-muted-foreground">
-              Chiranjivi Poudel &middot; Hamilton, New Zealand
-            </p>
           </div>
 
           {/* Social Links */}
