@@ -4,8 +4,15 @@ import Image from "next/image"
 import { ArrowDown, MapPin, Briefcase, Download } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { DEFAULT_HOMEPAGE_CONTENT, type HomepageContent } from "@/lib/homepage-content"
+import type { PublicProfile } from "@/app/actions/profile-public"
 
-export function HeroSection({ content = DEFAULT_HOMEPAGE_CONTENT }: { content?: HomepageContent }) {
+export function HeroSection({
+  content = DEFAULT_HOMEPAGE_CONTENT,
+  profile,
+}: {
+  content?: HomepageContent
+  profile?: PublicProfile | null
+}) {
   return (
     <section
       id="home"
@@ -36,8 +43,7 @@ export function HeroSection({ content = DEFAULT_HOMEPAGE_CONTENT }: { content?: 
           </div>
 
           <h1 className="mb-4 text-4xl font-bold tracking-tight text-foreground text-balance sm:text-5xl lg:text-6xl uppercase shadow-md" style={{ fontFamily: '"Playfair Display", sans-serif' }}>
-            {content.heroNameFirst}{" "}
-            <span className="text-primary">{content.heroNameLast}</span>
+            {profile?.full_name || `${content.heroNameFirst} ${content.heroNameLast}`}
           </h1>
 
           <p className="mb-3 flex items-center justify-center gap-2 text-right text-lg font-medium text-foreground/80 lg:justify-start">

@@ -26,9 +26,11 @@ import {
   ListOrdered,
 } from "lucide-react"
 import type { User } from "@supabase/supabase-js"
+import type { PublicProfile } from "@/app/actions/profile-public"
 
 interface AdminSidebarProps {
   user: User
+  profile?: PublicProfile | null
 }
 
 const sidebarLinks = [
@@ -67,7 +69,7 @@ const quickLinks = [
   { label: "Kharcha", href: "https://kharcha.poonamkarki.com.np/auth/login", icon: ExternalLink, external: true },
 ]
 
-export function AdminSidebar({ user }: AdminSidebarProps) {
+export function AdminSidebar({ user, profile }: AdminSidebarProps) {
   const pathname = usePathname()
   const [isMobileOpen, setIsMobileOpen] = useState(false)
 
@@ -106,7 +108,7 @@ export function AdminSidebar({ user }: AdminSidebarProps) {
             </div>
             <div>
               <p className="font-semibold text-sm text-foreground">Admin Panel</p>
-              <p className="text-xs text-muted-foreground">Chiranjivi Poudel</p>
+              <p className="text-xs text-muted-foreground">{profile?.full_name || 'Chiranjivi Poudel'}</p>
             </div>
           </div>
 

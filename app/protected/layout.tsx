@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server"
 import { AdminSidebar } from "@/components/admin/admin-sidebar"
 import { AdminNavbar } from "@/components/admin/admin-navbar"
 import { AdminFooter } from "@/components/admin/admin-footer"
+import { getPublicProfile } from "@/app/actions/profile-public"
 
 const SUPERADMIN_EMAIL = "c.poudel1993@gmail.com"
 
@@ -22,10 +23,12 @@ export default async function ProtectedLayout({
     redirect("/auth/unauthorized")
   }
 
+  const profile = await getPublicProfile()
+
   return (
     <div className="flex min-h-screen bg-background">
       {/* Left Sidebar */}
-      <AdminSidebar user={data.user} />
+      <AdminSidebar user={data.user} profile={profile} />
 
       {/* Main Content Area */}
       <div className="flex flex-1 flex-col lg:ml-64">

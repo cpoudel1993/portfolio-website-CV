@@ -7,6 +7,7 @@ import { ContactSection } from "@/components/contact-section"
 import { Footer } from "@/components/footer"
 import { getSiteSettingsAsMap } from "@/app/actions/site-settings"
 import { getSEOBySlug } from "@/app/actions/seo"
+import { getPublicProfile } from "@/app/actions/profile-public"
 import { mapSettingsToHomepageContent } from "@/lib/homepage-content"
 import { parseHighlights, parseSocialLinks } from "@/lib/site-content"
 
@@ -35,6 +36,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function Home() {
   const settings = await getSiteSettingsAsMap()
+  const profile = await getPublicProfile()
   const content = mapSettingsToHomepageContent(settings)
   const highlights = parseHighlights(settings.home_about_highlights)
   const socialLinks = parseSocialLinks(settings.site_social_links)
@@ -43,7 +45,7 @@ export default async function Home() {
     <>
       <NavigationServer />
       <main>
-        <HeroSection content={content} />
+        <HeroSection content={content} profile={profile} />
         <AboutSection content={content} highlights={highlights} />
         <GallerySection />
         <ContactSection socialLinks={socialLinks} />
