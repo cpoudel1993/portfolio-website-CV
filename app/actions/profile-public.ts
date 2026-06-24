@@ -8,6 +8,7 @@ export interface PublicProfile {
   display_name: string | null
   bio: string | null
   avatar_url: string | null
+  initials: string | null
   location: string | null
   linkedin_url: string | null
   github_url: string | null

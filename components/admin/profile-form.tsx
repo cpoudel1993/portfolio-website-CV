@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
-import { CheckCircle, AlertCircle, X, Save, Plus, Trash2 } from 'lucide-react'
+import { CheckCircle, AlertCircle, X, Save, Plus, Trash2, Upload, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -20,12 +20,14 @@ interface ProfileFormProps {
 export function ProfileForm({ initial, email }: ProfileFormProps) {
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
+  const [uploading, setUploading] = useState(false)
   const [status, setStatus] = useState<Status>(null)
   const [form, setForm] = useState<ProfileInput>({
     full_name: initial.full_name ?? '',
     display_name: initial.display_name ?? '',
     bio: initial.bio ?? '',
     avatar_url: initial.avatar_url ?? '',
+    initials: initial.initials ?? '',
     phone: initial.phone ?? '',
     location: initial.location ?? '',
     website: initial.website ?? '',
@@ -64,6 +66,30 @@ export function ProfileForm({ initial, email }: ProfileFormProps) {
 
   const removeWorkExperience = (index: number) => {
     setWorkExperience((w) => w.filter((_, i) => i !== index))
+  }
+
+  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    setUploading(true)
+    try {
+      const formData = new FormData()
+      formData.append('file', file)
+      formData.append('folder', 'avatars')
+
+      const res = await fetch('/api/upload', { method: 'POST', body: formData })
+      if (!res.ok) throw new Error('Upload failed')
+
+      const { url } = await res.json()
+      handleChange('avatar_url', url)
+      flash({ type: 'success', message: 'Avatar uploaded successfully.' })
+    } catch (err) {
+      flash({ type: 'error', message: 'Failed to upload avatar.' })
+      console.error(err)
+    } finally {
+      setUploading(false)
+    }
   }
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -149,6 +175,38 @@ export function ProfileForm({ initial, email }: ProfileFormProps) {
             <Input id="email" value={email} disabled className="bg-muted" />
           </div>
 
+          <div>
+            <Label>Avatar</Label>
+            <div className="mt-2 flex items-end gap-4">
+              {form.avatar_url && (
+                <img
+                  src={form.avatar_url}
+                  alt="Avatar preview"
+                  className="h-24 w-24 rounded-lg object-cover border border-border"
+                />
+              )}
+              <label className="cursor-pointer">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleAvatarUpload}
+                  disabled={uploading}
+                  className="hidden"
+                />
+                <Button type="button" variant="outline" size="sm" disabled={uploading} asChild>
+                  <span className="gap-2 flex items-center">
+                    {uploading ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <Upload className="h-4 w-4" />
+                    )}
+                    {uploading ? 'Uploading...' : 'Choose Image'}
+                  </span>
+                </Button>
+              </label>
+            </div>
+          </div>
+
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
               <Label htmlFor="full_name">Full Name</Label>
@@ -160,14 +218,25 @@ export function ProfileForm({ initial, email }: ProfileFormProps) {
               />
             </div>
             <div>
-              <Label htmlFor="display_name">Display Name</Label>
+              <Label htmlFor="display_name">Display Name (shown in browser tab)</Label>
               <Input
                 id="display_name"
                 value={form.display_name ?? ''}
                 onChange={(e) => handleChange('display_name', e.target.value)}
-                placeholder="CP"
+                placeholder="Chiranjivi Poudel"
               />
             </div>
+          </div>
+
+          <div>
+            <Label htmlFor="initials">Initials (shown in footer)</Label>
+            <Input
+              id="initials"
+              value={form.initials ?? ''}
+              onChange={(e) => handleChange('initials', e.target.value)}
+              placeholder="CP"
+              maxLength={3}
+            />
           </div>
 
           <div>

@@ -8,6 +8,7 @@ export interface ProfileInput {
   display_name: string | null
   bio: string | null
   avatar_url: string | null
+  initials: string | null
   phone: string | null
   location: string | null
   website: string | null
@@ -57,6 +58,7 @@ export async function upsertProfile(input: ProfileInput) {
       display_name: input.display_name?.trim() || null,
       bio: input.bio?.trim() || null,
       avatar_url: input.avatar_url?.trim() || null,
+      initials: input.initials?.trim() || null,
       phone: input.phone?.trim() || null,
       location: input.location?.trim() || null,
       website: input.website?.trim() || null,
