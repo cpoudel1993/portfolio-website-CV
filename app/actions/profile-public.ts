@@ -15,6 +15,7 @@ export interface PublicProfile {
   twitter_url: string | null
   website: string | null
   phone: string | null
+  work_experience: string | null
 }
 
 export async function getPublicProfile(): Promise<PublicProfile | null> {

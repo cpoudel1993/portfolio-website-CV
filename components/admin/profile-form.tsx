@@ -2,12 +2,13 @@
 
 import { useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
-import { CheckCircle, AlertCircle, X, Save } from 'lucide-react'
+import { CheckCircle, AlertCircle, X, Save, Plus, Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { upsertProfile, type ProfileInput } from '@/app/actions/profile'
+import { type Highlight } from '@/lib/site-content'
 
 type Status = { type: 'success' | 'error'; message: string } | null
 
@@ -32,6 +33,16 @@ export function ProfileForm({ initial, email }: ProfileFormProps) {
     github_url: initial.github_url ?? '',
     twitter_url: initial.twitter_url ?? '',
     youtube_url: initial.youtube_url ?? '',
+    work_experience: initial.work_experience ?? '',
+  })
+
+  const [workExperience, setWorkExperience] = useState<Highlight[]>(() => {
+    if (!initial.work_experience) return []
+    try {
+      return JSON.parse(initial.work_experience)
+    } catch {
+      return []
+    }
   })
 
   const flash = (s: Status) => {
@@ -43,10 +54,25 @@ export function ProfileForm({ initial, email }: ProfileFormProps) {
     setForm((f) => ({ ...f, [key]: value }))
   }
 
+  const addWorkExperience = () => {
+    setWorkExperience((w) => [...w, { icon: 'Award', title: '', description: '' }])
+  }
+
+  const updateWorkExperience = (index: number, field: keyof Highlight, value: string) => {
+    setWorkExperience((w) => w.map((item, i) => (i === index ? { ...item, [field]: value } : item)))
+  }
+
+  const removeWorkExperience = (index: number) => {
+    setWorkExperience((w) => w.filter((_, i) => i !== index))
+  }
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     startTransition(async () => {
-      const result = await upsertProfile(form)
+      const result = await upsertProfile({
+        ...form,
+        work_experience: JSON.stringify(workExperience),
+      })
       if (result.success) {
         flash({ type: 'success', message: 'Profile saved.' })
         router.refresh()
@@ -227,6 +253,66 @@ export function ProfileForm({ initial, email }: ProfileFormProps) {
               placeholder="https://youtube.com/..."
             />
           </div>
+        </div>
+      </div>
+
+      <div className="rounded-lg border border-border bg-card p-6">
+        <div className="mb-4 flex items-center justify-between">
+          <div>
+            <h2 className="text-lg font-semibold">Work Experience & Highlights</h2>
+            <p className="text-sm text-muted-foreground">
+              Add your professional experience and achievements shown on the homepage.
+            </p>
+          </div>
+          <Button type="button" variant="outline" size="sm" className="gap-2" onClick={addWorkExperience}>
+            <Plus className="h-4 w-4" />
+            Add Entry
+          </Button>
+        </div>
+
+        <div className="space-y-4">
+          {workExperience.length === 0 && (
+            <p className="rounded-md border border-dashed border-border p-4 text-center text-sm text-muted-foreground">
+              No work experience entries. Click "Add Entry" to create one.
+            </p>
+          )}
+          {workExperience.map((item, index) => (
+            <div key={index} className="rounded-lg border border-border p-4">
+              <div className="mb-3 flex items-center justify-between">
+                <span className="text-sm font-medium text-muted-foreground">
+                  {item.title || `Entry ${index + 1}`}
+                </span>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="text-destructive hover:text-destructive"
+                  onClick={() => removeWorkExperience(index)}
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </div>
+              <div className="space-y-3">
+                <div>
+                  <Label>Title (e.g., Food Processing)</Label>
+                  <Input
+                    value={item.title}
+                    onChange={(e) => updateWorkExperience(index, 'title', e.target.value)}
+                    placeholder="Your role or achievement title"
+                  />
+                </div>
+                <div>
+                  <Label>Description</Label>
+                  <Textarea
+                    rows={3}
+                    value={item.description}
+                    onChange={(e) => updateWorkExperience(index, 'description', e.target.value)}
+                    placeholder="Details about this experience or achievement"
+                  />
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 

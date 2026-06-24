@@ -46,7 +46,7 @@ export default async function Home() {
       <NavigationServer />
       <main>
         <HeroSection content={content} profile={profile} />
-        <AboutSection content={content} highlights={highlights} />
+        <AboutSection content={content} highlights={highlights} profile={profile} />
         <GallerySection />
         <ContactSection socialLinks={socialLinks} />
       </main>

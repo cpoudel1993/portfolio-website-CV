@@ -15,6 +15,7 @@ export interface ProfileInput {
   github_url: string | null
   twitter_url: string | null
   youtube_url: string | null
+  work_experience: string | null
 }
 
 const SUPERADMIN_EMAIL = 'c.poudel1993@gmail.com'
@@ -63,6 +64,7 @@ export async function upsertProfile(input: ProfileInput) {
       github_url: input.github_url?.trim() || null,
       twitter_url: input.twitter_url?.trim() || null,
       youtube_url: input.youtube_url?.trim() || null,
+      work_experience: input.work_experience || null,
     }
     const { error } = await supabase.from('profiles').upsert(payload, { onConflict: 'id' })
     if (error) {

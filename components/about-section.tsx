@@ -5,14 +5,27 @@ import {
   getHighlightIcon,
   type Highlight,
 } from "@/lib/site-content"
+import type { PublicProfile } from "@/app/actions/profile-public"
 
 export function AboutSection({
   content = DEFAULT_HOMEPAGE_CONTENT,
   highlights = DEFAULT_HIGHLIGHTS,
+  profile,
 }: {
   content?: HomepageContent
   highlights?: Highlight[]
+  profile?: PublicProfile | null
 }) {
+  // Use work experience from profile if available, otherwise fall back to highlights
+  const displayHighlights = profile?.work_experience
+    ? (() => {
+        try {
+          return JSON.parse(profile.work_experience) as Highlight[]
+        } catch {
+          return highlights
+        }
+      })()
+    : highlights
   return (
     <section id="about" className="px-4 py-20 lg:py-28">
       <div className="mx-auto max-w-6xl">
@@ -54,7 +67,7 @@ export function AboutSection({
 
         {/* Highlight Cards */}
         <div className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {highlights.map((item, index) => {
+          {displayHighlights.map((item, index) => {
             const Icon = getHighlightIcon(item.icon)
             return (
               <div
