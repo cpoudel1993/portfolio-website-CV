@@ -230,7 +230,20 @@ export function ProfileForm({ initial, email }: ProfileFormProps) {
           </div>
 
           <div>
-            <Label>Favicon (Logo)</Label>
+            <Label htmlFor="favicon_url">Favicon URL</Label>
+            <Input
+              id="favicon_url"
+              value={form.favicon_url ?? ''}
+              onChange={(e) => handleChange('favicon_url', e.target.value)}
+              placeholder="https://..."
+            />
+            <p className="mt-1 text-xs text-muted-foreground">
+              Paste a hosted favicon URL or upload below.
+            </p>
+          </div>
+
+          <div>
+            <Label>Upload Favicon (Logo)</Label>
             <div className="mt-2 flex items-end gap-4">
               {form.favicon_url && (
                 <img
