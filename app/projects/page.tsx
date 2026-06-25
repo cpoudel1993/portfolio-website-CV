@@ -1,6 +1,5 @@
 import { Metadata } from 'next'
 import { NavigationServer } from '@/components/navigation-server'
-import { PageHero } from '@/components/page-hero'
 import { Footer } from '@/components/footer'
 import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
@@ -39,12 +38,6 @@ export default async function ProjectsPage() {
     <>
       <NavigationServer />
       <main>
-        <PageHero
-          title="My Projects"
-          subtitle="Portfolio & Work"
-          description="Explore the projects I've built, from full-stack applications to civil engineering solutions and innovative digital products."
-          imageUrl="/api/placeholder?w=500&h=500"
-        />
         <section className="px-4 py-20 lg:py-28">
           <div className="mx-auto max-w-6xl">
             {projects.length === 0 ? (
