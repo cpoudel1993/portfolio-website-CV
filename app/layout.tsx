@@ -19,6 +19,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const displayName = profile?.display_name || 'Chiranjivi Poudel'
   const fullName = profile?.full_name || 'Chiranjivi Poudel'
   const bio = profile?.bio || 'Originally from Nepal, now based in Hamilton, New Zealand. Process Worker at Silver Fern Farms with a strong background in Civil Engineering, Surveying, Site Supervision, and Full-Stack Web Development. Eligible for full-time work in New Zealand.'
+  const faviconUrl = profile?.favicon_url || '/favicon.jpg'
 
   return {
     title: {
@@ -85,8 +86,8 @@ export async function generateMetadata(): Promise<Metadata> {
       },
     },
     icons: {
-      icon: '/favicon.jpg',
-      apple: '/apple-icon.jpg',
+      icon: faviconUrl,
+      apple: faviconUrl,
     },
   }
 }

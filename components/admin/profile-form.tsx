@@ -25,9 +25,9 @@ export function ProfileForm({ initial, email }: ProfileFormProps) {
   const [form, setForm] = useState<ProfileInput>({
     full_name: initial.full_name ?? '',
     display_name: initial.display_name ?? '',
-    site_title: initial.site_title ?? '',
     bio: initial.bio ?? '',
     avatar_url: initial.avatar_url ?? '',
+    favicon_url: initial.favicon_url ?? '',
     initials: initial.initials ?? '',
     phone: initial.phone ?? '',
     location: initial.location ?? '',
@@ -69,7 +69,7 @@ export function ProfileForm({ initial, email }: ProfileFormProps) {
     setWorkExperience((w) => w.filter((_, i) => i !== index))
   }
 
-  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>, type: 'avatar' | 'favicon' = 'avatar') => {
     const file = e.target.files?.[0]
     if (!file) return
 
@@ -77,16 +77,16 @@ export function ProfileForm({ initial, email }: ProfileFormProps) {
     try {
       const formData = new FormData()
       formData.append('file', file)
-      formData.append('folder', 'avatars')
+      formData.append('folder', type === 'favicon' ? 'favicons' : 'avatars')
 
       const res = await fetch('/api/upload', { method: 'POST', body: formData })
       if (!res.ok) throw new Error('Upload failed')
 
       const { url } = await res.json()
-      handleChange('avatar_url', url)
-      flash({ type: 'success', message: 'Avatar uploaded successfully.' })
+      handleChange(type === 'favicon' ? 'favicon_url' : 'avatar_url', url)
+      flash({ type: 'success', message: `${type === 'favicon' ? 'Favicon' : 'Avatar'} uploaded successfully.` })
     } catch (err) {
-      flash({ type: 'error', message: 'Failed to upload avatar.' })
+      flash({ type: 'error', message: `Failed to upload ${type}.` })
       console.error(err)
     } finally {
       setUploading(false)
@@ -230,13 +230,35 @@ export function ProfileForm({ initial, email }: ProfileFormProps) {
           </div>
 
           <div>
-            <Label htmlFor="site_title">Site Title (shown near logo/favicon)</Label>
-            <Input
-              id="site_title"
-              value={form.site_title ?? ''}
-              onChange={(e) => handleChange('site_title', e.target.value)}
-              placeholder="Chiranjivi Poudel"
-            />
+            <Label>Favicon (Logo)</Label>
+            <div className="mt-2 flex items-end gap-4">
+              {form.favicon_url && (
+                <img
+                  src={form.favicon_url}
+                  alt="Favicon preview"
+                  className="h-16 w-16 rounded-lg object-contain border border-border"
+                />
+              )}
+              <label className="cursor-pointer">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => handleAvatarUpload(e, 'favicon')}
+                  disabled={uploading}
+                  className="hidden"
+                />
+                <Button type="button" variant="outline" size="sm" disabled={uploading} asChild>
+                  <span className="gap-2 flex items-center">
+                    {uploading ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <Upload className="h-4 w-4" />
+                    )}
+                    {uploading ? 'Uploading...' : 'Choose Favicon'}
+                  </span>
+                </Button>
+              </label>
+            </div>
           </div>
 
           <div>

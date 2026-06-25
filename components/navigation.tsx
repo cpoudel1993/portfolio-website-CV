@@ -36,7 +36,7 @@ const languages = [
   { code: "jp", label: "Japanese" },
 ]
 
-export function Navigation({ menuItems, initials = 'CP', siteTitle = 'Chiranjivi Poudel' }: { menuItems?: NavLink[]; initials?: string; siteTitle?: string } = {}) {
+export function Navigation({ menuItems, initials = 'CP' }: { menuItems?: NavLink[]; initials?: string } = {}) {
   const pathname = usePathname()
   const router = useRouter()
   const isHomePage = pathname === '/'
@@ -105,7 +105,7 @@ export function Navigation({ menuItems, initials = 'CP', siteTitle = 'Chiranjivi
       }`}
     >
       <nav className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 lg:px-8" style={{ fontFamily: '"IBM Plex Sans", sans-serif', fontWeight: 300 }}>
-        {/* Logo and Brand */}
+        {/* Logo */}
         <Link
           href="/"
           onClick={() => {
@@ -113,14 +113,11 @@ export function Navigation({ menuItems, initials = 'CP', siteTitle = 'Chiranjivi
               handleAnchorClick({ label: "Home", href: "/", anchor: "#home" })
             }
           }}
-          className="flex flex-col gap-0.5"
+          className="text-lg font-bold tracking-tight text-foreground"
         >
-          <div className="text-lg font-bold tracking-tight text-foreground">
-            {initials.split('')[0]}
-            {initials.split('')[1]}
-            <span className="text-primary">.</span>
-          </div>
-          <p className="text-xs text-muted-foreground font-medium">{siteTitle}</p>
+          {initials.split('')[0]}
+          {initials.split('')[1]}
+          <span className="text-primary">.</span>
         </Link>
 
         {/* Desktop Nav Links */}

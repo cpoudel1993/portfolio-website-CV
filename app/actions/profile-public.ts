@@ -6,9 +6,9 @@ export interface PublicProfile {
   id: string
   full_name: string | null
   display_name: string | null
-  site_title: string | null
   bio: string | null
   avatar_url: string | null
+  favicon_url: string | null
   initials: string | null
   location: string | null
   linkedin_url: string | null
