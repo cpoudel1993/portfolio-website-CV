@@ -13,5 +13,9 @@ export async function NavigationServer() {
     external: item.is_external || undefined,
   }))
 
-  return <Navigation menuItems={menuItems} initials={profile?.initials || 'CP'} />
+  return <Navigation 
+    menuItems={menuItems} 
+    initials={profile?.initials || 'CP'}
+    siteTitle={profile?.site_title || 'Chiranjivi Poudel'}
+  />
 }

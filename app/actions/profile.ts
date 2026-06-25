@@ -6,6 +6,7 @@ import { revalidatePath } from 'next/cache'
 export interface ProfileInput {
   full_name: string | null
   display_name: string | null
+  site_title: string | null
   bio: string | null
   avatar_url: string | null
   initials: string | null
@@ -56,6 +57,7 @@ export async function upsertProfile(input: ProfileInput) {
       id: user.id,
       full_name: input.full_name?.trim() || null,
       display_name: input.display_name?.trim() || null,
+      site_title: input.site_title?.trim() || null,
       bio: input.bio?.trim() || null,
       avatar_url: input.avatar_url?.trim() || null,
       initials: input.initials?.trim() || null,

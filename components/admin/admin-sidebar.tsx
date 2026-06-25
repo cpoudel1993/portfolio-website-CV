@@ -57,6 +57,7 @@ const sidebarLinks = [
     links: [
       { label: "Messages", href: "/protected/messages", icon: MessageSquare },
       { label: "Images", href: "/protected/images", icon: ImageIcon },
+      { label: "Users", href: "/protected/users", icon: Users },
       { label: "Profile", href: "/protected/profile", icon: UserCircle },
       { label: "Menu", href: "/protected/menu", icon: ListOrdered },
       { label: "SEO Settings", href: "/protected/seo", icon: Search },

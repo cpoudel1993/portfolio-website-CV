@@ -12,8 +12,10 @@ import { DEFAULT_SOCIAL_LINKS, getSocialIcon, type SocialLink } from "@/lib/site
 
 export function ContactSection({
   socialLinks = DEFAULT_SOCIAL_LINKS,
+  backgroundImage = '/images/anime-mountain-bg-2.jpg',
 }: {
   socialLinks?: SocialLink[]
+  backgroundImage?: string
 }) {
   const [formData, setFormData] = useState({
     full_name: "",
@@ -60,11 +62,11 @@ export function ContactSection({
 
   return (
     <section id="contact" className="relative px-4 py-20 lg:py-28 overflow-hidden">
-      {/* Anime-style mountain background */}
+      {/* Contact section background */}
       <div className="absolute inset-0">
         <Image
-          src="/images/anime-mountain-bg-2.jpg"
-          alt="Anime-style mountain sunset landscape"
+          src={backgroundImage}
+          alt="Contact section background"
           fill
           className="object-cover object-center"
           quality={90}

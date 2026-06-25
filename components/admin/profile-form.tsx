@@ -25,6 +25,7 @@ export function ProfileForm({ initial, email }: ProfileFormProps) {
   const [form, setForm] = useState<ProfileInput>({
     full_name: initial.full_name ?? '',
     display_name: initial.display_name ?? '',
+    site_title: initial.site_title ?? '',
     bio: initial.bio ?? '',
     avatar_url: initial.avatar_url ?? '',
     initials: initial.initials ?? '',
@@ -229,7 +230,17 @@ export function ProfileForm({ initial, email }: ProfileFormProps) {
           </div>
 
           <div>
-            <Label htmlFor="initials">Initials (shown in footer)</Label>
+            <Label htmlFor="site_title">Site Title (shown near logo/favicon)</Label>
+            <Input
+              id="site_title"
+              value={form.site_title ?? ''}
+              onChange={(e) => handleChange('site_title', e.target.value)}
+              placeholder="Chiranjivi Poudel"
+            />
+          </div>
+
+          <div>
+            <Label htmlFor="initials">Initials (shown in menu and footer)</Label>
             <Input
               id="initials"
               value={form.initials ?? ''}

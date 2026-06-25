@@ -49,11 +49,15 @@ export function HomepageForm({ initial, userId }: HomepageFormProps) {
   const [socialLinks, setSocialLinks] = useState<SocialLink[]>(() =>
     parseSocialLinks(initial[SITE_CONTENT_KEYS.socialLinks]),
   )
-  const [uploadingField, setUploadingField] = useState<keyof HomepageContent | null>(null)
+  const [uploadingField, setUploadingField] = useState<keyof HomepageContent | string | null>(null)
+  const [contactBgImage, setContactBgImage] = useState<string>(
+    initial.contact_bg_image || '/images/anime-mountain-bg-2.jpg',
+  )
 
   const bgInputRef = useRef<HTMLInputElement>(null)
   const profileInputRef = useRef<HTMLInputElement>(null)
   const aboutInputRef = useRef<HTMLInputElement>(null)
+  const contactBgInputRef = useRef<HTMLInputElement>(null)
 
   const flash = (s: Status) => {
     setStatus(s)
@@ -80,7 +84,7 @@ export function HomepageForm({ initial, userId }: HomepageFormProps) {
     setSocialLinks((s) => s.filter((_, i) => i !== index))
 
   async function uploadImage(
-    field: keyof HomepageContent,
+    field: keyof HomepageContent | string,
     e: React.ChangeEvent<HTMLInputElement>,
   ) {
     const file = e.target.files?.[0]
@@ -114,7 +118,11 @@ export function HomepageForm({ initial, userId }: HomepageFormProps) {
         data: { publicUrl },
       } = supabase.storage.from("gallery-images").getPublicUrl(path)
 
-      set(field, publicUrl)
+      if (field === 'contact_bg_image') {
+        setContactBgImage(publicUrl)
+      } else {
+        set(field as keyof HomepageContent, publicUrl)
+      }
       flash({ type: "success", message: "Image uploaded. Remember to save." })
     } catch (err) {
       console.error("[v0] homepage image upload error", err)
@@ -131,6 +139,7 @@ export function HomepageForm({ initial, userId }: HomepageFormProps) {
         ...mapHomepageContentToSettings(content),
         [SITE_CONTENT_KEYS.highlights]: JSON.stringify(highlights),
         [SITE_CONTENT_KEYS.socialLinks]: JSON.stringify(socialLinks),
+        contact_bg_image: contactBgImage,
       }
       console.log("[v0] Saving homepage settings:", payload)
       const result = await upsertSiteSettings(payload)
@@ -586,6 +595,55 @@ export function HomepageForm({ initial, userId }: HomepageFormProps) {
               </div>
             )
           })}
+        </div>
+      </div>
+
+      {/* Contact Section Background Image */}
+      <div className="rounded-lg border border-border bg-card p-6">
+        <h2 className="text-lg font-semibold mb-4">Contact Section Background</h2>
+        <div className="flex items-end gap-4">
+          {contactBgImage && (
+            <div className="relative h-32 w-48 flex-shrink-0 rounded-lg border border-border overflow-hidden">
+              <Image
+                src={contactBgImage}
+                alt="Contact background preview"
+                fill
+                className="object-cover"
+              />
+            </div>
+          )}
+          <div>
+            <Label htmlFor="contact-bg">Choose Image</Label>
+            <input
+              ref={contactBgInputRef}
+              id="contact-bg"
+              type="file"
+              accept="image/*"
+              onChange={(e) => uploadImage('contact_bg_image', e)}
+              disabled={uploadingField === 'contact_bg_image'}
+              className="hidden"
+            />
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              disabled={uploadingField === 'contact_bg_image'}
+              className="gap-2 mt-2"
+              onClick={() => contactBgInputRef.current?.click()}
+            >
+              {uploadingField === 'contact_bg_image' ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Uploading...
+                </>
+              ) : (
+                <>
+                  <Upload className="h-4 w-4" />
+                  Upload Image
+                </>
+              )}
+            </Button>
+          </div>
         </div>
       </div>
 
