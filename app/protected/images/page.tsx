@@ -7,6 +7,7 @@ import { listImages, deleteImage } from '@/app/actions/images'
 
 interface Image {
   name: string
+  filename: string
   size: number
   created_at: string
   url: string
@@ -34,13 +35,13 @@ export default function ImagesPage() {
     setLoading(false)
   }
 
-  const handleDelete = async (filename: string) => {
+  const handleDelete = async (fullPath: string, filename: string) => {
     if (!confirm(`Delete "${filename}"? This action cannot be undone.`)) return
 
-    setDeleting(filename)
-    const result = await deleteImage(filename)
+    setDeleting(fullPath)
+    const result = await deleteImage(fullPath)
     if (result.success) {
-      setImages(images.filter((img) => img.name !== filename))
+      setImages(images.filter((img) => img.name !== fullPath))
       setError(null)
     } else {
       setError(result.error || 'Failed to delete image')
@@ -107,8 +108,11 @@ export default function ImagesPage() {
               <div className="aspect-square overflow-hidden bg-muted">
                 <img
                   src={image.url}
-                  alt={image.name}
+                  alt={image.filename}
                   className="h-full w-full object-cover hover:scale-105 transition-transform duration-300"
+                  onError={(e) => {
+                    console.log('[v0] Image failed to load:', image.url)
+                  }}
                 />
               </div>
 
@@ -116,10 +120,13 @@ export default function ImagesPage() {
               <div className="p-4 space-y-3">
                 <div>
                   <p className="font-medium text-sm text-foreground truncate" title={image.name}>
-                    {image.name}
+                    {image.filename}
                   </p>
                   <p className="text-xs text-muted-foreground mt-1">
                     {formatFileSize(image.size)} • {formatDate(image.created_at)}
+                  </p>
+                  <p className="text-xs text-muted-foreground/70 mt-1 truncate" title={image.name}>
+                    Path: {image.name}
                   </p>
                 </div>
 
@@ -128,7 +135,7 @@ export default function ImagesPage() {
                   variant="destructive"
                   size="sm"
                   className="w-full gap-2"
-                  onClick={() => handleDelete(image.name)}
+                  onClick={() => handleDelete(image.name, image.filename)}
                   disabled={deleting === image.name}
                 >
                   {deleting === image.name ? (
