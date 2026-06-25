@@ -79,15 +79,26 @@ export function ProfileForm({ initial, email }: ProfileFormProps) {
       formData.append('file', file)
       formData.append('folder', type === 'favicon' ? 'favicons' : 'avatars')
 
+      console.log("[v0] Uploading", type, "file:", file.name)
       const res = await fetch('/api/upload', { method: 'POST', body: formData })
-      if (!res.ok) throw new Error('Upload failed')
+      console.log("[v0] Upload response status:", res.status)
+      
+      if (!res.ok) {
+        const errorData = await res.json()
+        console.log("[v0] Upload error response:", errorData)
+        throw new Error(errorData.error || 'Upload failed')
+      }
 
-      const { url } = await res.json()
+      const { url, error } = await res.json()
+      if (error) throw new Error(error)
+      if (!url) throw new Error('No URL returned from upload')
+      
       handleChange(type === 'favicon' ? 'favicon_url' : 'avatar_url', url)
       flash({ type: 'success', message: `${type === 'favicon' ? 'Favicon' : 'Avatar'} uploaded successfully.` })
     } catch (err) {
-      flash({ type: 'error', message: `Failed to upload ${type}.` })
-      console.error(err)
+      const errorMessage = err instanceof Error ? err.message : 'Failed to upload'
+      flash({ type: 'error', message: `Failed to upload ${type}: ${errorMessage}` })
+      console.error("[v0] Upload error:", err)
     } finally {
       setUploading(false)
     }
@@ -230,7 +241,20 @@ export function ProfileForm({ initial, email }: ProfileFormProps) {
           </div>
 
           <div>
-            <Label>Favicon (Logo)</Label>
+            <Label htmlFor="favicon_url">Favicon URL</Label>
+            <Input
+              id="favicon_url"
+              value={form.favicon_url ?? ''}
+              onChange={(e) => handleChange('favicon_url', e.target.value)}
+              placeholder="https://..."
+            />
+            <p className="mt-1 text-xs text-muted-foreground">
+              Paste a hosted favicon URL or upload below.
+            </p>
+          </div>
+
+          <div>
+            <Label>Upload Favicon (Logo)</Label>
             <div className="mt-2 flex items-end gap-4">
               {form.favicon_url && (
                 <img

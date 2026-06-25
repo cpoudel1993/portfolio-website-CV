@@ -5,10 +5,10 @@ const SUPERADMIN_EMAIL = 'c.poudel1993@gmail.com'
 
 export async function POST(req: NextRequest) {
   try {
-    // Check auth
+    // Check auth - allow any authenticated user
     const supabase = await createClient()
     const { data, error: authError } = await supabase.auth.getUser()
-    if (authError || !data?.user || data.user.email !== SUPERADMIN_EMAIL) {
+    if (authError || !data?.user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
@@ -35,8 +35,10 @@ export async function POST(req: NextRequest) {
 
     if (uploadError) {
       console.error('[v0] Upload error:', uploadError)
-      return NextResponse.json({ error: 'Upload failed' }, { status: 500 })
+      return NextResponse.json({ error: uploadError.message || 'Upload failed' }, { status: 500 })
     }
+
+    console.log('[v0] Upload successful:', filename)
 
     // Get public URL
     const { data: publicUrlData } = supabase.storage
@@ -46,6 +48,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ url: publicUrlData.publicUrl })
   } catch (err) {
     console.error('[v0] Upload route error:', err)
-    return NextResponse.json({ error: 'Server error' }, { status: 500 })
+    const errorMessage = err instanceof Error ? err.message : 'Server error'
+    return NextResponse.json({ error: errorMessage }, { status: 500 })
   }
 }
