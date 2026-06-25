@@ -17,12 +17,13 @@ export const metadata: Metadata = {
 export default async function ContactPage() {
   const settings = await getSiteSettingsAsMap()
   const socialLinks = parseSocialLinks(settings.site_social_links)
+  const contactBgImage = settings.contact_bg_image || '/images/anime-mountain-bg-2.jpg'
 
   return (
     <>
       <NavigationServer />
       <main>
-        <ContactSection socialLinks={socialLinks} />
+        <ContactSection socialLinks={socialLinks} backgroundImage={contactBgImage} />
       </main>
       <Footer />
     </>

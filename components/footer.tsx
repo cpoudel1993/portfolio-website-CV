@@ -48,7 +48,16 @@ export async function Footer() {
 
         <div className="mt-8 border-t border-border pt-6 text-center">
           <p className="text-xs text-muted-foreground">
-            {`\u00A9 ${currentYear} Chiranjivi Poudel. All rights reserved.`}
+            {`\u00A9 ${profile?.display_name || 'Chiranjivi Poudel'} ${currentYear} built by `}
+            <a 
+              href="https://chiranjivipoudel.com.np" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-primary hover:underline"
+            >
+              Chiranjivi Poudel (chiranjivipoudel.com.np)
+            </a>
+            {`. All rights reserved.`}
           </p>
         </div>
       </div>
