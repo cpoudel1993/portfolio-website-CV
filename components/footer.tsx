@@ -55,7 +55,7 @@ export async function Footer() {
               rel="noopener noreferrer"
               className="text-primary hover:underline"
             >
-              Chiranjivi Poudel (chiranjivipoudel.com.np)
+              Chiranjivi Poudel
             </a>
             {`. All rights reserved.`}
           </p>
