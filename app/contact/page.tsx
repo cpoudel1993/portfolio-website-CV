@@ -1,6 +1,5 @@
 import { Metadata } from 'next'
 import { NavigationServer } from '@/components/navigation-server'
-import { PageHero } from '@/components/page-hero'
 import { ContactSection } from '@/components/contact-section'
 import { Footer } from '@/components/footer'
 import { getSiteSettingsAsMap } from '@/app/actions/site-settings'
@@ -23,12 +22,6 @@ export default async function ContactPage() {
     <>
       <NavigationServer />
       <main>
-        <PageHero
-          title="Get In Touch"
-          subtitle="Let's Connect"
-          description="Have a question or interested in collaborating? I'd love to hear from you. Reach out and let's start a conversation."
-          imageUrl="/api/placeholder?w=500&h=500"
-        />
         <ContactSection socialLinks={socialLinks} />
       </main>
       <Footer />

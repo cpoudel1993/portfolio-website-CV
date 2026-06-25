@@ -1,6 +1,5 @@
 import { Metadata } from 'next'
 import { NavigationServer } from '@/components/navigation-server'
-import { PageHero } from '@/components/page-hero'
 import { ExperienceSection } from '@/components/experience-section'
 import { Footer } from '@/components/footer'
 
@@ -18,12 +17,6 @@ export default function ExperiencePage() {
     <>
       <NavigationServer />
       <main>
-        <PageHero
-          title="My Experience"
-          subtitle="Professional Journey"
-          description="Explore my professional background, roles, and key achievements across various industries and organizations."
-          imageUrl="/api/placeholder?w=500&h=500"
-        />
         <ExperienceSection />
       </main>
       <Footer />
