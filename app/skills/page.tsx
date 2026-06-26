@@ -1,6 +1,5 @@
 import { Metadata } from 'next'
 import { NavigationServer } from '@/components/navigation-server'
-import { PageHero } from '@/components/page-hero'
 import { SkillsSection } from '@/components/skills-section'
 import { Footer } from '@/components/footer'
 
@@ -18,12 +17,6 @@ export default function SkillsPage() {
     <>
       <NavigationServer />
       <main>
-        <PageHero
-          title="My Skills"
-          subtitle="Technical Expertise"
-          description="Discover the technical and professional skills I've developed through years of experience in engineering and software development."
-          imageUrl="/api/placeholder?w=500&h=500"
-        />
         <SkillsSection />
       </main>
       <Footer />
