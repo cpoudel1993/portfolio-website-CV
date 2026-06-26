@@ -90,14 +90,9 @@ export function ContactSection({
         <div className="flex flex-col gap-10 lg:flex-row lg:gap-16">
           {/* Contact Info */}
           <div className="flex-1">
-            <h3 className="mb-4 text-lg font-semibold text-foreground">
+            <h3 className="mb-6 text-lg font-semibold text-foreground">
               {"Let's Connect"}
             </h3>
-            <p className="mb-8 text-base leading-relaxed text-muted-foreground">
-              {"I'm"} always open to discussing new opportunities, whether in production,
-              construction, engineering, or customer-focused roles in New Zealand. Feel
-              free to reach out.
-            </p>
 
             <div className="space-y-5">
               {socialLinks.map((link) => {
