@@ -48,6 +48,7 @@ const sidebarLinks = [
       { label: "Projects", href: "/protected/projects", icon: FolderOpen },
       { label: "Gallery", href: "/protected/gallery", icon: ImageIcon },
       { label: "Experience", href: "/protected/experience", icon: Briefcase },
+      { label: "Skills", href: "/protected/skills", icon: Wrench },
       { label: "Certifications", href: "/protected/certifications", icon: Award },
       { label: "Blog Posts", href: "/protected/blog-posts", icon: FileText },
     ],
