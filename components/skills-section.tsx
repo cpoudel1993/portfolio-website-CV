@@ -17,6 +17,7 @@ interface Skill {
 interface SkillCategory {
   name: string
   icon: React.ComponentType<{ className?: string }>
+  iconUrl?: string | null
   skills: Skill[]
 }
 
@@ -45,12 +46,18 @@ export function SkillsSection() {
     let mounted = true
 
     const fetchSkills = async () => {
-      const { data, error } = await supabase
-        .from('skills')
-        .select('*')
-        .eq('status', 'published')
-        .order('category', { ascending: true })
-        .order('name', { ascending: true })
+      const [{ data, error }, { data: cats }] = await Promise.all([
+        supabase
+          .from('skills')
+          .select('*')
+          .eq('status', 'published')
+          .order('name', { ascending: true }),
+        supabase
+          .from('skill_categories')
+          .select('*')
+          .order('sort_order', { ascending: true })
+          .order('name', { ascending: true }),
+      ])
 
       if (!mounted) return
       if (error) {
@@ -59,20 +66,35 @@ export function SkillsSection() {
         return
       }
 
-      // Group skills by category
-      const grouped = (data || []).reduce((acc: SkillCategory[], skill) => {
-        const existing = acc.find((g) => g.name === skill.category)
-        if (existing) {
-          existing.skills.push(skill)
-        } else {
-          acc.push({
-            name: skill.category || 'Other',
-            icon: iconMap[skill.category] || Monitor,
-            skills: [skill],
-          })
-        }
-        return acc
-      }, [] as SkillCategory[])
+      const skillsData = data || []
+      let grouped: SkillCategory[]
+
+      if (cats && cats.length > 0) {
+        // Use managed categories (ordered) and attach their uploaded logos
+        grouped = cats
+          .map((cat) => ({
+            name: cat.name,
+            icon: iconMap[cat.name] || Monitor,
+            iconUrl: cat.icon_url as string | null,
+            skills: skillsData.filter((s) => s.category === cat.name),
+          }))
+          .filter((g) => g.skills.length > 0)
+      } else {
+        // Fallback: derive categories from skills
+        grouped = skillsData.reduce((acc: SkillCategory[], skill) => {
+          const existing = acc.find((g) => g.name === skill.category)
+          if (existing) {
+            existing.skills.push(skill)
+          } else {
+            acc.push({
+              name: skill.category || 'Other',
+              icon: iconMap[skill.category] || Monitor,
+              skills: [skill],
+            })
+          }
+          return acc
+        }, [] as SkillCategory[])
+      }
 
       setSkillsByCategory(grouped)
       setLoading(false)
@@ -86,6 +108,13 @@ export function SkillsSection() {
       .on(
         'postgres_changes',
         { event: '*', schema: 'public', table: 'skills' },
+        () => {
+          fetchSkills()
+        }
+      )
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'skill_categories' },
         () => {
           fetchSkills()
         }
@@ -135,8 +164,13 @@ export function SkillsSection() {
                 className="group rounded-xl border border-border bg-card p-6 transition-all hover:border-primary/30 hover:shadow-md"
               >
                 <div className="mb-5 flex items-center gap-3">
-                  <div className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
-                    <Icon className="h-5 w-5" />
+                  <div className="inline-flex h-10 w-10 items-center justify-center overflow-hidden rounded-lg bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
+                    {category.iconUrl ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={category.iconUrl || "/placeholder.svg"} alt={category.name} className="h-full w-full object-cover" />
+                    ) : (
+                      <Icon className="h-5 w-5" />
+                    )}
                   </div>
                   <h3 className="text-sm font-semibold text-foreground">{category.name}</h3>
                 </div>
