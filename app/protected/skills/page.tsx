@@ -25,6 +25,17 @@ export default async function SkillsPage() {
     console.error('[v0] Error fetching skills:', fetchError)
   }
 
+  const { data: categories, error: catError } = await supabase
+    .from('skill_categories')
+    .select('*')
+    .eq('user_id', data.user.id)
+    .order('sort_order', { ascending: true })
+    .order('name', { ascending: true })
+
+  if (catError) {
+    console.error('[v0] Error fetching skill categories:', catError)
+  }
+
   return (
     <div className="space-y-6">
       <div>
@@ -32,7 +43,7 @@ export default async function SkillsPage() {
         <p className="mt-2 text-muted-foreground">Manage your technical and professional skills</p>
       </div>
 
-      <SkillsManager skills={skills || []} userId={data.user.id} />
+      <SkillsManager skills={skills || []} categories={categories || []} userId={data.user.id} />
     </div>
   )
 }
