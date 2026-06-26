@@ -29,7 +29,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
-import { Plus, Edit, Trash2, Award, Clock, ExternalLink, FileText } from 'lucide-react'
+import { Plus, Edit, Trash2, Award, Clock, ExternalLink, FileText, Upload, Loader2 } from 'lucide-react'
 import { createCertification, updateCertification, deleteCertification } from '@/app/actions/certification'
 
 interface Certification {
@@ -73,7 +73,36 @@ export function CertificationManager({ certifications, userId }: CertificationMa
   const [editingId, setEditingId] = useState<string | null>(null)
   const [deleteId, setDeleteId] = useState<string | null>(null)
   const [isSaving, setIsSaving] = useState(false)
+  const [isUploading, setIsUploading] = useState(false)
+  const [uploadError, setUploadError] = useState<string | null>(null)
   const [formData, setFormData] = useState(emptyCert)
+
+  const handlePdfUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    if (file.type !== 'application/pdf') {
+      setUploadError('Please select a PDF file.')
+      return
+    }
+    setUploadError(null)
+    setIsUploading(true)
+    try {
+      const uploadForm = new FormData()
+      uploadForm.append('file', file)
+      uploadForm.append('folder', 'certificates')
+
+      const res = await fetch('/api/upload', { method: 'POST', body: uploadForm })
+      const result = await res.json()
+      if (!res.ok) throw new Error(result.error || 'Upload failed')
+
+      setFormData((prev) => ({ ...prev, pdf_url: result.url }))
+    } catch (err) {
+      console.error('[v0] PDF upload error:', err)
+      setUploadError(err instanceof Error ? err.message : 'Upload failed')
+    } finally {
+      setIsUploading(false)
+    }
+  }
 
   const openCreateDialog = () => {
     setEditingId(null)
@@ -354,14 +383,48 @@ export function CertificationManager({ certifications, userId }: CertificationMa
             </div>
 
             <div>
-              <Label htmlFor="pdf_url">PDF URL</Label>
-              <Input
-                id="pdf_url"
-                value={formData.pdf_url}
-                onChange={(e) => setFormData({ ...formData, pdf_url: e.target.value })}
-                placeholder="/certificates/..."
-                className="mt-1.5"
-              />
+              <Label htmlFor="pdf_url">Certificate PDF</Label>
+              <div className="mt-1.5 flex gap-2">
+                <Input
+                  id="pdf_url"
+                  value={formData.pdf_url}
+                  onChange={(e) => setFormData({ ...formData, pdf_url: e.target.value })}
+                  placeholder="Upload a PDF or paste a URL"
+                />
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="flex-shrink-0 gap-1.5"
+                  disabled={isUploading}
+                  onClick={() => document.getElementById('pdf_file_input')?.click()}
+                >
+                  {isUploading ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <Upload className="h-4 w-4" />
+                  )}
+                  {isUploading ? 'Uploading...' : 'Upload PDF'}
+                </Button>
+                <input
+                  id="pdf_file_input"
+                  type="file"
+                  accept="application/pdf"
+                  className="hidden"
+                  onChange={handlePdfUpload}
+                />
+              </div>
+              {uploadError && <p className="mt-1.5 text-xs text-destructive">{uploadError}</p>}
+              {formData.pdf_url && !uploadError && (
+                <a
+                  href={formData.pdf_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-1.5 inline-flex items-center gap-1 text-xs text-primary hover:underline"
+                >
+                  <FileText className="h-3 w-3" />
+                  Preview uploaded PDF
+                </a>
+              )}
             </div>
 
             <div className="grid grid-cols-2 gap-4">

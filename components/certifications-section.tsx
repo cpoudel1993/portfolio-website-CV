@@ -1,7 +1,6 @@
 'use client'
 
 import { ExternalLink, Clock, Award, FileText } from 'lucide-react'
-import { Button } from '@/components/ui/button'
 import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
 
@@ -96,76 +95,95 @@ export function CertificationsSection() {
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {certifications.map((cert) => (
-            <div
-              key={cert.id}
-              className="group flex flex-col rounded-xl border border-border bg-card p-5 transition-all hover:border-primary/30 hover:shadow-md"
-            >
-              <div className="mb-3 flex items-start justify-between gap-2">
-                <div className="inline-flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                  <Award className="h-4 w-4" />
-                </div>
-                <span className="rounded-full bg-muted px-2.5 py-0.5 text-xs font-medium text-muted-foreground">
-                  {cert.type || 'Certificate'}
-                </span>
-              </div>
-
-              <h3 className="mb-1 text-sm font-semibold text-foreground leading-snug">{cert.title}</h3>
-              <p className="mb-3 text-xs text-primary">{cert.platform}</p>
-
-              <div className="mb-4 flex flex-wrap gap-3 text-xs text-muted-foreground">
-                {cert.duration && (
-                  <span className="flex items-center gap-1">
-                    <Clock className="h-3 w-3" />
-                    {cert.duration}
-                  </span>
-                )}
-                {cert.date_earned && <span>{cert.date_earned}</span>}
-              </div>
-
-              {cert.skills && cert.skills.length > 0 && (
-                <div className="mb-4 flex flex-wrap gap-1.5">
-                  {cert.skills.map((skill) => (
-                    <span
-                      key={skill}
-                      className="rounded-md border border-primary/20 bg-primary/5 px-2 py-0.5 text-xs text-primary"
-                    >
-                      {skill}
-                    </span>
-                  ))}
-                </div>
-              )}
-
-              <div className="mt-auto flex flex-wrap gap-2">
-                {cert.verify_url && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-auto gap-1.5 px-0 text-xs text-muted-foreground hover:text-primary"
-                    asChild
-                  >
-                    <a href={cert.verify_url} target="_blank" rel="noopener noreferrer">
-                      Verify
-                      <ExternalLink className="h-3 w-3" />
-                    </a>
-                  </Button>
-                )}
+          {certifications.map((cert) => {
+            const CardTag = cert.pdf_url ? 'a' : 'div'
+            const cardProps = cert.pdf_url
+              ? { href: cert.pdf_url, target: '_blank', rel: 'noopener noreferrer' }
+              : {}
+            return (
+              <CardTag
+                key={cert.id}
+                {...cardProps}
+                className={`group relative flex flex-col overflow-hidden rounded-xl border border-border bg-card p-5 transition-all hover:border-primary/30 hover:shadow-md ${
+                  cert.pdf_url ? 'cursor-pointer' : ''
+                }`}
+              >
+                {/* PDF background preview */}
                 {cert.pdf_url && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-auto gap-1.5 px-0 text-xs text-muted-foreground hover:text-primary"
-                    asChild
-                  >
-                    <a href={cert.pdf_url} target="_blank" rel="noopener noreferrer">
-                      View PDF
-                      <FileText className="h-3 w-3" />
-                    </a>
-                  </Button>
+                  <div className="pointer-events-none absolute inset-0 z-0" aria-hidden="true">
+                    <iframe
+                      src={`${cert.pdf_url}#toolbar=0&navpanes=0&scrollbar=0&view=FitH`}
+                      title={`${cert.title} preview`}
+                      className="h-full w-full scale-105 opacity-[0.07] transition-opacity duration-300 group-hover:opacity-[0.14]"
+                      tabIndex={-1}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-b from-card/70 via-card/80 to-card" />
+                  </div>
                 )}
-              </div>
-            </div>
-          ))}
+
+                <div className="relative z-10 flex flex-1 flex-col">
+                  <div className="mb-3 flex items-start justify-between gap-2">
+                    <div className="inline-flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                      <Award className="h-4 w-4" />
+                    </div>
+                    <span className="rounded-full bg-muted px-2.5 py-0.5 text-xs font-medium text-muted-foreground">
+                      {cert.type || 'Certificate'}
+                    </span>
+                  </div>
+
+                  <h3 className="mb-1 text-sm font-semibold text-foreground leading-snug">{cert.title}</h3>
+                  <p className="mb-3 text-xs text-primary">{cert.platform}</p>
+
+                  <div className="mb-4 flex flex-wrap gap-3 text-xs text-muted-foreground">
+                    {cert.duration && (
+                      <span className="flex items-center gap-1">
+                        <Clock className="h-3 w-3" />
+                        {cert.duration}
+                      </span>
+                    )}
+                    {cert.date_earned && <span>{cert.date_earned}</span>}
+                  </div>
+
+                  {cert.skills && cert.skills.length > 0 && (
+                    <div className="mb-4 flex flex-wrap gap-1.5">
+                      {cert.skills.map((skill) => (
+                        <span
+                          key={skill}
+                          className="rounded-md border border-primary/20 bg-primary/5 px-2 py-0.5 text-xs text-primary"
+                        >
+                          {skill}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+
+                  <div className="mt-auto flex flex-wrap gap-3">
+                    {cert.verify_url && (
+                      <span
+                        role="link"
+                        tabIndex={0}
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          e.preventDefault()
+                          window.open(cert.verify_url!, '_blank', 'noopener,noreferrer')
+                        }}
+                        className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-primary"
+                      >
+                        Verify
+                        <ExternalLink className="h-3 w-3" />
+                      </span>
+                    )}
+                    {cert.pdf_url && (
+                      <span className="inline-flex items-center gap-1.5 text-xs text-primary">
+                        View PDF
+                        <FileText className="h-3 w-3" />
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </CardTag>
+            )
+          })}
         </div>
       </div>
     </section>
