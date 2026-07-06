@@ -1,15 +1,11 @@
 import type { Metadata } from "next"
 import { NavigationServer } from "@/components/navigation-server"
 import { HeroSection } from "@/components/hero-section"
-import { AboutSection } from "@/components/about-section"
-import { GallerySection } from "@/components/gallery-section"
-import { ContactSection } from "@/components/contact-section"
 import { Footer } from "@/components/footer"
 import { getSiteSettingsAsMap } from "@/app/actions/site-settings"
 import { getSEOBySlug } from "@/app/actions/seo"
 import { getPublicProfile } from "@/app/actions/profile-public"
 import { mapSettingsToHomepageContent } from "@/lib/homepage-content"
-import { parseHighlights, parseSocialLinks } from "@/lib/site-content"
 
 export async function generateMetadata(): Promise<Metadata> {
   const seo = await getSEOBySlug("home")
@@ -38,17 +34,12 @@ export default async function Home() {
   const settings = await getSiteSettingsAsMap()
   const profile = await getPublicProfile()
   const content = mapSettingsToHomepageContent(settings)
-  const highlights = parseHighlights(settings.home_about_highlights)
-  const socialLinks = parseSocialLinks(settings.site_social_links)
 
   return (
     <>
       <NavigationServer />
       <main>
         <HeroSection content={content} profile={profile} />
-        <AboutSection content={content} highlights={highlights} profile={profile} />
-        <GallerySection />
-        <ContactSection socialLinks={socialLinks} />
       </main>
       <Footer />
     </>
