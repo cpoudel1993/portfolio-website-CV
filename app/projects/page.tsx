@@ -62,6 +62,11 @@ export default async function ProjectsPage() {
                       </div>
                     )}
                     <div className="p-5">
+                      {project.category && (
+                        <span className="inline-block mb-2 text-xs bg-primary/10 text-primary px-2 py-1 rounded font-medium">
+                          {project.category}
+                        </span>
+                      )}
                       <h3 className="font-semibold text-foreground mb-2">
                         {project.title}
                       </h3>
