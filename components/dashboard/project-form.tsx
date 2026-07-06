@@ -2,27 +2,55 @@
 
 import { useState } from 'react'
 import { createProject, updateProject } from '@/lib/db'
-import type { Project } from '@/lib/db'
+import type { Project, ProjectCategory } from '@/lib/db'
+import { Upload, Loader2 } from 'lucide-react'
 
 interface ProjectFormProps {
   userId: string
   project?: Project
+  categories: ProjectCategory[]
   onSuccess: () => void
 }
 
-export function ProjectForm({ userId, project, onSuccess }: ProjectFormProps) {
+export function ProjectForm({ userId, project, categories, onSuccess }: ProjectFormProps) {
   const [isLoading, setIsLoading] = useState(false)
+  const [isUploading, setIsUploading] = useState(false)
   const [error, setError] = useState<string>('')
   const [formData, setFormData] = useState({
     title: project?.title || '',
     description: project?.description || '',
     image_url: project?.image_url || '',
+    category: project?.category || categories[0]?.name || '',
     technologies: (project?.technologies || []).join(', '),
     live_url: project?.live_url || '',
     github_url: project?.github_url || '',
     featured: project?.featured || false,
     status: (project?.status || 'draft') as 'draft' | 'published' | 'archived',
   })
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setIsUploading(true)
+    setError('')
+    try {
+      const fd = new FormData()
+      fd.append('file', file)
+      fd.append('folder', 'projects')
+      const res = await fetch('/api/upload', { method: 'POST', body: fd })
+      if (!res.ok) {
+        const err = await res.json()
+        throw new Error(err.error || 'Upload failed')
+      }
+      const { url } = await res.json()
+      setFormData((prev) => ({ ...prev, image_url: url }))
+    } catch (err) {
+      console.error('[v0] Image upload error:', err)
+      setError(err instanceof Error ? err.message : 'Failed to upload image')
+    } finally {
+      setIsUploading(false)
+    }
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -72,6 +100,22 @@ export function ProjectForm({ userId, project, onSuccess }: ProjectFormProps) {
         </div>
 
         <div>
+          <label className="block text-sm font-medium mb-2">Category</label>
+          <select
+            value={formData.category}
+            onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+            className="w-full px-3 py-2 border border-border rounded-lg bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+          >
+            {categories.length === 0 && <option value="">No categories yet</option>}
+            {categories.map((cat) => (
+              <option key={cat.id} value={cat.name}>
+                {cat.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div>
           <label className="block text-sm font-medium mb-2">Status</label>
           <select
             value={formData.status}
@@ -95,15 +139,34 @@ export function ProjectForm({ userId, project, onSuccess }: ProjectFormProps) {
           />
         </div>
 
-        <div>
-          <label className="block text-sm font-medium mb-2">Image URL</label>
-          <input
-            type="url"
-            value={formData.image_url}
-            onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
-            className="w-full px-3 py-2 border border-border rounded-lg bg-background focus:outline-none focus:ring-2 focus:ring-primary"
-            placeholder="https://..."
-          />
+        <div className="md:col-span-2">
+          <label className="block text-sm font-medium mb-2">Project Image</label>
+          <div className="flex items-center gap-4">
+            <div className="flex h-20 w-28 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-border bg-background">
+              {formData.image_url ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={formData.image_url || "/placeholder.svg"} alt="Project preview" className="h-full w-full object-cover" />
+              ) : (
+                <span className="text-xs text-muted-foreground">No image</span>
+              )}
+            </div>
+            <div className="flex-1 space-y-2">
+              <label className="inline-block cursor-pointer">
+                <input type="file" accept="image/*" onChange={handleImageUpload} disabled={isUploading} className="hidden" />
+                <span className="inline-flex items-center gap-2 px-3 py-2 border border-border rounded-lg bg-background hover:bg-muted transition-colors text-sm">
+                  {isUploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
+                  {isUploading ? 'Uploading...' : 'Upload Image'}
+                </span>
+              </label>
+              <input
+                type="url"
+                value={formData.image_url}
+                onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
+                className="w-full px-3 py-2 border border-border rounded-lg bg-background focus:outline-none focus:ring-2 focus:ring-primary text-sm"
+                placeholder="Or paste an image URL"
+              />
+            </div>
+          </div>
         </div>
 
         <div>

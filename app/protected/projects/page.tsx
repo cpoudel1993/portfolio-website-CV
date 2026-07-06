@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { ProjectsTable } from '@/components/dashboard/projects-table'
-import type { Project } from '@/lib/db'
+import type { Project, ProjectCategory } from '@/lib/db'
 
 const SUPERADMIN_EMAIL = 'c.poudel1993@gmail.com'
 
@@ -24,6 +24,16 @@ export default async function ProjectsPage() {
     console.error('[v0] projects fetch error:', projectsError)
   }
 
+  const { data: categories, error: categoriesError } = await supabase
+    .from('project_categories')
+    .select('*')
+    .order('sort_order', { ascending: true })
+    .order('name', { ascending: true })
+
+  if (categoriesError) {
+    console.error('[v0] project categories fetch error:', categoriesError)
+  }
+
   return (
     <div className="space-y-6">
       <div>
@@ -33,7 +43,11 @@ export default async function ProjectsPage() {
         </p>
       </div>
       <div className="rounded-lg border border-border bg-card overflow-hidden">
-        <ProjectsTable projects={(projects ?? []) as Project[]} userId={data.user.id} />
+        <ProjectsTable
+          projects={(projects ?? []) as Project[]}
+          categories={(categories ?? []) as ProjectCategory[]}
+          userId={data.user.id}
+        />
       </div>
     </div>
   )

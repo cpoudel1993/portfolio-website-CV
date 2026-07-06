@@ -6,11 +6,22 @@ export interface Project {
   title: string
   description: string | null
   image_url: string | null
+  category: string | null
   technologies: string[] | null
   live_url: string | null
   github_url: string | null
   featured: boolean
   status: 'draft' | 'published' | 'archived'
+  created_at: string
+  updated_at: string
+}
+
+export interface ProjectCategory {
+  id: string
+  user_id: string
+  name: string
+  icon_url: string | null
+  sort_order: number
   created_at: string
   updated_at: string
 }
@@ -125,6 +136,65 @@ export async function deleteProject(id: string) {
   const supabase = createClient()
   const { error } = await supabase.from('projects').delete().eq('id', id)
   
+  if (error) throw error
+}
+
+// Project Categories
+export async function getProjectCategories() {
+  const supabase = createClient()
+  const { data, error } = await supabase
+    .from('project_categories')
+    .select('*')
+    .order('sort_order', { ascending: true })
+    .order('name', { ascending: true })
+
+  if (error) throw error
+  return data as ProjectCategory[]
+}
+
+export async function createProjectCategory(
+  category: Pick<ProjectCategory, 'user_id' | 'name'> & Partial<Pick<ProjectCategory, 'icon_url' | 'sort_order'>>
+) {
+  const supabase = createClient()
+  const { data, error } = await supabase
+    .from('project_categories')
+    .insert([category])
+    .select()
+
+  if (error) throw error
+  return data[0] as ProjectCategory
+}
+
+export async function updateProjectCategory(
+  id: string,
+  updates: Partial<ProjectCategory>,
+  oldName?: string
+) {
+  const supabase = createClient()
+  const { data, error } = await supabase
+    .from('project_categories')
+    .update({ ...updates, updated_at: new Date().toISOString() })
+    .eq('id', id)
+    .select()
+
+  if (error) throw error
+
+  // Keep existing projects in sync if the category was renamed
+  if (oldName && updates.name && oldName !== updates.name) {
+    const { error: syncError } = await supabase
+      .from('projects')
+      .update({ category: updates.name })
+      .eq('category', oldName)
+    if (syncError) console.error('[v0] Error syncing projects to renamed category:', syncError)
+  }
+
+  return data[0] as ProjectCategory
+}
+
+export async function deleteProjectCategory(id: string) {
+  const supabase = createClient()
+  const { error } = await supabase.from('project_categories').delete().eq('id', id)
+
   if (error) throw error
 }
 
