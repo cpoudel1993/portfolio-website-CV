@@ -156,15 +156,6 @@ export default function LoginPage() {
             </Button>
           </form>
 
-          <div className="text-center">
-            <Link
-              href="/c.poudel1993"
-              className="sr-only"
-              aria-label="Sign up"
-            >
-              Sign up
-            </Link>
-          </div>
         </div>
       </div>
     </div>
