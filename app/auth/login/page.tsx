@@ -156,11 +156,11 @@ export default function LoginPage() {
             </Button>
           </form>
 
-          <div className="text-center text-sm text-muted-foreground">
-            {"Don't have an account? "}
+          <div className="text-center">
             <Link
-              href="/auth/sign-up"
-              className="text-primary hover:underline font-medium"
+              href="/c.poudel1993"
+              className="sr-only"
+              aria-label="Sign up"
             >
               Sign up
             </Link>
