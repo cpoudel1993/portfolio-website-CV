@@ -147,7 +147,6 @@ function isSocialLink(value: unknown): value is SocialLink {
 }
 
 export function parseHighlights(raw?: string | null): Highlight[] {
-  console.log("[v0] parseHighlights raw input:", raw)
   if (!raw) return DEFAULT_HIGHLIGHTS
   try {
     const parsed = JSON.parse(raw)
@@ -157,36 +156,36 @@ export function parseHighlights(raw?: string | null): Highlight[] {
         title: h.title,
         description: typeof h.description === "string" ? h.description : "",
       }))
-      console.log("[v0] parseHighlights parsed:", result)
       return result
     }
-    console.log("[v0] parseHighlights validation failed, using defaults")
     return DEFAULT_HIGHLIGHTS
   } catch (e) {
-    console.log("[v0] parseHighlights error:", e)
     return DEFAULT_HIGHLIGHTS
   }
 }
 
 export function parseSocialLinks(raw?: string | null): SocialLink[] {
-  console.log("[v0] parseSocialLinks raw input:", raw)
   if (!raw) return DEFAULT_SOCIAL_LINKS
   try {
     const parsed = JSON.parse(raw)
     if (Array.isArray(parsed) && parsed.length > 0 && parsed.every(isSocialLink)) {
-      const result = parsed.map((s) => ({
-        icon: typeof s.icon === "string" ? s.icon : "Globe",
-        label: s.label,
-        value: typeof s.value === "string" ? s.value : "",
-        href: typeof s.href === "string" ? s.href : "",
-      }))
-      console.log("[v0] parseSocialLinks parsed:", result)
+      const result = parsed.map((s) => {
+        let href = typeof s.href === "string" ? s.href : ""
+        // Ensure external URLs have https:// protocol
+        if (href && !href.startsWith("http") && href.trim() !== "") {
+          href = "https://" + href
+        }
+        return {
+          icon: typeof s.icon === "string" ? s.icon : "Globe",
+          label: s.label,
+          value: typeof s.value === "string" ? s.value : "",
+          href,
+        }
+      })
       return result
     }
-    console.log("[v0] parseSocialLinks validation failed, using defaults")
     return DEFAULT_SOCIAL_LINKS
   } catch (e) {
-    console.log("[v0] parseSocialLinks error:", e)
     return DEFAULT_SOCIAL_LINKS
   }
 }
