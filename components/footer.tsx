@@ -1,11 +1,12 @@
-import { getSiteSettingsAsMap } from "@/app/actions/site-settings"
+import { getCachedPublicProfile, getCachedSiteSettings } from "@/lib/public-data"
 import { parseSocialLinks, getSocialIcon } from "@/lib/site-content"
-import { getPublicProfile } from "@/app/actions/profile-public"
 
 export async function Footer() {
   const currentYear = new Date().getFullYear()
-  const settings = await getSiteSettingsAsMap()
-  const profile = await getPublicProfile()
+  const [settings, profile] = await Promise.all([
+    getCachedSiteSettings(),
+    getCachedPublicProfile(),
+  ])
   const socialLinks = parseSocialLinks(settings.site_social_links)
   const initials = profile?.initials || 'CP'
 

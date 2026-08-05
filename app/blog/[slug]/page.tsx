@@ -4,24 +4,10 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { NavigationServer } from '@/components/navigation-server'
 import { Footer } from '@/components/footer'
-import { createClient } from '@/lib/supabase/server'
+import { getCachedBlogPost } from '@/lib/public-data'
 import { Calendar, Clock, ArrowLeft } from 'lucide-react'
 
-async function getPost(slug: string) {
-  const supabase = await createClient()
-  const { data, error } = await supabase
-    .from('blog_posts')
-    .select('*')
-    .eq('slug', slug)
-    .eq('status', 'published')
-    .maybeSingle()
-
-  if (error) {
-    console.error('[v0] Error fetching blog post:', error)
-    return null
-  }
-  return data
-}
+const getPost = getCachedBlogPost
 
 export async function generateMetadata({
   params,
@@ -117,7 +103,15 @@ export default async function BlogPostPage({
             {/* Featured image */}
             {image && (
               <div className="relative mb-10 aspect-video w-full overflow-hidden rounded-xl">
-                <Image src={image || "/placeholder.svg"} alt={post.title} fill className="object-cover" priority />
+                <Image
+                  src={image || "/placeholder.svg"}
+                  alt={post.title}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, 768px"
+                  quality={85}
+                  priority
+                />
               </div>
             )}
 

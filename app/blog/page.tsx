@@ -1,7 +1,7 @@
 import { Metadata } from 'next'
 import { NavigationServer } from '@/components/navigation-server'
 import { Footer } from '@/components/footer'
-import { createClient } from '@/lib/supabase/server'
+import { getCachedBlogPosts } from '@/lib/public-data'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Calendar, Clock, ArrowRight } from 'lucide-react'
@@ -15,23 +15,8 @@ export const metadata: Metadata = {
   },
 }
 
-async function getBlogPosts() {
-  const supabase = await createClient()
-  const { data, error } = await supabase
-    .from('blog_posts')
-    .select('*')
-    .eq('status', 'published')
-    .order('published_at', { ascending: false })
-  
-  if (error) {
-    console.error('Error fetching blog posts:', error)
-    return []
-  }
-  return data || []
-}
-
 export default async function BlogPage() {
-  const posts = await getBlogPosts()
+  const posts = await getCachedBlogPosts()
 
   return (
     <>
@@ -69,6 +54,8 @@ export default async function BlogPage() {
                             alt={post.title}
                             fill
                             className="object-cover transition-transform group-hover:scale-105"
+                            sizes="(max-width: 640px) 100vw, 256px"
+                            quality={82}
                           />
                         </div>
                       )}

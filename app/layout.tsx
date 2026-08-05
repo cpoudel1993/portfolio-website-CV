@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from 'next'
 import { Inter, JetBrains_Mono } from 'next/font/google'
 import { ThemeProvider } from '@/components/theme-provider'
-import { getPublicProfile } from '@/app/actions/profile-public'
+import { getCachedPublicProfile } from '@/lib/public-data'
 import './globals.css'
 
 const inter = Inter({
@@ -15,7 +15,7 @@ const jetbrainsMono = JetBrains_Mono({
 })
 
 export async function generateMetadata(): Promise<Metadata> {
-  const profile = await getPublicProfile()
+  const profile = await getCachedPublicProfile()
   const displayName = profile?.display_name || 'Chiranjivi Poudel'
   const fullName = profile?.full_name || 'Chiranjivi Poudel'
   const bio = profile?.bio || 'Originally from Nepal, now based in Hamilton, New Zealand. Process Worker at Silver Fern Farms with a strong background in Civil Engineering, Surveying, Site Supervision, and Full-Stack Web Development. Eligible for full-time work in New Zealand.'

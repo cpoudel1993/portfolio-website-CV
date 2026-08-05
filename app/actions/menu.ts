@@ -1,7 +1,7 @@
 'use server'
 
 import { createClient } from '@/lib/supabase/server'
-import { revalidatePath } from 'next/cache'
+import { revalidatePath, updateTag } from 'next/cache'
 
 export interface MenuItem {
   id: string
@@ -97,6 +97,7 @@ export async function createMenuItem(input: MenuItemInput) {
       console.error('createMenuItem error:', error)
       return { success: false, error: error.message }
     }
+    updateTag('menu-items')
     revalidatePath('/protected/menu')
     revalidatePath('/', 'layout')
     return { success: true }
@@ -123,6 +124,7 @@ export async function updateMenuItem(id: string, input: Partial<MenuItemInput>) 
       console.error('updateMenuItem error:', error)
       return { success: false, error: error.message }
     }
+    updateTag('menu-items')
     revalidatePath('/protected/menu')
     revalidatePath('/', 'layout')
     return { success: true }
@@ -139,6 +141,7 @@ export async function deleteMenuItem(id: string) {
       console.error('deleteMenuItem error:', error)
       return { success: false, error: error.message }
     }
+    updateTag('menu-items')
     revalidatePath('/protected/menu')
     revalidatePath('/', 'layout')
     return { success: true }
@@ -160,6 +163,7 @@ export async function reorderMenuItems(updates: Array<{ id: string; sort_order: 
         return { success: false, error: error.message }
       }
     }
+    updateTag('menu-items')
     revalidatePath('/protected/menu')
     revalidatePath('/', 'layout')
     return { success: true }

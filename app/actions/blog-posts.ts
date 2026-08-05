@@ -1,7 +1,7 @@
 'use server'
 
 import { createClient } from '@/lib/supabase/server'
-import { revalidatePath } from 'next/cache'
+import { revalidatePath, updateTag } from 'next/cache'
 
 export interface BlogPostInput {
   title: string
@@ -76,6 +76,7 @@ export async function createBlogPost(input: BlogPostInput) {
       console.error('createBlogPost error:', error)
       return { success: false, error: error.message }
     }
+    updateTag('blog-posts')
     revalidatePath('/protected/blog-posts')
     revalidatePath('/blog')
     return { success: true }
@@ -107,6 +108,7 @@ export async function updateBlogPost(id: string, input: Partial<BlogPostInput>) 
       console.error('updateBlogPost error:', error)
       return { success: false, error: error.message }
     }
+    updateTag('blog-posts')
     revalidatePath('/protected/blog-posts')
     revalidatePath('/blog')
     return { success: true }
@@ -123,6 +125,7 @@ export async function deleteBlogPost(id: string) {
       console.error('deleteBlogPost error:', error)
       return { success: false, error: error.message }
     }
+    updateTag('blog-posts')
     revalidatePath('/protected/blog-posts')
     revalidatePath('/blog')
     return { success: true }

@@ -302,8 +302,7 @@ export function GallerySection() {
               fill
               className="object-contain"
               sizes="100vw"
-              quality={100}
-              priority
+              quality={90}
             />
           </div>
 

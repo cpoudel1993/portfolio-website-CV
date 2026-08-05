@@ -1,7 +1,7 @@
 'use server'
 
 import { createClient } from '@/lib/supabase/server'
-import { revalidatePath } from 'next/cache'
+import { revalidatePath, updateTag } from 'next/cache'
 
 export interface ProfileInput {
   full_name: string | null
@@ -75,6 +75,7 @@ export async function upsertProfile(input: ProfileInput) {
       console.error('upsertProfile error:', error)
       return { success: false, error: error.message }
     }
+    updateTag('profile')
     revalidatePath('/protected/profile')
     revalidatePath('/about')
     revalidatePath('/contact')
