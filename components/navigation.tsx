@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback, useMemo, useRef } from "react"
 import { usePathname, useRouter } from "next/navigation"
 import { useTheme } from "next-themes"
 import { Menu, X, Moon, Sun, Download, LogIn, Globe, ExternalLink } from "lucide-react"
@@ -47,35 +47,52 @@ export function Navigation({ menuItems, initials = 'CP' }: { menuItems?: NavLink
   const [selectedLang, setSelectedLang] = useState("en")
   const { theme, setTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
+  const scrollTimeoutRef = useRef<NodeJS.Timeout>()
 
   useEffect(() => {
     setMounted(true)
   }, [])
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20)
+  // Memoize anchor IDs to avoid recalculating on every scroll
+  const anchorIds = useMemo(
+    () =>
+      isHomePage
+        ? navLinks.filter((link) => link.anchor).map((link) => link.anchor!.replace("#", ""))
+        : [],
+    [isHomePage, navLinks]
+  )
 
-      // Only track anchor sections on homepage
-      if (isHomePage) {
-        const anchors = navLinks.filter((link) => link.anchor).map((link) => link.anchor!.replace("#", ""))
-        for (let i = anchors.length - 1; i >= 0; i--) {
-          const el = document.getElementById(anchors[i])
+  // Throttled scroll handler
+  const handleScroll = useCallback(() => {
+    setScrolled(window.scrollY > 20)
+
+    if (isHomePage && anchorIds.length > 0) {
+      // Throttle section detection to every 100ms
+      if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current)
+      scrollTimeoutRef.current = setTimeout(() => {
+        for (let i = anchorIds.length - 1; i >= 0; i--) {
+          const el = document.getElementById(anchorIds[i])
           if (el) {
             const rect = el.getBoundingClientRect()
             if (rect.top <= 100) {
-              setActiveSection(anchors[i])
+              setActiveSection(anchorIds[i])
               break
             }
           }
         }
-      }
+      }, 100)
     }
-    window.addEventListener("scroll", handleScroll)
-    return () => window.removeEventListener("scroll", handleScroll)
-  }, [isHomePage])
+  }, [isHomePage, anchorIds])
 
-  const handleAnchorClick = (link: NavLink) => {
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll, { passive: true })
+    return () => {
+      window.removeEventListener("scroll", handleScroll)
+      if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current)
+    }
+  }, [handleScroll])
+
+  const handleAnchorClick = useCallback((link: NavLink) => {
     setIsOpen(false)
     if (link.anchor) {
       const el = document.querySelector(link.anchor)
@@ -84,17 +101,15 @@ export function Navigation({ menuItems, initials = 'CP' }: { menuItems?: NavLink
         return
       }
     }
-    // Section isn't present on this page (e.g. Experience/Skills are on their own
-    // dedicated pages now) — navigate to the dedicated page instead.
     router.push(link.href)
-  }
+  }, [router])
 
-  const getActiveState = (link: typeof navLinks[0]) => {
+  const getActiveState = useCallback((link: typeof navLinks[0]) => {
     if (isHomePage && link.anchor) {
       return activeSection === link.anchor.replace("#", "")
     }
     return pathname === link.href
-  }
+  }, [isHomePage, activeSection, pathname])
 
   return (
     <header
