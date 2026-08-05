@@ -16,6 +16,15 @@ export const metadata: Metadata = {
   },
 }
 
+function isValidImageUrl(url: string): boolean {
+  try {
+    const imageExtensions = /\.(jpg|jpeg|png|gif|webp|avif|svg)(\?.*)?$/i
+    return imageExtensions.test(url)
+  } catch {
+    return false
+  }
+}
+
 export default async function ProjectsPage() {
   const projects = await getCachedProjects()
 
@@ -36,7 +45,7 @@ export default async function ProjectsPage() {
                     key={project.id}
                     className="group rounded-xl border border-border bg-card overflow-hidden transition-all hover:shadow-lg hover:border-primary/50"
                   >
-                    {project.image_url && (
+                    {project.image_url && isValidImageUrl(project.image_url) ? (
                       <div className="relative aspect-video overflow-hidden">
                         <Image
                           src={project.image_url}
@@ -46,6 +55,13 @@ export default async function ProjectsPage() {
                           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                           quality={82}
                         />
+                      </div>
+                    ) : (
+                      <div className="relative aspect-video overflow-hidden bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center">
+                        <div className="text-center">
+                          <div className="text-4xl mb-2">📦</div>
+                          <p className="text-sm text-muted-foreground font-medium">{project.title}</p>
+                        </div>
                       </div>
                     )}
                     <div className="p-5">
