@@ -1,10 +1,11 @@
-import { getActiveMenuItems } from '@/app/actions/menu'
-import { getPublicProfile } from '@/app/actions/profile-public'
+import { getCachedActiveMenuItems, getCachedPublicProfile } from '@/lib/public-data'
 import { Navigation } from '@/components/navigation'
 
 export async function NavigationServer() {
-  const items = await getActiveMenuItems('main')
-  const profile = await getPublicProfile()
+  const [items, profile] = await Promise.all([
+    getCachedActiveMenuItems('main'),
+    getCachedPublicProfile(),
+  ])
 
   const menuItems = items.map((item) => ({
     label: item.label,

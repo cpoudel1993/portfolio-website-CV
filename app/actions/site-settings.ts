@@ -1,7 +1,7 @@
 'use server'
 
 import { createClient } from '@/lib/supabase/server'
-import { revalidatePath } from 'next/cache'
+import { revalidatePath, updateTag } from 'next/cache'
 
 export interface SiteSetting {
   key: string
@@ -61,6 +61,7 @@ export async function upsertSiteSetting(key: string, value: string, description?
       console.error('upsertSiteSetting error:', error)
       return { success: false, error: error.message }
     }
+    updateTag('site-settings')
     revalidatePath('/protected/settings')
     revalidatePath('/', 'layout')
     return { success: true }
@@ -81,6 +82,7 @@ export async function upsertSiteSettings(values: Record<string, string>) {
       return { success: false, error: error.message }
     }
     // Revalidate all pages that use site_settings data
+    updateTag('site-settings')
     revalidatePath('/protected/settings')
     revalidatePath('/', 'layout') // Homepage + all layouts
     revalidatePath('/contact', 'layout') // Contact page + layouts
@@ -104,6 +106,7 @@ export async function deleteSiteSetting(key: string) {
       console.error('deleteSiteSetting error:', error)
       return { success: false, error: error.message }
     }
+    updateTag('site-settings')
     revalidatePath('/protected/settings')
     revalidatePath('/', 'layout')
     return { success: true }

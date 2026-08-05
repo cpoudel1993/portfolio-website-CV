@@ -50,6 +50,8 @@ export function PageHero({ title, subtitle, description, imageUrl }: PageHeroPro
                 alt={title}
                 fill
                 className="object-cover"
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                quality={85}
                 priority
               />
               {/* Overlay gradient */}

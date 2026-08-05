@@ -1,7 +1,7 @@
 import { Metadata } from 'next'
 import { NavigationServer } from '@/components/navigation-server'
 import { Footer } from '@/components/footer'
-import { createClient } from '@/lib/supabase/server'
+import { getCachedProjects } from '@/lib/public-data'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Calendar, ExternalLink, Github } from 'lucide-react'
@@ -16,23 +16,8 @@ export const metadata: Metadata = {
   },
 }
 
-async function getProjects() {
-  const supabase = await createClient()
-  const { data, error } = await supabase
-    .from('projects')
-    .select('*')
-    .eq('status', 'published')
-    .order('display_order', { ascending: true })
-  
-  if (error) {
-    console.error('Error fetching projects:', error)
-    return []
-  }
-  return data || []
-}
-
 export default async function ProjectsPage() {
-  const projects = await getProjects()
+  const projects = await getCachedProjects()
 
   return (
     <>
@@ -58,6 +43,8 @@ export default async function ProjectsPage() {
                           alt={project.title}
                           fill
                           className="object-cover transition-transform group-hover:scale-105"
+                          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                          quality={82}
                         />
                       </div>
                     )}

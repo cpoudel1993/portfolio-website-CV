@@ -1,6 +1,7 @@
 'use server'
 
 import { createClient } from '@/lib/supabase/server'
+import { updateTag } from 'next/cache'
 
 interface SEOSettingsInput {
   id?: string
@@ -71,6 +72,7 @@ export async function upsertSEOSettings(data: SEOSettingsInput) {
       }
     }
 
+    updateTag('seo-settings')
     return { success: true }
   } catch (error) {
     console.error('SEO settings error:', error)

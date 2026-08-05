@@ -2,13 +2,15 @@ import type { Metadata } from "next"
 import { NavigationServer } from "@/components/navigation-server"
 import { HeroSection } from "@/components/hero-section"
 import { Footer } from "@/components/footer"
-import { getSiteSettingsAsMap } from "@/app/actions/site-settings"
-import { getSEOBySlug } from "@/app/actions/seo"
-import { getPublicProfile } from "@/app/actions/profile-public"
+import {
+  getCachedPublicProfile,
+  getCachedSEOBySlug,
+  getCachedSiteSettings,
+} from "@/lib/public-data"
 import { mapSettingsToHomepageContent } from "@/lib/homepage-content"
 
 export async function generateMetadata(): Promise<Metadata> {
-  const seo = await getSEOBySlug("home")
+  const seo = await getCachedSEOBySlug("home")
   if (!seo) return {}
 
   const metadata: Metadata = {}
@@ -31,8 +33,10 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function Home() {
-  const settings = await getSiteSettingsAsMap()
-  const profile = await getPublicProfile()
+  const [settings, profile] = await Promise.all([
+    getCachedSiteSettings(),
+    getCachedPublicProfile(),
+  ])
   const content = mapSettingsToHomepageContent(settings)
 
   return (
