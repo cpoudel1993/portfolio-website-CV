@@ -18,7 +18,7 @@ type NavLink = { label: string; href: string; anchor?: string; external?: boolea
 
 const defaultNavLinks: NavLink[] = [
   { label: "Home", href: "/", anchor: "#home" },
-  { label: "About", href: "/about", anchor: "#about" },
+  { label: "About", href: "/about" },
   { label: "Experience", href: "/experience", anchor: "#experience" },
   { label: "Skills", href: "/skills", anchor: "#skills" },
   { label: "Projects", href: "/projects" },
@@ -47,7 +47,7 @@ export function Navigation({ menuItems, initials = 'CP' }: { menuItems?: NavLink
   const [selectedLang, setSelectedLang] = useState("en")
   const { theme, setTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
-  const scrollTimeoutRef = useRef<NodeJS.Timeout>()
+  const scrollTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useEffect(() => {
     setMounted(true)

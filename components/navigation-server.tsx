@@ -10,7 +10,7 @@ export async function NavigationServer() {
   const menuItems = items.map((item) => ({
     label: item.label,
     href: item.href,
-    anchor: item.anchor ?? undefined,
+    anchor: item.label.toLowerCase() === 'about' ? undefined : item.anchor ?? undefined,
     external: item.is_external || undefined,
   }))
 
