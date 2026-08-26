@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
-import { CheckCircle, AlertCircle, X, Save } from 'lucide-react'
+import { CheckCircle, AlertCircle, X, Save, Palette, Check } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -18,6 +18,16 @@ interface SettingsFormProps {
 
 const TOGGLE_KEYS = ['enable_blog', 'enable_contact_form', 'enable_analytics'] as const
 
+const COLOR_KEYS = ['admin_primary_color', 'admin_accent_color', 'admin_surface_color', 'admin_text_color'] as const
+
+const COLOR_PRESETS = [
+  { name: 'Ocean', colors: { admin_primary_color: '#0f766e', admin_accent_color: '#f59e0b', admin_surface_color: '#f0fdfa', admin_text_color: '#134e4a' } },
+  { name: 'Slate', colors: { admin_primary_color: '#334155', admin_accent_color: '#0ea5e9', admin_surface_color: '#f8fafc', admin_text_color: '#0f172a' } },
+  { name: 'Berry', colors: { admin_primary_color: '#9f1239', admin_accent_color: '#f97316', admin_surface_color: '#fff1f2', admin_text_color: '#4c0519' } },
+] as const
+
+const DEFAULT_COLORS = COLOR_PRESETS[0].colors
+
 export function SiteSettingsForm({ initial, email }: SettingsFormProps) {
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
@@ -29,6 +39,10 @@ export function SiteSettingsForm({ initial, email }: SettingsFormProps) {
     enable_blog: initial.enable_blog ?? 'true',
     enable_contact_form: initial.enable_contact_form ?? 'true',
     enable_analytics: initial.enable_analytics ?? 'true',
+    admin_primary_color: initial.admin_primary_color ?? DEFAULT_COLORS.admin_primary_color,
+    admin_accent_color: initial.admin_accent_color ?? DEFAULT_COLORS.admin_accent_color,
+    admin_surface_color: initial.admin_surface_color ?? DEFAULT_COLORS.admin_surface_color,
+    admin_text_color: initial.admin_text_color ?? DEFAULT_COLORS.admin_text_color,
   })
 
   const flash = (s: Status) => {
@@ -132,6 +146,51 @@ export function SiteSettingsForm({ initial, email }: SettingsFormProps) {
         </div>
       </div>
 
+      {/* Admin palette */}
+      <div className="rounded-lg border border-border bg-card p-6">
+        <div className="mb-6 flex items-start gap-3">
+          <div className="rounded-md bg-primary/10 p-2 text-primary"><Palette className="size-5" /></div>
+          <div>
+            <h2 className="text-lg font-semibold">Admin panel colors</h2>
+            <p className="mt-1 text-sm text-muted-foreground">Choose a preset or fine-tune the admin panel preview. These controls do not change the public website.</p>
+          </div>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          {COLOR_PRESETS.map((preset) => {
+            const selected = COLOR_KEYS.every((key) => values[key] === preset.colors[key])
+            return (
+              <button
+                key={preset.name}
+                type="button"
+                onClick={() => setValues((current) => ({ ...current, ...preset.colors }))}
+                className={`flex items-center gap-2 rounded-md border px-3 py-2 text-sm transition-colors ${selected ? 'border-primary bg-primary/10' : 'border-border hover:bg-muted'}`}
+                aria-pressed={selected}
+              >
+                <span className="flex -space-x-1" aria-hidden="true">
+                  {Object.values(preset.colors).slice(0, 3).map((color) => <span key={color} className="size-4 rounded-full border-2 border-background" style={{ backgroundColor: color }} />)}
+                </span>
+                {preset.name}
+                {selected && <Check className="size-4 text-primary" />}
+              </button>
+            )
+          })}
+        </div>
+        <div className="mt-6 grid gap-4 sm:grid-cols-2">
+          <ColorField label="Primary" value={values.admin_primary_color} onChange={(value) => handleChange('admin_primary_color', value)} />
+          <ColorField label="Accent" value={values.admin_accent_color} onChange={(value) => handleChange('admin_accent_color', value)} />
+          <ColorField label="Surface" value={values.admin_surface_color} onChange={(value) => handleChange('admin_surface_color', value)} />
+          <ColorField label="Text" value={values.admin_text_color} onChange={(value) => handleChange('admin_text_color', value)} />
+        </div>
+        <div className="mt-6 overflow-hidden rounded-md border" style={{ backgroundColor: values.admin_surface_color, color: values.admin_text_color }}>
+          <div className="flex items-center justify-between p-4" style={{ backgroundColor: values.admin_primary_color, color: '#ffffff' }}>
+            <span className="font-medium">Admin preview</span><span className="text-xs opacity-80">Live</span>
+          </div>
+          <div className="flex items-center justify-between gap-4 p-4">
+            <span className="text-sm">Your selected palette</span><span className="rounded-md px-3 py-1 text-sm font-medium" style={{ backgroundColor: values.admin_accent_color, color: '#ffffff' }}>Action</span>
+          </div>
+        </div>
+      </div>
+
       {/* Features */}
       <div className="rounded-lg border border-border bg-card p-6">
         <h2 className="mb-6 text-lg font-semibold">Features</h2>
@@ -166,6 +225,33 @@ export function SiteSettingsForm({ initial, email }: SettingsFormProps) {
         </Button>
       </div>
     </form>
+  )
+}
+
+function ColorField({
+  label,
+  value,
+  onChange,
+}: {
+  label: string
+  value: string
+  onChange: (value: string) => void
+}) {
+  return (
+    <div className="flex items-center justify-between gap-3 rounded-md border border-border p-3">
+      <Label htmlFor={`admin_${label.toLowerCase()}_color`}>{label}</Label>
+      <div className="flex items-center gap-2">
+        <Input
+          id={`admin_${label.toLowerCase()}_color`}
+          type="color"
+          value={value}
+          onChange={(event) => onChange(event.target.value)}
+          className="size-9 cursor-pointer p-1"
+          aria-label={`${label} color`}
+        />
+        <span className="font-mono text-xs uppercase text-muted-foreground">{value}</span>
+      </div>
+    </div>
   )
 }
 
