@@ -1,6 +1,5 @@
 'use client'
 
-import { Moon } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 
 export function AnimatedHandCursor() {
@@ -47,7 +46,11 @@ export function AnimatedHandCursor() {
       aria-hidden="true"
       className={`pointer-events-none fixed left-0 top-0 z-[9999] hidden text-primary transition-[opacity,transform] duration-150 lg:block ${isVisible ? 'opacity-100' : 'opacity-0'} ${isHovering ? 'scale-125' : 'scale-100'}`}
     >
-      <Moon className="size-7 drop-shadow-md" strokeWidth={1.8} />
+      <img
+        src="/images/pointer.png"
+        alt=""
+        className="size-10 object-contain drop-shadow-md"
+      />
     </div>
   )
 }
