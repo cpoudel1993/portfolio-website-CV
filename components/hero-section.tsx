@@ -105,12 +105,6 @@ export function HeroSection({
                 sizes="(max-width: 640px) 288px, (max-width: 1024px) 320px, 384px"
               />
             </div>
-            <div className="pointer-events-none absolute -right-8 top-8 hidden text-[9px] font-medium tracking-[0.22em] text-primary/80 [writing-mode:vertical-rl] sm:block">
-              CIVIL ENGINEERING
-            </div>
-            <div className="pointer-events-none absolute -bottom-7 left-5 text-[9px] tracking-[0.28em] text-primary/70">
-              CONSTRUCTION / SURVEYING
-            </div>
           </div>
         </div>
       </div>
