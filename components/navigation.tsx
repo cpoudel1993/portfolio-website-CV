@@ -31,10 +31,21 @@ const defaultNavLinks: NavLink[] = [
 
 const languages = [
   { code: "en", label: "English" },
-  { code: "ne", label: "Nepali" },
-  { code: "hi", label: "Hindi" },
-  { code: "jp", label: "Japanese" },
+  { code: "ne", label: "नेपाली" },
 ]
+
+const navLabels: Record<string, string> = {
+  Home: "गृहपृष्ठ",
+  About: "मेरो बारेमा",
+  Experience: "अनुभव",
+  Skills: "सीपहरू",
+  Projects: "परियोजनाहरू",
+  Certifications: "प्रमाणपत्रहरू",
+  Gallery: "ग्यालरी",
+  Blog: "ब्लग",
+  Contact: "सम्पर्क",
+  Kharcha: "खर्च",
+}
 
 export function Navigation({ menuItems, initials = 'CP' }: { menuItems?: NavLink[]; initials?: string } = {}) {
   const pathname = usePathname()
@@ -51,7 +62,21 @@ export function Navigation({ menuItems, initials = 'CP' }: { menuItems?: NavLink
 
   useEffect(() => {
     setMounted(true)
+    const savedLanguage = window.sessionStorage.getItem("site-language")
+    if (savedLanguage === "en" || savedLanguage === "ne") {
+      setSelectedLang(savedLanguage)
+    }
   }, [])
+
+  useEffect(() => {
+    document.documentElement.lang = selectedLang === "ne" ? "ne" : "en"
+    window.sessionStorage.setItem("site-language", selectedLang)
+  }, [selectedLang])
+
+  const displayLabel = useCallback(
+    (label: string) => selectedLang === "ne" ? navLabels[label] ?? label : label,
+    [selectedLang],
+  )
 
   // Memoize anchor IDs to avoid recalculating on every scroll
   const anchorIds = useMemo(
@@ -146,7 +171,7 @@ export function Navigation({ menuItems, initials = 'CP' }: { menuItems?: NavLink
                   rel="noopener noreferrer"
                   className="flex items-center gap-1 rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground hover:bg-muted"
                 >
-                  {link.label}
+                  {displayLabel(link.label)}
                   <ExternalLink className="h-3 w-3" />
                 </a>
               ) : isHomePage && link.anchor ? (
@@ -162,7 +187,7 @@ export function Navigation({ menuItems, initials = 'CP' }: { menuItems?: NavLink
                       : "text-muted-foreground hover:text-foreground hover:bg-muted"
                   }`}
                 >
-                  {link.label}
+                  {displayLabel(link.label)}
                 </a>
               ) : (
                 <Link
@@ -173,7 +198,7 @@ export function Navigation({ menuItems, initials = 'CP' }: { menuItems?: NavLink
                       : "text-muted-foreground hover:text-foreground hover:bg-muted"
                   }`}
                 >
-                  {link.label}
+                  {displayLabel(link.label)}
                 </Link>
               )}
             </li>
@@ -282,7 +307,7 @@ export function Navigation({ menuItems, initials = 'CP' }: { menuItems?: NavLink
                 rel="noopener noreferrer"
                 className="flex items-center gap-1.5 rounded-md px-3 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground hover:bg-muted"
               >
-                {link.label}
+                {displayLabel(link.label)}
                 <ExternalLink className="h-3 w-3" />
               </a>
             ) : isHomePage && link.anchor ? (
@@ -299,7 +324,7 @@ export function Navigation({ menuItems, initials = 'CP' }: { menuItems?: NavLink
                     : "text-muted-foreground hover:text-foreground hover:bg-muted"
                 }`}
               >
-                {link.label}
+                {displayLabel(link.label)}
               </a>
             ) : (
               <Link
@@ -312,7 +337,7 @@ export function Navigation({ menuItems, initials = 'CP' }: { menuItems?: NavLink
                     : "text-muted-foreground hover:text-foreground hover:bg-muted"
                 }`}
               >
-                {link.label}
+                {displayLabel(link.label)}
               </Link>
             )
           )}
