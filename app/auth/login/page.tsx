@@ -96,7 +96,7 @@ export default function LoginPage() {
                   placeholder="you@example.com or username"
                   required
                   value={identifier}
-                  onChange={(e) => setIdentifier(e.target.value)
+                  onChange={(e) => setIdentifier(e.target.value)}
                   className="pl-10 h-10"
                   disabled={isLoading}
                 />
