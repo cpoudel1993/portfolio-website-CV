@@ -5,6 +5,15 @@ import { createProject, updateProject } from '@/lib/db'
 import type { Project, ProjectCategory } from '@/lib/db'
 import { Upload, Loader2 } from 'lucide-react'
 
+const DEFAULT_PROJECT_CATEGORIES = [
+  'Civil Engineering',
+  'IT',
+  'Programming',
+  'Website Hosting',
+  'Graphic Design',
+  'Digital Marketing',
+]
+
 interface ProjectFormProps {
   userId: string
   project?: Project
@@ -106,10 +115,12 @@ export function ProjectForm({ userId, project, categories, onSuccess }: ProjectF
             onChange={(e) => setFormData({ ...formData, category: e.target.value })}
             className="w-full px-3 py-2 border border-border rounded-lg bg-background focus:outline-none focus:ring-2 focus:ring-primary"
           >
-            {categories.length === 0 && <option value="">No categories yet</option>}
-            {categories.map((cat) => (
-              <option key={cat.id} value={cat.name}>
-                {cat.name}
+            {Array.from(new Set([
+              ...DEFAULT_PROJECT_CATEGORIES,
+              ...categories.map((category) => category.name),
+            ])).map((category) => (
+              <option key={category} value={category}>
+                {category}
               </option>
             ))}
           </select>
