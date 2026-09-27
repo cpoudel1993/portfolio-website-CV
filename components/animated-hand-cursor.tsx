@@ -1,6 +1,6 @@
 'use client'
 
-import { Hand } from 'lucide-react'
+import { Moon } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 
 export function AnimatedHandCursor() {
@@ -55,7 +55,7 @@ export function AnimatedHandCursor() {
       className={`pointer-events-none fixed left-0 top-0 z-[9999] hidden text-primary transition-[opacity,transform] duration-150 lg:block ${isVisible ? 'opacity-100' : 'opacity-0'} ${isHovering ? 'scale-125' : 'scale-100'}`}
       style={{ animation: 'cursor-fly 1.6s ease-in-out infinite' }}
     >
-        <Hand className="size-7 drop-shadow-md" strokeWidth={1.8} />
+        <Moon className="size-7 drop-shadow-md" strokeWidth={1.8} />
       </div>
     </>
   )
