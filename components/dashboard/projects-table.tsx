@@ -14,11 +14,11 @@ import { Trash2, Edit2, FolderPlus, Upload, Loader2, X, Folder } from 'lucide-re
 
 interface ProjectsTableProps {
   projects: Project[]
-  categories: ProjectCategory[]
+  categories?: ProjectCategory[]
   userId: string
 }
 
-export function ProjectsTable({ projects, categories, userId }: ProjectsTableProps) {
+export function ProjectsTable({ projects, categories = [], userId }: ProjectsTableProps) {
   const [showForm, setShowForm] = useState(false)
   const [editingProject, setEditingProject] = useState<Project | null>(null)
   const [deleting, setDeleting] = useState<string | null>(null)
