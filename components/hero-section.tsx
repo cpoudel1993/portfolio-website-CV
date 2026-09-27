@@ -80,20 +80,38 @@ export function HeroSection({
         </div>
 
         {/* Profile Image */}
-        <div className="hero-reveal hero-reveal-delay relative flex-shrink-0">
-          <div className="hero-image-frame relative h-72 w-72 overflow-hidden rounded-2xl border-2 border-border shadow-2xl sm:h-80 sm:w-80 lg:h-96 lg:w-96">
-            <Image
-              src={content.heroProfileImage || "/images/chiranjivi-formal.png"}
-              alt={`${content.heroNameFirst} ${content.heroNameLast} - Professional portrait`}
-              fill
-              className="object-cover object-top"
-              priority
-              quality={100}
-              sizes="(max-width: 640px) 288px, (max-width: 1024px) 320px, 384px"
-            />
+        <div className="hero-reveal hero-reveal-delay group relative flex-shrink-0">
+          <div className="relative h-72 w-72 sm:h-80 sm:w-80 lg:h-96 lg:w-96">
+            <div className="pointer-events-none absolute -inset-8 opacity-90 transition-transform duration-700 group-hover:scale-105 motion-reduce:transition-none">
+              <svg viewBox="0 0 420 420" className="h-full w-full text-primary/70" aria-hidden="true">
+                <path d="M38 112V58h54M328 58h54v54M382 308v54h-54M92 362H38v-54" fill="none" stroke="currentColor" strokeWidth="1.5" strokeDasharray="5 8" className="origin-center animate-[spin_36s_linear_infinite] motion-reduce:animate-none" />
+                <path d="M18 210h44M358 210h44M210 18v44M210 358v44M66 96l28 28M326 96l-28 28M66 324l28-28M326 324l-28-28" fill="none" stroke="currentColor" strokeWidth="1" opacity=".65" />
+                <path d="M70 286V166l70-40 70 40v120M140 126v160M210 166l70-40 70 40v120M280 126v160M70 286h280M92 302h236" fill="none" stroke="currentColor" strokeWidth="1.2" opacity=".4" />
+                <path d="M252 80h74M289 80v42M252 122h74M252 80l-24 42h98" fill="none" stroke="currentColor" strokeWidth="1" opacity=".55" />
+                <path d="M36 210h26M38 204v12M358 210h26M382 204v12" fill="none" stroke="currentColor" strokeWidth="1" opacity=".8" />
+              </svg>
+            </div>
+            <div className="absolute -inset-2 rounded-[2rem] border border-primary/50 bg-primary/5 shadow-[0_0_28px_color-mix(in_srgb,var(--primary)_25%,transparent)] transition-transform duration-700 group-hover:rotate-1 group-hover:scale-[1.02] motion-reduce:transition-none" />
+            <div className="absolute inset-0 overflow-hidden rounded-[1.65rem] border-2 border-primary/80 bg-background/20 shadow-2xl shadow-primary/20 [clip-path:polygon(8%_0,92%_0,100%_8%,100%_92%,92%_100%,8%_100%,0_92%,0_8%)]">
+              <div className="pointer-events-none absolute inset-0 z-10 bg-gradient-to-br from-primary/15 via-transparent to-cyan-300/10" />
+              <div className="pointer-events-none absolute inset-y-0 -left-1/2 z-20 w-1/3 -skew-x-12 bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0 transition-all duration-1000 group-hover:left-[120%] group-hover:opacity-100 motion-reduce:transition-none" />
+              <Image
+                src={content.heroProfileImage || "/images/chiranjivi-formal.png"}
+                alt={`${content.heroNameFirst} ${content.heroNameLast} - Professional portrait`}
+                fill
+                className="object-cover object-top transition-transform duration-700 group-hover:scale-[1.015] motion-reduce:transition-none"
+                priority
+                quality={100}
+                sizes="(max-width: 640px) 288px, (max-width: 1024px) 320px, 384px"
+              />
+            </div>
+            <div className="pointer-events-none absolute -right-8 top-8 hidden text-[9px] font-medium tracking-[0.22em] text-primary/80 [writing-mode:vertical-rl] sm:block">
+              CIVIL ENGINEERING
+            </div>
+            <div className="pointer-events-none absolute -bottom-7 left-5 text-[9px] tracking-[0.28em] text-primary/70">
+              CONSTRUCTION / SURVEYING
+            </div>
           </div>
-          {/* Decorative accent */}
-          <div className="absolute -bottom-3 -right-3 h-72 w-72 rounded-2xl border-2 border-primary/20 sm:h-80 sm:w-80 lg:h-96 lg:w-96" />
         </div>
       </div>
 
