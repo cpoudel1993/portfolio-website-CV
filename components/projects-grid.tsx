@@ -62,7 +62,7 @@ export function ProjectsGrid({ projects }: { projects: Project[] }) {
           >
             {project.image_url && isValidImageUrl(project.image_url) ? (
               <div className="relative aspect-video overflow-hidden">
-                <Image src={project.image_url} alt={project.title} fill className="object-cover transition-transform group-hover:scale-105" sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw" quality={82} />
+                <Image src={project.image_url} alt={project.title} fill className="object-cover transition-transform group-hover:scale-105" sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw" quality={100} unoptimized />
               </div>
             ) : (
               <div className="flex aspect-video items-center justify-center overflow-hidden bg-gradient-to-br from-primary/10 to-primary/5">
