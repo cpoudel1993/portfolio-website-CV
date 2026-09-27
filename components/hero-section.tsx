@@ -36,7 +36,7 @@ export function HeroSection({
 
       <div className="relative mx-auto flex max-w-6xl flex-col items-center gap-10 lg:flex-row lg:gap-16">
         {/* Text Content */}
-        <div className="flex-1 text-center lg:text-left">
+        <div className="hero-reveal flex-1 text-center lg:text-left">
           <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-border bg-secondary px-4 py-1.5 text-sm text-muted-foreground italic">
             <MapPin className="h-3.5 w-3.5" />
             {content.heroBadge}
@@ -80,8 +80,8 @@ export function HeroSection({
         </div>
 
         {/* Profile Image */}
-        <div className="relative flex-shrink-0">
-          <div className="relative h-72 w-72 overflow-hidden rounded-2xl border-2 border-border shadow-2xl sm:h-80 sm:w-80 lg:h-96 lg:w-96">
+        <div className="hero-reveal hero-reveal-delay relative flex-shrink-0">
+          <div className="hero-image-frame relative h-72 w-72 overflow-hidden rounded-2xl border-2 border-border shadow-2xl sm:h-80 sm:w-80 lg:h-96 lg:w-96">
             <Image
               src={content.heroProfileImage || "/images/chiranjivi-formal.png"}
               alt={`${content.heroNameFirst} ${content.heroNameLast} - Professional portrait`}

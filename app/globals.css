@@ -114,6 +114,61 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
+@keyframes hero-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes hero-image-float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.hero-reveal {
+  animation: hero-reveal 700ms ease-out both;
+}
+
+.hero-reveal-delay {
+  animation-delay: 140ms;
+}
+
+.hero-image-frame {
+  animation: hero-image-float 6s ease-in-out 900ms infinite;
+}
+
+.project-card {
+  transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
+}
+
+.project-card:hover {
+  transform: translateY(-5px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-reveal,
+  .hero-image-frame {
+    animation: none;
+  }
+
+  .project-card {
+    transition: none;
+  }
+
+  .project-card:hover {
+    transform: none;
+  }
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
