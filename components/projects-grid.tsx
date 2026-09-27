@@ -58,7 +58,7 @@ export function ProjectsGrid({ projects }: { projects: Project[] }) {
           <article
             key={project.id}
             id={project.category ? project.category.toLowerCase().replace(/\s+/g, '-') : undefined}
-            className="group overflow-hidden rounded-xl border border-border bg-card transition-all hover:border-primary/50 hover:shadow-lg"
+            className="project-card group overflow-hidden rounded-xl border border-border bg-card transition-all hover:border-primary/50 hover:shadow-lg"
           >
             {project.image_url && isValidImageUrl(project.image_url) ? (
               <div className="relative aspect-video overflow-hidden">

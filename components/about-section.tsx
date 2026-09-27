@@ -49,6 +49,7 @@ export function AboutSection({
                 alt={`${content.heroNameFirst} ${content.heroNameLast} - Casual portrait`}
                 fill
                 className="object-cover object-top"
+                quality={100}
                 sizes="(max-width: 640px) 256px, 288px"
               />
             </div>

@@ -50,6 +50,14 @@ export function ProjectForm({ userId, project, categories, onSuccess }: ProjectF
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
+
+    const maxUploadSize = 4 * 1024 * 1024
+    if (file.size > maxUploadSize) {
+      setError('This image is larger than 4 MB. Please compress it or choose a smaller image.')
+      e.target.value = ''
+      return
+    }
+
     setIsUploading(true)
     setError('')
     try {
@@ -57,12 +65,35 @@ export function ProjectForm({ userId, project, categories, onSuccess }: ProjectF
       fd.append('file', file)
       fd.append('folder', 'projects')
       const res = await fetch('/api/upload', { method: 'POST', body: fd })
-      if (!res.ok) {
-        const err = await res.json()
-        throw new Error(err.error || 'Upload failed')
+      const contentType = res.headers.get('content-type') || ''
+      const responseText = await res.text()
+      let responseData: { url?: string; error?: string } = {}
+
+      if (responseText) {
+        if (contentType.includes('application/json')) {
+          try {
+            responseData = JSON.parse(responseText) as typeof responseData
+          } catch {
+            throw new Error('The upload service returned an invalid response. Please try again.')
+          }
+        } else {
+          throw new Error(
+            res.status === 413
+              ? 'This image is too large to upload. Please choose a smaller image.'
+              : `Upload failed (${res.status || 'unknown error'}). Please try again.`,
+          )
+        }
       }
-      const { url } = await res.json()
-      setFormData((prev) => ({ ...prev, image_url: url }))
+
+      if (!res.ok) {
+        throw new Error(responseData.error || 'Upload failed')
+      }
+
+      if (!responseData.url) {
+        throw new Error('Upload completed without an image URL. Please try again.')
+      }
+
+      setFormData((prev) => ({ ...prev, image_url: responseData.url as string }))
     } catch (err) {
       console.error('[v0] Image upload error:', err)
       setError(err instanceof Error ? err.message : 'Failed to upload image')
