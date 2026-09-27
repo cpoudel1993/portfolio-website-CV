@@ -8,12 +8,24 @@ export interface Project {
   image_url: string | null
   category: string | null
   technologies: string[] | null
+  details: ProjectDetails | null
   live_url: string | null
   github_url: string | null
   featured: boolean
   status: 'draft' | 'published' | 'archived'
   created_at: string
   updated_at: string
+}
+
+export interface ProjectDetails {
+  project_type?: string
+  location?: string
+  client_name?: string
+  website_name?: string
+  service_type?: string
+  gallery_urls?: string[]
+  feedback?: string
+  reaction_count?: number
 }
 
 export interface ProjectCategory {
