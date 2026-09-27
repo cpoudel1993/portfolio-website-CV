@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { upsertSiteSettings } from '@/app/actions/site-settings'
+import { createClient } from '@/lib/supabase/client'
 
 type Status = { type: 'success' | 'error'; message: string } | null
 
@@ -32,6 +33,11 @@ export function SiteSettingsForm({ initial, email }: SettingsFormProps) {
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
   const [status, setStatus] = useState<Status>(null)
+  const [accountPending, setAccountPending] = useState(false)
+  const [newUsername, setNewUsername] = useState('')
+  const [newEmail, setNewEmail] = useState('')
+  const [newPassword, setNewPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
   const [values, setValues] = useState<Record<string, string>>({
     site_title: initial.site_title ?? 'Chiranjivi Poudel | Portfolio',
     site_description: initial.site_description ?? '',
@@ -56,6 +62,63 @@ export function SiteSettingsForm({ initial, email }: SettingsFormProps) {
 
   const toggle = (key: string) => {
     setValues((v) => ({ ...v, [key]: v[key] === 'true' ? 'false' : 'true' }))
+  }
+
+  const handleAccountUpdate = async (type: 'username' | 'email' | 'password') => {
+    setStatus(null)
+    if (type === 'username') {
+      const username = newUsername.trim()
+      if (!/^[a-zA-Z0-9._-]{3,32}$/.test(username)) {
+        flash({ type: 'error', message: 'Username must be 3–32 letters, numbers, dots, underscores, or hyphens.' })
+        return
+      }
+      setAccountPending(true)
+      const supabase = createClient()
+      const { data: userData } = await supabase.auth.getUser()
+      const result = userData.user
+        ? await supabase.from('profiles').update({ username }).eq('id', userData.user.id)
+        : { error: new Error('Your session has expired.') }
+      setAccountPending(false)
+      if (result.error) {
+        flash({ type: 'error', message: result.error.message.includes('duplicate') ? 'That username is already in use.' : result.error.message })
+        return
+      }
+      setNewUsername(username)
+      flash({ type: 'success', message: 'Username saved. You can now use it to sign in.' })
+      return
+    }
+    if (type === 'password') {
+      if (newPassword.length < 8) {
+        flash({ type: 'error', message: 'Password must be at least 8 characters.' })
+        return
+      }
+      if (newPassword !== confirmPassword) {
+        flash({ type: 'error', message: 'Passwords do not match.' })
+        return
+      }
+    }
+
+    setAccountPending(true)
+    const supabase = createClient()
+    const result = type === 'email'
+      ? await supabase.auth.updateUser({ email: newEmail.trim() })
+      : await supabase.auth.updateUser({ password: newPassword })
+    setAccountPending(false)
+
+    if (result.error) {
+      flash({ type: 'error', message: result.error.message })
+      return
+    }
+
+    setNewEmail('')
+    setNewPassword('')
+    setConfirmPassword('')
+    flash({
+      type: 'success',
+      message: type === 'email'
+        ? 'Confirmation links were sent to your email addresses.'
+        : 'Password updated successfully.',
+    })
   }
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -100,12 +163,54 @@ export function SiteSettingsForm({ initial, email }: SettingsFormProps) {
         <h2 className="mb-6 text-lg font-semibold">Account</h2>
         <div className="space-y-4">
           <div>
-            <Label htmlFor="account_email">Email</Label>
+            <Label htmlFor="account_email">Current login email</Label>
             <Input id="account_email" value={email} disabled className="bg-muted" />
-            <p className="mt-1 text-xs text-muted-foreground">
-              To change your login email, update it in Supabase auth.
-            </p>
           </div>
+          <div className="grid gap-3 sm:grid-cols-[1fr_auto]">
+            <div>
+              <Label htmlFor="new_account_username">Login username</Label>
+              <Input
+                id="new_account_username"
+                value={newUsername}
+                onChange={(e) => setNewUsername(e.target.value)}
+                placeholder="chiranjivi"
+                pattern="[a-zA-Z0-9._-]{3,32}"
+              />
+              <p className="mt-1 text-xs text-muted-foreground">Use this username or your email address when signing in.</p>
+            </div>
+            <Button type="button" variant="outline" className="self-end" disabled={accountPending || !newUsername.trim()} onClick={() => handleAccountUpdate('username')}>
+              Save username
+            </Button>
+          </div>
+          <div className="grid gap-3 sm:grid-cols-[1fr_auto]">
+            <div>
+              <Label htmlFor="new_account_email">New login email</Label>
+              <Input
+                id="new_account_email"
+                type="email"
+                value={newEmail}
+                onChange={(e) => setNewEmail(e.target.value)}
+                placeholder="new@email.com"
+              />
+              <p className="mt-1 text-xs text-muted-foreground">Supabase will require confirmation before the change takes effect.</p>
+            </div>
+            <Button type="button" variant="outline" className="self-end" disabled={accountPending || !newEmail.trim()} onClick={() => handleAccountUpdate('email')}>
+              Change email
+            </Button>
+          </div>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <div>
+              <Label htmlFor="new_account_password">New password</Label>
+              <Input id="new_account_password" type="password" minLength={8} value={newPassword} onChange={(e) => setNewPassword(e.target.value)} placeholder="At least 8 characters" />
+            </div>
+            <div>
+              <Label htmlFor="confirm_account_password">Confirm password</Label>
+              <Input id="confirm_account_password" type="password" minLength={8} value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} placeholder="Repeat new password" />
+            </div>
+          </div>
+          <Button type="button" variant="outline" disabled={accountPending || !newPassword || !confirmPassword} onClick={() => handleAccountUpdate('password')}>
+            Change password
+          </Button>
           <div>
             <Label htmlFor="contact_email">Public contact email</Label>
             <Input
