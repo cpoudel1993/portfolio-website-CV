@@ -31,6 +31,16 @@ export function ProjectForm({ userId, project, categories, onSuccess }: ProjectF
     image_url: project?.image_url || '',
     category: project?.category || categories[0]?.name || '',
     technologies: (project?.technologies || []).join(', '),
+    details: {
+      project_type: project?.details?.project_type || '',
+      location: project?.details?.location || '',
+      client_name: project?.details?.client_name || '',
+      website_name: project?.details?.website_name || '',
+      service_type: project?.details?.service_type || '',
+      gallery_urls: (project?.details?.gallery_urls || []).join(', '),
+      feedback: project?.details?.feedback || '',
+      reaction_count: project?.details?.reaction_count || 0,
+    },
     live_url: project?.live_url || '',
     github_url: project?.github_url || '',
     featured: project?.featured || false,
@@ -75,6 +85,11 @@ export function ProjectForm({ userId, project, categories, onSuccess }: ProjectF
       const projectData = {
         ...formData,
         technologies,
+        details: {
+          ...formData.details,
+          gallery_urls: formData.details.gallery_urls.split(',').map((url) => url.trim()).filter(Boolean),
+          reaction_count: Number(formData.details.reaction_count) || 0,
+        },
         user_id: userId,
       }
 
@@ -177,6 +192,32 @@ export function ProjectForm({ userId, project, categories, onSuccess }: ProjectF
                 placeholder="Or paste an image URL"
               />
             </div>
+          </div>
+        </div>
+
+        <div className="md:col-span-2 rounded-lg border border-border bg-background/60 p-4">
+          <p className="mb-3 text-sm font-semibold">Category-specific details</p>
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            {(formData.category === 'Civil Engineering' || formData.category === 'IT' || formData.category === 'Programming') && (
+              <input value={formData.details.project_type} onChange={(e) => setFormData({ ...formData, details: { ...formData.details, project_type: e.target.value } })} className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm" placeholder="Project type (e.g. Survey, App, Network)" />
+            )}
+            {(formData.category === 'Civil Engineering' || formData.category === 'IT') && (
+              <input value={formData.details.location} onChange={(e) => setFormData({ ...formData, details: { ...formData.details, location: e.target.value } })} className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm" placeholder="Location" />
+            )}
+            {(formData.category === 'Website Hosting' || formData.category === 'Digital Marketing') && (
+              <input value={formData.details.client_name} onChange={(e) => setFormData({ ...formData, details: { ...formData.details, client_name: e.target.value } })} className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm" placeholder="Client name" />
+            )}
+            {formData.category === 'Website Hosting' && (
+              <input value={formData.details.website_name} onChange={(e) => setFormData({ ...formData, details: { ...formData.details, website_name: e.target.value } })} className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm" placeholder="Website name" />
+            )}
+            {formData.category === 'Digital Marketing' && (
+              <input value={formData.details.service_type} onChange={(e) => setFormData({ ...formData, details: { ...formData.details, service_type: e.target.value } })} className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm" placeholder="Marketing service" />
+            )}
+            {(formData.category === 'Graphic Design' || formData.category === 'Digital Marketing') && (
+              <input value={formData.details.gallery_urls} onChange={(e) => setFormData({ ...formData, details: { ...formData.details, gallery_urls: e.target.value } })} className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm" placeholder="Gallery image URLs (comma-separated)" />
+            )}
+            <input value={formData.details.feedback} onChange={(e) => setFormData({ ...formData, details: { ...formData.details, feedback: e.target.value } })} className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm" placeholder="Existing client feedback" />
+            <input type="number" min="0" value={formData.details.reaction_count} onChange={(e) => setFormData({ ...formData, details: { ...formData.details, reaction_count: Number(e.target.value) } })} className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm" placeholder="Feedback reactions" />
           </div>
         </div>
 
