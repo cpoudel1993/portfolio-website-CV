@@ -18,7 +18,7 @@ function getSafeNext(): string {
 }
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("")
+  const [identifier, setIdentifier] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
@@ -32,10 +32,13 @@ export default function LoginPage() {
     setError(null)
 
     try {
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
+      const response = await fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ identifier, password }),
       })
+      const result = await response.json()
+      if (!response.ok) throw new Error(result.error || 'Unable to sign in.')
       if (error) throw error
       router.push(getSafeNext())
       router.refresh()
@@ -82,18 +85,18 @@ export default function LoginPage() {
 
           <form onSubmit={handleLogin} className="space-y-4">
             <div className="grid gap-2">
-              <Label htmlFor="email" className="text-sm font-medium">
-                Email Address
+              <Label htmlFor="identifier" className="text-sm font-medium">
+                Email or username
               </Label>
               <div className="relative">
                 <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                 <Input
-                  id="email"
-                  type="email"
-                  placeholder="you@example.com"
+                  id="identifier"
+                  type="text"
+                  placeholder="you@example.com or username"
                   required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  value={identifier}
+                  onChange={(e) => setIdentifier(e.target.value)
                   className="pl-10 h-10"
                   disabled={isLoading}
                 />
