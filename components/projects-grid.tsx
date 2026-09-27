@@ -20,7 +20,9 @@ function isValidImageUrl(url: string): boolean {
 }
 
 export function ProjectsGrid({ projects }: { projects: Project[] }) {
-  const categories = ['All', ...Array.from(new Set(projects.map((project) => project.category).filter(Boolean) as string[]))]
+  const categoryOrder = ['Civil Engineering', 'IT', 'Programming', 'Website Hosting', 'Graphic Design', 'Digital Marketing']
+  const projectCategories = Array.from(new Set(projects.map((project) => project.category).filter(Boolean) as string[]))
+  const categories = ['All', ...categoryOrder, ...projectCategories.filter((category) => !categoryOrder.includes(category))]
   const [activeCategory, setActiveCategory] = useState('All')
   const visibleProjects = activeCategory === 'All' ? projects : projects.filter((project) => project.category === activeCategory)
 
